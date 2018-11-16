@@ -3,6 +3,7 @@ package com.carlo.copiaproject;
 import MiscellaneousClasses.*;
 import java.io.File;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.collections.transformation.SortedList;
@@ -261,16 +262,20 @@ public class FXMLController implements Initializable
             clientEntity.setCompany_Name(textfield_client_companyname.getText().trim());
             clientEntity.setIndustry(combobox_client_industry.getSelectionModel().getSelectedItem());
             clientEntity.setType(combobox_client_type.getSelectionModel().getSelectedItem());
-            //String id = dbQuery.SendPostData(clientEntity, "https://concipiotektura.back4app.io/classes/Client", "POST");
-            /*for(int x = 0; x < listview_client_FiletoUpload.getItems().size(); x++)
+            dbQuery.SendPostData(clientEntity, "Client");
+            
+            if(listview_client_FiletoUpload.getItems().size() > 0)
             {
-                String current = listview_client_FiletoUpload.getItems().get(x);
-                //File file = new File(current);
-                upload = uploadService.uploadFileForUser("Any name", id, current, UploadFileType.IMAGE, "Sample Desc");
-            }*/
+                ArrayList<File> temp = new ArrayList<>();
+                for(int x = 0; x < listview_client_FiletoUpload.getItems().size(); x++)
+                {
+                    File current = new File(listview_client_FiletoUpload.getItems().get(x));
+                    temp.add(current);
+                }
+                clientEntity.setFileToUpload(temp);
+            }
             
             
-            JOptionPane.showMessageDialog(null, "Success");
             
         }catch(Exception ex)
         {
