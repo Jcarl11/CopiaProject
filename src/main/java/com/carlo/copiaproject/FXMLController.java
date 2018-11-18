@@ -4,14 +4,17 @@ import MiscellaneousClasses.*;
 import java.io.File;
 import java.net.URL;
 import java.nio.file.Files;
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -19,27 +22,34 @@ import javafx.scene.layout.GridPane;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import org.apache.commons.io.FilenameUtils;
-import org.parse4j.Parse;
+import org.parse4j.*;
+
 public class FXMLController implements Initializable 
 {
     PreviewImage previewimage = new PreviewImage();
     DatabaseQuery dbQuery = new DatabaseQuery();
     ClientEntity clientEntity = new ClientEntity();
     @FXML
+    private Button button_search;
+    
+    @FXML
     private ListView<String> listview_specifications_FiletoUpload,listview_client_FiletoUpload,listview_suppliers_FiletoUpload, 
-            listview_contractors_FiletoUpload;
+            listview_contractors_FiletoUpload,listview_searchrecord_fileshowcase;
     @FXML
     private AnchorPane anchorpane_main,anchorpane_viewdocument;
     @FXML
     private GridPane gridpane_specifications,gridpane_consultants,gridpane_contractors,gridpane_suppliers
-            ,gridpane_client;
+            ,gridpane_client,gridpane_searchrecords;
     @FXML
     private ComboBox<String> combobox_client_industry,combobox_client_type,combobox_suppliers_industry,combobox_suppliers_type
-            ,combobox_contractors_industry,combobox_contractors_classificiation;
+            ,combobox_contractors_industry,combobox_contractors_classificiation,combobox_searchrecords_searchin;
     @FXML
-    private TextField textfield_client_representative,textfield_client_position,textfield_client_companyname;
-    
+    private TextField textfield_client_representative,textfield_client_position,textfield_client_companyname, textfield_searchrecords_keyword;
+    @FXML
+    private TableView<ClientEntity> tableview_searchinrecord;
     @FXML
     void clientOnClicked(ActionEvent event)  throws Exception
     {
@@ -252,6 +262,16 @@ public class FXMLController implements Initializable
     }
     
     @FXML
+    void searchRecordsOnClick(ActionEvent event)
+    {
+        SectionsManager.showPane(anchorpane_main, gridpane_searchrecords);
+    }
+    @FXML
+    void button_searchrecords_showfilesOnClick(ActionEvent event)
+    {
+         
+    }
+    @FXML
     void button_upload(ActionEvent event)
     {
         
@@ -262,8 +282,6 @@ public class FXMLController implements Initializable
             clientEntity.setCompany_Name(textfield_client_companyname.getText().trim());
             clientEntity.setIndustry(combobox_client_industry.getSelectionModel().getSelectedItem());
             clientEntity.setType(combobox_client_type.getSelectionModel().getSelectedItem());
-            dbQuery.SendPostData(clientEntity, "Client");
-            
             if(listview_client_FiletoUpload.getItems().size() > 0)
             {
                 ArrayList<File> temp = new ArrayList<>();
@@ -273,6 +291,11 @@ public class FXMLController implements Initializable
                     temp.add(current);
                 }
                 clientEntity.setFileToUpload(temp);
+                dbQuery.SendPostData(clientEntity, "Client");
+            }
+            else
+            {
+                dbQuery.SendPostData(clientEntity, "Client");
             }
             
             
@@ -308,22 +331,76 @@ public class FXMLController implements Initializable
         return paths;
     }
     
-    
+    @FXML
+    void button_searchrecords_search(ActionEvent event)
+    {
+        ObservableList<ClientEntity> clientObsList = FXCollections.observableArrayList();
+        ArrayList<ClientEntity> clientEntityList = new ArrayList<>();
+        String searchIn = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem();
+        String search = textfield_searchrecords_keyword.getText().trim();
+        clientEntityList = dbQuery.RetrieveImages(search, searchIn);
+        if(tableview_searchinrecord.getColumns().isEmpty())
+        {
+            
+
+            TableColumn objectid = new TableColumn("ObjectID");
+            TableColumn representative = new TableColumn("Representative");
+            TableColumn position = new TableColumn("Position");
+            TableColumn company = new TableColumn("Company");
+            TableColumn industry = new TableColumn("Industry");
+            TableColumn type = new TableColumn("Type");
+
+            tableview_searchinrecord.getColumns().add(objectid);
+            tableview_searchinrecord.getColumns().add(representative);
+            tableview_searchinrecord.getColumns().add(position);
+            tableview_searchinrecord.getColumns().add(company);
+            tableview_searchinrecord.getColumns().add(industry);
+            tableview_searchinrecord.getColumns().add(type);
+
+            objectid.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("ObjectID"));
+            representative.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Representative"));
+            position.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Position"));
+            company.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Company_Name"));
+            industry.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Industry"));
+            type.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Type"));
+            for(ClientEntity CE : clientEntityList)
+            {
+                clientObsList = FXCollections.observableArrayList(
+                    new ClientEntity(CE.getObjectID(), CE.getRepresentative(), CE.getPosition(), CE.getCompany_Name(), CE.getIndustry(), CE.getType()));
+                tableview_searchinrecord.setItems(clientObsList);
+            }
+        }
+        else
+        {
+            for(ClientEntity CE : clientEntityList)
+            {
+                clientObsList = FXCollections.observableArrayList(
+                    new ClientEntity(CE.getObjectID(), CE.getRepresentative(), CE.getPosition(), CE.getCompany_Name(), CE.getIndustry(), CE.getType()));
+                tableview_searchinrecord.setItems(clientObsList);
+            }
+        }
+        
+        
+    }
     
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
-        
         SectionsManager.clearThis(anchorpane_main);
         try
         {
-            combobox_client_industry.setItems(new SortedList<String>(dbQuery.RetrieveComboboxData("Client", "Industry")));
-            combobox_client_type.setItems(new SortedList<String>(dbQuery.RetrieveComboboxData("Client", "Type")));
-            combobox_suppliers_industry.setItems(new SortedList<String>(dbQuery.RetrieveComboboxData("Suppliers", "Industry")));
-            combobox_suppliers_type.setItems(new SortedList<String>(dbQuery.RetrieveComboboxData("Suppliers", "Type")));
-            combobox_contractors_industry.setItems(new SortedList<String>(dbQuery.RetrieveComboboxData("Contractors", "Industry")));
-            combobox_contractors_classificiation.setItems(new SortedList<String>(dbQuery.RetrieveComboboxData("Contractors", "Classification")));
-        }catch(Exception ex)
+        
+            
+            
+            combobox_client_industry.setItems(new SortedList<String>(dbQuery.RetrieveComboboxData("Client", "Industry"), Collator.getInstance()));
+            combobox_client_type.setItems(new SortedList<String>(dbQuery.RetrieveComboboxData("Client", "Type"), Collator.getInstance()));
+            combobox_suppliers_industry.setItems(new SortedList<String>(dbQuery.RetrieveComboboxData("Suppliers", "Industry"), Collator.getInstance()));
+            combobox_suppliers_type.setItems(new SortedList<String>(dbQuery.RetrieveComboboxData("Suppliers", "Type"), Collator.getInstance()));
+            combobox_contractors_industry.setItems(new SortedList<String>(dbQuery.RetrieveComboboxData("Contractors", "Industry"), Collator.getInstance()));
+            combobox_contractors_classificiation.setItems(new SortedList<String>(dbQuery.RetrieveComboboxData("Contractors", "Classification"), Collator.getInstance()));
+            combobox_searchrecords_searchin.setItems(new SortedList<String>(dbQuery.RetrieveComboboxDataCategories(), Collator.getInstance()));
+        }
+        catch(Exception ex)
         {
             ex.printStackTrace();
         }
@@ -332,5 +409,6 @@ public class FXMLController implements Initializable
         gridpane_suppliers.setVisible(true);
         gridpane_contractors.setVisible(true);
         gridpane_specifications.setVisible(true);
+        gridpane_searchrecords.setVisible(true);
     }    
 }

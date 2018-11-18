@@ -18,11 +18,13 @@ public class PreviewImage
     public ImageView showImage(String path)
     {
         File file = new File(path);
+        
         Image image = new Image(file.toURI().toString());
         ImageView imageContainer = new ImageView();
         imageContainer.setFitWidth(360);
         imageContainer.setFitHeight(250);
         imageContainer.setImage(image);
+        
         return imageContainer;
     }
 }

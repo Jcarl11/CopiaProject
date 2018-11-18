@@ -9,6 +9,7 @@ import java.util.ArrayList;
  */
 public class ClientEntity 
 {
+    private String ObjectID;
     private String Representative;
     private String Position;
     private String Company_Name;
@@ -16,6 +17,18 @@ public class ClientEntity
     private String Type;
     private ArrayList<File> fileToUpload;
 
+    public ClientEntity(String ObjectID, String Representative, String Position, String Company_Name, String Industry, String Type) {
+        this.ObjectID = ObjectID;
+        this.Representative = Representative;
+        this.Position = Position;
+        this.Company_Name = Company_Name;
+        this.Industry = Industry;
+        this.Type = Type;
+    }
+    
+    public ClientEntity(){}
+    
+            
     public ArrayList<File> getFileToUpload() {
         return fileToUpload;
     }
@@ -24,6 +37,14 @@ public class ClientEntity
         this.fileToUpload = fileToUpload;
     }
 
+    public void setObjectID(String ObjectID) {
+        this.ObjectID = ObjectID;
+    }
+    
+    public String getObjectID() {
+        return ObjectID;
+    }
+    
     public String getRepresentative() {
         return Representative;
     }
