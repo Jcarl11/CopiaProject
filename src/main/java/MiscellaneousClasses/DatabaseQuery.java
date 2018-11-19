@@ -3,9 +3,15 @@ package MiscellaneousClasses;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javax.swing.JOptionPane;
 import org.parse4j.ParseException;
 import org.parse4j.ParseFile;
@@ -20,6 +26,7 @@ import org.parse4j.callback.SaveCallback;
  */
 public class DatabaseQuery 
 {
+    
     public DatabaseQuery(){}
     
     public ObservableList<String> RetrieveComboboxData(String category, String field) throws Exception
@@ -131,73 +138,107 @@ public class DatabaseQuery
     
     public ArrayList<ClientEntity> RetrieveImages(String searchData, String categoryClass)
     {
+        
         final ArrayList<ClientEntity> cliententityList = new ArrayList<>();
-        final ClientEntity cliententity = new ClientEntity();
+        
         try
         {
             final ParseQuery<ParseObject> client = ParseQuery.getQuery(categoryClass);
-            //client.whereEqualTo("Representative", searchData);
+            /*List<String> parameters = new ArrayList<>();
+            parameters.add("Joey");
+            parameters.add("Ese");
+            client.whereContainedIn("Representative", Arrays.asList(parameters));*/
             client.whereContains("Representative", searchData);
             List<ParseObject> list = client.find();
-            for(ParseObject po : list)
+            if(list != null)
             {
-                cliententity.setObjectID(po.getObjectId());
-                cliententity.setRepresentative(po.getString("Representative"));
-                cliententity.setPosition(po.getString("Position"));
-                cliententity.setCompany_Name(po.getString("Company"));
-                cliententity.setIndustry(po.getString("Industry"));
-                cliententity.setType(po.getString("Type"));
-                cliententityList.add(cliententity);
+                for(ParseObject po : list)
+                {
+                    ClientEntity cliententity = new ClientEntity();
+                    cliententity.setObjectID(po.getObjectId());
+                    cliententity.setRepresentative(po.getString("Representative"));
+                    cliententity.setPosition(po.getString("Position"));
+                    cliententity.setCompany_Name(po.getString("Company"));
+                    cliententity.setIndustry(po.getString("Industry"));
+                    cliententity.setType(po.getString("Type"));
+
+                    cliententityList.add(cliententity);
+                } 
+            }
+            else
+            {
+                System.out.println("Something went wrong");
             }
             /*client.findInBackground(new FindCallback<ParseObject>() 
             {
                 @Override
                 public void done(List<ParseObject> list, ParseException parseException) 
                 {
-                    if(parseException == null && list != null)
+                    if(list != null)
                     {
                         for(ParseObject po : list)
                         {
+                            ClientEntity cliententity = new ClientEntity();
                             cliententity.setObjectID(po.getObjectId());
                             cliententity.setRepresentative(po.getString("Representative"));
                             cliententity.setPosition(po.getString("Position"));
                             cliententity.setCompany_Name(po.getString("Company"));
                             cliententity.setIndustry(po.getString("Industry"));
                             cliententity.setType(po.getString("Type"));
-                            ParseQuery<ParseObject> clientSearch = ParseQuery.getQuery("Images");
-                            clientSearch.include("ClientPointer");
-                            clientSearch.whereMatchesQuery("ClientPointer", client);
-                            clientSearch.findInBackground(new FindCallback<ParseObject>() 
-                            {
-                                @Override
-                                public void done(List<ParseObject> list, ParseException parseException) 
-                                {
-                                    if(parseException == null && list != null)
-                                    {
-                                        for(ParseObject mylist : list)
-                                        {
-
-                                            ParseFile myFile = mylist.getParseFile("Image");
-                                         
-                                        }
-                                    }
-                                    else
-                                    {
-                                        JOptionPane.showMessageDialog(null, "Something went wrong");
-                                    }
-
-                                }
-                            });
-                        }
-                        
+                            
+                            cliententityList.add(cliententity);
+                        } 
+                    }
+                    else
+                    {
+                        System.out.println("Something went wrong");
                     }
                 }
             });*/
-            
         }catch(Exception ex)
         {
             ex.printStackTrace();
         }
+
         return cliententityList;
+    }
+    
+    public void RetrieveAssociatedFiles(String id, final ListView files)
+    {
+        final ParseQuery<ParseObject> query = ParseQuery.getQuery("Client");
+        query.whereEqualTo("objectId", id);
+        query.findInBackground(new FindCallback<ParseObject>() 
+        {
+            @Override
+            public void done(List<ParseObject> list, ParseException parseException) 
+            {
+                if(parseException == null && list != null)
+                {
+                    ParseQuery<ParseObject> query2 = ParseQuery.getQuery("Images");
+                    query2.include("ClientPointer");
+                    query2.whereMatchesQuery("ClientPointer", query);
+                    query2.findInBackground(new FindCallback<ParseObject>() 
+                    {
+                        @Override
+                        public void done(List<ParseObject> list, ParseException parseException) 
+                        {
+                            if(parseException == null && list != null)
+                            {
+                                for(ParseObject mylist : list)
+                                {
+                                    ParseFile file = mylist.getParseFile("Image");
+                                    System.out.println(file.getName());
+                                    files.getItems().add(file.getName());
+                                }
+                            }
+                            else
+                            {
+                                files.getItems().add("Something went wrong");
+                            }
+                        }
+                    });
+                }
+            }
+        });
     }
 }

@@ -6,11 +6,16 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -26,6 +31,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.apache.commons.io.FilenameUtils;
 import org.parse4j.*;
+import org.parse4j.callback.FindCallback;
 
 public class FXMLController implements Initializable 
 {
@@ -269,7 +275,8 @@ public class FXMLController implements Initializable
     @FXML
     void button_searchrecords_showfilesOnClick(ActionEvent event)
     {
-         
+        String objId = tableview_searchinrecord.getSelectionModel().getSelectedItem().getObjectID();
+        dbQuery.RetrieveAssociatedFiles(objId, listview_searchrecord_fileshowcase);
     }
     @FXML
     void button_upload(ActionEvent event)
@@ -339,48 +346,61 @@ public class FXMLController implements Initializable
         String searchIn = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem();
         String search = textfield_searchrecords_keyword.getText().trim();
         clientEntityList = dbQuery.RetrieveImages(search, searchIn);
+        
+        
+        System.out.println(clientEntityList);
+        initializeTable();
         if(tableview_searchinrecord.getColumns().isEmpty())
         {
-            
-
-            TableColumn objectid = new TableColumn("ObjectID");
-            TableColumn representative = new TableColumn("Representative");
-            TableColumn position = new TableColumn("Position");
-            TableColumn company = new TableColumn("Company");
-            TableColumn industry = new TableColumn("Industry");
-            TableColumn type = new TableColumn("Type");
-
-            tableview_searchinrecord.getColumns().add(objectid);
-            tableview_searchinrecord.getColumns().add(representative);
-            tableview_searchinrecord.getColumns().add(position);
-            tableview_searchinrecord.getColumns().add(company);
-            tableview_searchinrecord.getColumns().add(industry);
-            tableview_searchinrecord.getColumns().add(type);
-
-            objectid.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("ObjectID"));
-            representative.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Representative"));
-            position.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Position"));
-            company.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Company_Name"));
-            industry.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Industry"));
-            type.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Type"));
+            initializeTable();
             for(ClientEntity CE : clientEntityList)
             {
-                clientObsList = FXCollections.observableArrayList(
-                    new ClientEntity(CE.getObjectID(), CE.getRepresentative(), CE.getPosition(), CE.getCompany_Name(), CE.getIndustry(), CE.getType()));
-                tableview_searchinrecord.setItems(clientObsList);
+                /*clientObsList = FXCollections.observableArrayList(
+                    new ClientEntity(CE.getObjectID(), CE.getRepresentative(), CE.getPosition(), CE.getCompany_Name(), CE.getIndustry(), CE.getType()));*/
+                //tableview_searchinrecord.setItems(clientObsList);
+                tableview_searchinrecord.getItems().addAll(clientEntityList);
             }
         }
         else
         {
             for(ClientEntity CE : clientEntityList)
             {
-                clientObsList = FXCollections.observableArrayList(
-                    new ClientEntity(CE.getObjectID(), CE.getRepresentative(), CE.getPosition(), CE.getCompany_Name(), CE.getIndustry(), CE.getType()));
-                tableview_searchinrecord.setItems(clientObsList);
+                /*clientObsList = FXCollections.observableArrayList(
+                    new ClientEntity(CE.getObjectID(), CE.getRepresentative(), CE.getPosition(), CE.getCompany_Name(), CE.getIndustry(), CE.getType()));*/
+                //tableview_searchinrecord.setItems(clientObsList);
+                tableview_searchinrecord.getItems().addAll(clientEntityList);
             }
         }
         
         
+        
+        
+        
+        
+    }
+    
+    public void initializeTable()
+    {
+        TableColumn objectid = new TableColumn("ObjectID");
+        TableColumn representative = new TableColumn("Representative");
+        TableColumn position = new TableColumn("Position");
+        TableColumn company = new TableColumn("Company");
+        TableColumn industry = new TableColumn("Industry");
+        TableColumn type = new TableColumn("Type");
+
+        tableview_searchinrecord.getColumns().add(objectid);
+        tableview_searchinrecord.getColumns().add(representative);
+        tableview_searchinrecord.getColumns().add(position);
+        tableview_searchinrecord.getColumns().add(company);
+        tableview_searchinrecord.getColumns().add(industry);
+        tableview_searchinrecord.getColumns().add(type);
+
+        objectid.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("ObjectID"));
+        representative.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Representative"));
+        position.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Position"));
+        company.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Company_Name"));
+        industry.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Industry"));
+        type.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Type"));
     }
     
     @Override
@@ -389,9 +409,6 @@ public class FXMLController implements Initializable
         SectionsManager.clearThis(anchorpane_main);
         try
         {
-        
-            
-            
             combobox_client_industry.setItems(new SortedList<String>(dbQuery.RetrieveComboboxData("Client", "Industry"), Collator.getInstance()));
             combobox_client_type.setItems(new SortedList<String>(dbQuery.RetrieveComboboxData("Client", "Type"), Collator.getInstance()));
             combobox_suppliers_industry.setItems(new SortedList<String>(dbQuery.RetrieveComboboxData("Suppliers", "Industry"), Collator.getInstance()));
