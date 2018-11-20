@@ -38,6 +38,7 @@ public class FXMLController implements Initializable
     PreviewImage previewimage = new PreviewImage();
     DatabaseQuery dbQuery = new DatabaseQuery();
     ClientEntity clientEntity = new ClientEntity();
+    Object i = new Object();
     @FXML
     private Button button_search;
     
@@ -345,38 +346,20 @@ public class FXMLController implements Initializable
         ArrayList<ClientEntity> clientEntityList = new ArrayList<>();
         String searchIn = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem();
         String search = textfield_searchrecords_keyword.getText().trim();
-        clientEntityList = dbQuery.RetrieveImages(search, searchIn);
+        RetrieveValues ret = new RetrieveValues(search, searchIn);
         
-        
-        System.out.println(clientEntityList);
+        Thread thread = new Thread(ret);
+        thread.start();
+        try{thread.join();}catch(Exception ex){ex.printStackTrace();}
+        clientEntityList = ret.getResult();
         initializeTable();
-        if(tableview_searchinrecord.getColumns().isEmpty())
-        {
+        if(tableview_searchinrecord.getColumns().isEmpty()){
             initializeTable();
-            for(ClientEntity CE : clientEntityList)
-            {
-                /*clientObsList = FXCollections.observableArrayList(
-                    new ClientEntity(CE.getObjectID(), CE.getRepresentative(), CE.getPosition(), CE.getCompany_Name(), CE.getIndustry(), CE.getType()));*/
-                //tableview_searchinrecord.setItems(clientObsList);
-                tableview_searchinrecord.getItems().addAll(clientEntityList);
-            }
+            tableview_searchinrecord.getItems().addAll(clientEntityList);
         }
-        else
-        {
-            for(ClientEntity CE : clientEntityList)
-            {
-                /*clientObsList = FXCollections.observableArrayList(
-                    new ClientEntity(CE.getObjectID(), CE.getRepresentative(), CE.getPosition(), CE.getCompany_Name(), CE.getIndustry(), CE.getType()));*/
-                //tableview_searchinrecord.setItems(clientObsList);
-                tableview_searchinrecord.getItems().addAll(clientEntityList);
-            }
+        else{
+            tableview_searchinrecord.getItems().addAll(clientEntityList);
         }
-        
-        
-        
-        
-        
-        
     }
     
     public void initializeTable()

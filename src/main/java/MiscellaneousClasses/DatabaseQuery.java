@@ -135,80 +135,14 @@ public class DatabaseQuery
             }
         });
     }
-    
-    public ArrayList<ClientEntity> RetrieveImages(String searchData, String categoryClass)
-    {
-        
-        final ArrayList<ClientEntity> cliententityList = new ArrayList<>();
-        
-        try
-        {
-            final ParseQuery<ParseObject> client = ParseQuery.getQuery(categoryClass);
-            /*List<String> parameters = new ArrayList<>();
-            parameters.add("Joey");
-            parameters.add("Ese");
-            client.whereContainedIn("Representative", Arrays.asList(parameters));*/
-            client.whereContains("Representative", searchData);
-            List<ParseObject> list = client.find();
-            if(list != null)
-            {
-                for(ParseObject po : list)
-                {
-                    ClientEntity cliententity = new ClientEntity();
-                    cliententity.setObjectID(po.getObjectId());
-                    cliententity.setRepresentative(po.getString("Representative"));
-                    cliententity.setPosition(po.getString("Position"));
-                    cliententity.setCompany_Name(po.getString("Company"));
-                    cliententity.setIndustry(po.getString("Industry"));
-                    cliententity.setType(po.getString("Type"));
-
-                    cliententityList.add(cliententity);
-                } 
-            }
-            else
-            {
-                System.out.println("Something went wrong");
-            }
-            /*client.findInBackground(new FindCallback<ParseObject>() 
-            {
-                @Override
-                public void done(List<ParseObject> list, ParseException parseException) 
-                {
-                    if(list != null)
-                    {
-                        for(ParseObject po : list)
-                        {
-                            ClientEntity cliententity = new ClientEntity();
-                            cliententity.setObjectID(po.getObjectId());
-                            cliententity.setRepresentative(po.getString("Representative"));
-                            cliententity.setPosition(po.getString("Position"));
-                            cliententity.setCompany_Name(po.getString("Company"));
-                            cliententity.setIndustry(po.getString("Industry"));
-                            cliententity.setType(po.getString("Type"));
-                            
-                            cliententityList.add(cliententity);
-                        } 
-                    }
-                    else
-                    {
-                        System.out.println("Something went wrong");
-                    }
-                }
-            });*/
-        }catch(Exception ex)
-        {
-            ex.printStackTrace();
-        }
-
-        return cliententityList;
-    }
-    
+ 
     public void RetrieveAssociatedFiles(String id, final ListView files)
     {
         final ParseQuery<ParseObject> query = ParseQuery.getQuery("Client");
         query.whereEqualTo("objectId", id);
         query.findInBackground(new FindCallback<ParseObject>() 
         {
+            
             @Override
             public void done(List<ParseObject> list, ParseException parseException) 
             {
@@ -240,5 +174,6 @@ public class DatabaseQuery
                 }
             }
         });
+        
     }
 }
