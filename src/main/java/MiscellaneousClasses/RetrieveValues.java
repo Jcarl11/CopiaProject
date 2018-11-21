@@ -1,13 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package MiscellaneousClasses;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javax.swing.JOptionPane;
 import org.parse4j.*;
 import org.parse4j.callback.FindCallback;
 
@@ -43,11 +39,12 @@ public class RetrieveValues extends Thread
             try
             {
                 final ParseQuery<ParseObject> client = ParseQuery.getQuery(searchClass);
-           
                 ArrayList<String> parameters = new ArrayList<String>();
-                parameters.add("Juan");
-                parameters.add("Janitor");
-                parameters.add("Juan Dela Cruz");
+                String[] getValues = searchData.toUpperCase().split(",");
+                for(String values : getValues)
+                {
+                    parameters.add(values);
+                }
                 client.whereContainedIn("Tags", Arrays.asList(parameters));
                 if(iterations <= 0)
                 {
@@ -73,7 +70,7 @@ public class RetrieveValues extends Thread
                             }
                             else
                             {
-                                System.out.println("Something went wrong");
+                                JOptionPane.showMessageDialog(null, "No records found");
                                 terminate();
                             }
                         }

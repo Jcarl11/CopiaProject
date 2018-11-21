@@ -3,7 +3,6 @@ package com.carlo.copiaproject;
 import MiscellaneousClasses.*;
 import java.io.File;
 import java.net.URL;
-import java.nio.file.Files;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,10 +11,7 @@ import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
-import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -276,20 +272,36 @@ public class FXMLController implements Initializable
     @FXML
     void button_searchrecords_showfilesOnClick(ActionEvent event)
     {
+        listview_searchrecord_fileshowcase.getItems().clear();
         String objId = tableview_searchinrecord.getSelectionModel().getSelectedItem().getObjectID();
-        dbQuery.RetrieveAssociatedFiles(objId, listview_searchrecord_fileshowcase);
+        //dbQuery.RetrieveAssociatedFiles(objId, listview_searchrecord_fileshowcase);
+        RetrieveAssociatedFiles raf = new RetrieveAssociatedFiles(objId);
+        Thread thread = new Thread(raf);
+        thread.start();
+        try{thread.join();}catch(Exception ex){ex.printStackTrace();}
+        ArrayList<String> result = raf.getResult();
+        if(result.size() > 0)
+        {
+            listview_searchrecord_fileshowcase.getItems().clear();
+            listview_searchrecord_fileshowcase.getItems().addAll(result);
+        }
+        else
+        {
+            listview_searchrecord_fileshowcase.getItems().clear();
+            JOptionPane.showMessageDialog(null, "No Files found");
+        }
     }
     @FXML
     void button_upload(ActionEvent event)
     {
-        
         try
         {
-            clientEntity.setRepresentative(textfield_client_representative.getText().trim());
-            clientEntity.setPosition(textfield_client_position.getText().trim());
-            clientEntity.setCompany_Name(textfield_client_companyname.getText().trim());
-            clientEntity.setIndustry(combobox_client_industry.getSelectionModel().getSelectedItem());
-            clientEntity.setType(combobox_client_type.getSelectionModel().getSelectedItem());
+            clientEntity.setRepresentative(textfield_client_representative.getText().trim().toUpperCase());
+            clientEntity.setPosition(textfield_client_position.getText().trim().toUpperCase());
+            clientEntity.setCompany_Name(textfield_client_companyname.getText().trim().toUpperCase());
+            clientEntity.setIndustry(combobox_client_industry.getSelectionModel().getSelectedItem().toUpperCase());
+            clientEntity.setType(combobox_client_type.getSelectionModel().getSelectedItem().toUpperCase());
+            
             if(listview_client_FiletoUpload.getItems().size() > 0)
             {
                 ArrayList<File> temp = new ArrayList<>();
@@ -299,11 +311,33 @@ public class FXMLController implements Initializable
                     temp.add(current);
                 }
                 clientEntity.setFileToUpload(temp);
-                dbQuery.SendPostData(clientEntity, "Client");
+                SendPost sendPost = new SendPost(clientEntity, "Client");
+                Thread sendPostThread = new Thread(sendPost);
+                sendPostThread.start();
+                try{sendPostThread.join();}catch(Exception ex){ex.printStackTrace();}
+                if(sendPost.getResult() == "Successful")
+                {
+                    JOptionPane.showMessageDialog(null, "Successful");
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(null, "Upload failed");
+                }
             }
             else
             {
-                dbQuery.SendPostData(clientEntity, "Client");
+                SendPost sendPost = new SendPost(clientEntity, "Client");
+                Thread sendPostThread = new Thread(sendPost);
+                sendPostThread.start();
+                try{sendPostThread.join();}catch(Exception ex){ex.printStackTrace();}
+                if(sendPost.getResult() == "Successful")
+                {
+                    JOptionPane.showMessageDialog(null, "Successful");
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(null, "Upload failed");
+                }
             }
             
             
@@ -312,7 +346,6 @@ public class FXMLController implements Initializable
         {
             ex.printStackTrace();
         }
-        
     }
     
     @FXML
@@ -347,17 +380,18 @@ public class FXMLController implements Initializable
         String searchIn = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem();
         String search = textfield_searchrecords_keyword.getText().trim();
         RetrieveValues ret = new RetrieveValues(search, searchIn);
-        
         Thread thread = new Thread(ret);
         thread.start();
         try{thread.join();}catch(Exception ex){ex.printStackTrace();}
         clientEntityList = ret.getResult();
-        initializeTable();
-        if(tableview_searchinrecord.getColumns().isEmpty()){
+        if(tableview_searchinrecord.getColumns().isEmpty())
+        {
             initializeTable();
             tableview_searchinrecord.getItems().addAll(clientEntityList);
         }
-        else{
+        else
+        {
+            tableview_searchinrecord.getItems().clear();
             tableview_searchinrecord.getItems().addAll(clientEntityList);
         }
     }
