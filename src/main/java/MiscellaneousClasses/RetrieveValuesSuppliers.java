@@ -4,51 +4,54 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.JOptionPane;
-import org.parse4j.*;
+import org.parse4j.ParseException;
+import org.parse4j.ParseObject;
+import org.parse4j.ParseQuery;
 import org.parse4j.callback.FindCallback;
 
 /**
  *
- * @author Windows
+ * @author Joey Francisco
  */
-public class RetrieveValues extends Thread
+public class RetrieveValuesSuppliers extends Thread
 {
     volatile boolean running = true;
     volatile int iterations = 0;
     private String searchData;
     private String searchClass;
-    final ArrayList<ClientEntity> cliententityList = new ArrayList<>();
-    public RetrieveValues(String searchData, String searchClass)
+    final ArrayList<SuppliersEntity> suppliersEntity = new ArrayList<>();
+    public RetrieveValuesSuppliers(String searchData, String searchClass)
     {
         this.searchData = searchData;
         this.searchClass = searchClass;
     }
-    public ArrayList<ClientEntity> getResult()
+    public ArrayList<SuppliersEntity> getResult()
     {
-        return cliententityList;
+        return suppliersEntity;
     }
     public void terminate()
     {
         running = false;
     }
+    
     @Override
-    public void run() 
+    public void run()
     {
         while(running)
         {
             try
             {
-                final ParseQuery<ParseObject> client = ParseQuery.getQuery(searchClass);
+                final ParseQuery<ParseObject> suppliers = ParseQuery.getQuery(searchClass);
                 ArrayList<String> parameters = new ArrayList<String>();
                 String[] getValues = searchData.toUpperCase().split(",");
                 for(String values : getValues)
                 {
                     parameters.add(values);
                 }
-                client.whereContainedIn("Tags", Arrays.asList(parameters));
+                suppliers.whereContainedIn("Tags", Arrays.asList(parameters));
                 if(iterations <= 0)
                 {
-                    client.findInBackground(new FindCallback<ParseObject>() 
+                    suppliers.findInBackground(new FindCallback<ParseObject>() 
                     {
                         @Override
                         public void done(List<ParseObject> list, ParseException parseException) 
@@ -57,18 +60,15 @@ public class RetrieveValues extends Thread
                             {
                                 for(ParseObject po : list)
                                 {
-                                    ClientEntity cliententity = new ClientEntity();
-                                    cliententity.setObjectID(po.getObjectId());
-                                    cliententity.setRepresentative(po.getString("Representative"));
-                                    cliententity.setPosition(po.getString("Position"));
-                                    cliententity.setCompany_Name(po.getString("Company"));
-                                    if(searchClass == "Suppliers")
-                                    {
-                                        cliententity.setBrand(po.getString("Brand"));
-                                    }
-                                    cliententity.setIndustry(po.getString("Industry"));
-                                    cliententity.setType(po.getString("Type"));
-                                    cliententityList.add(cliententity);
+                                    SuppliersEntity suppliersentity = new SuppliersEntity();
+                                    suppliersentity.setObjectID(po.getObjectId());
+                                    suppliersentity.setRepresentative(po.getString("Representative"));
+                                    suppliersentity.setPosition(po.getString("Position"));
+                                    suppliersentity.setCompany_Name(po.getString("Company"));
+                                    suppliersentity.setBrand(po.getString("Brand"));
+                                    suppliersentity.setIndustry(po.getString("Industry"));
+                                    suppliersentity.setType(po.getString("Type"));
+                                    suppliersEntity.add(suppliersentity);
                                 } 
                                 terminate();
                             }

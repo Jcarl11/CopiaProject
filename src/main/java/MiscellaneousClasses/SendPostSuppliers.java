@@ -14,18 +14,18 @@ import org.parse4j.callback.SaveCallback;
  *
  * @author Joey Francisco
  */
-public class SendPost extends Thread
+public class SendPostSuppliers extends Thread
 {
-    ClientEntity client;
+    SuppliersEntity suppliersEntity;
     ParseObject obj;
     ArrayList<String> tags;
     String result = null;
     volatile boolean running = true;
     volatile int iterations = 0;
     
-    public SendPost(ClientEntity client, String dataClass)
+    public SendPostSuppliers(SuppliersEntity suppliers, String dataClass)
     {
-        this.client = client;
+        this.suppliersEntity = suppliers;
         obj = new ParseObject(dataClass);
         tags = new ArrayList<>();
     }    
@@ -44,11 +44,12 @@ public class SendPost extends Thread
         {
             if(iterations <= 0)
             {
-                obj.put("Representative", client.getRepresentative());
-                obj.put("Position", client.getPosition());
-                obj.put("Company", client.getCompany_Name());
-                obj.put("Industry", client.getIndustry());
-                obj.put("Type", client.getType());
+                obj.put("Representative", suppliersEntity.getRepresentative());
+                obj.put("Position", suppliersEntity.getPosition());
+                obj.put("Company_Name", suppliersEntity.getCompany_Name());
+                obj.put("Brand", suppliersEntity.getBrand());
+                obj.put("Industry", suppliersEntity.getIndustry());
+                obj.put("Type", suppliersEntity.getType());
                 obj.put("Tags", new JSONArray(extractStringsToTags()));
                 obj.saveInBackground(new SaveCallback() 
                 {
@@ -57,11 +58,11 @@ public class SendPost extends Thread
                     {
                         if(parseException == null)
                         {
-                            if(client.getFileToUpload() != null)
+                            if(suppliersEntity.getFileToUpload() != null)
                             {
                                 try
                                 {
-                                    for(final File individual : client.getFileToUpload() )
+                                    for(final File individual : suppliersEntity.getFileToUpload() )
                                     {
                                         final ParseFile fileobj = new ParseFile(individual.getName(), Files.readAllBytes(individual.toPath()));
                                         fileobj.saveInBackground(new SaveCallback() 
@@ -74,7 +75,7 @@ public class SendPost extends Thread
                                                     ParseObject PO = new ParseObject("Images");
                                                     PO.put("ImageName", individual.getName());
                                                     PO.put("Image", fileobj);
-                                                    PO.put("ClientPointer", obj);
+                                                    PO.put("SuppliersPointer", obj);
                                                     PO.saveInBackground(new SaveCallback() 
                                                     {
                                                         @Override
@@ -125,14 +126,16 @@ public class SendPost extends Thread
     private ArrayList<String> extractStringsToTags()
     {
         ArrayList<String> tags = new ArrayList<>();
-        tags.add(client.getRepresentative());
-        tags.add(client.getPosition());
-        tags.add(client.getCompany_Name());
-        tags.add(client.getIndustry());
-        tags.add(client.getType());
-        String[] representativeSplit = client.getRepresentative().split("\\s+");
-        String[] positionSplit = client.getPosition().split("\\s+");
-        String[] companySplit = client.getCompany_Name().split("\\s+");
+        tags.add(suppliersEntity.getRepresentative());
+        tags.add(suppliersEntity.getPosition());
+        tags.add(suppliersEntity.getCompany_Name());
+        tags.add(suppliersEntity.getBrand());
+        tags.add(suppliersEntity.getIndustry());
+        tags.add(suppliersEntity.getType());
+        String[] representativeSplit = suppliersEntity.getRepresentative().split("\\s+");
+        String[] positionSplit = suppliersEntity.getPosition().split("\\s+");
+        String[] companySplit = suppliersEntity.getCompany_Name().split("\\s+");
+        String[] brandSplit = suppliersEntity.getBrand().split("\\s+");
         for(String values : representativeSplit)
         {
             tags.add(values.toUpperCase());
@@ -145,9 +148,10 @@ public class SendPost extends Thread
         {
             tags.add(values.toUpperCase());
         }
+        for(String values : brandSplit)
+        {
+            tags.add(values.toUpperCase());
+        }
         return tags;
     }
-    
-    
-    
 }

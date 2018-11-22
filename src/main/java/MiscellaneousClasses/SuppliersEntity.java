@@ -7,7 +7,7 @@ import java.util.ArrayList;
  *
  * @author Joey Francisco
  */
-public class ClientEntity 
+public class SuppliersEntity 
 {
     private String ObjectID;
     private String Representative;
@@ -18,7 +18,7 @@ public class ClientEntity
     private String Type;
     private ArrayList<File> fileToUpload;
 
-    public ClientEntity(String ObjectID, String Representative, String Position, String Company_Name, String Brand,String Industry, String Type) {
+    public SuppliersEntity(String ObjectID, String Representative, String Position, String Company_Name, String Brand,String Industry, String Type) {
         this.ObjectID = ObjectID;
         this.Representative = Representative;
         this.Position = Position;
@@ -27,17 +27,8 @@ public class ClientEntity
         this.Industry = Industry;
         this.Type = Type;
     }
-    public ClientEntity(){}
-
-    public String getBrand() {
-        return Brand;
-    }
-
-    public void setBrand(String Brand) {
-        this.Brand = Brand;
-    }
     
-    
+    public SuppliersEntity(){}
     
             
     public ArrayList<File> getFileToUpload() {
@@ -79,6 +70,14 @@ public class ClientEntity
     public void setCompany_Name(String Company_Name) {
         this.Company_Name = Company_Name;
     }
+    
+    public String getBrand() {
+        return Brand;
+    }
+
+    public void setBrand(String Brand) {
+        this.Brand = Brand;
+    }
 
     public String getIndustry() {
         return Industry;
@@ -95,7 +94,4 @@ public class ClientEntity
     public void setType(String Type) {
         this.Type = Type;
     }
-    
-       
-    
 }

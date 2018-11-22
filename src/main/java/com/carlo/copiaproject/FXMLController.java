@@ -1,6 +1,8 @@
 package com.carlo.copiaproject;
 
 import MiscellaneousClasses.*;
+import UploadProcess.ClientUpload;
+import UploadProcess.SuppliersUpload;
 import java.io.File;
 import java.net.URL;
 import java.text.Collator;
@@ -34,6 +36,7 @@ public class FXMLController implements Initializable
     PreviewImage previewimage = new PreviewImage();
     DatabaseQuery dbQuery = new DatabaseQuery();
     ClientEntity clientEntity = new ClientEntity();
+    SuppliersEntity suppliersEntity = new SuppliersEntity();
     Object i = new Object();
     @FXML
     private Button button_search;
@@ -50,7 +53,8 @@ public class FXMLController implements Initializable
     private ComboBox<String> combobox_client_industry,combobox_client_type,combobox_suppliers_industry,combobox_suppliers_type
             ,combobox_contractors_industry,combobox_contractors_classificiation,combobox_searchrecords_searchin;
     @FXML
-    private TextField textfield_client_representative,textfield_client_position,textfield_client_companyname, textfield_searchrecords_keyword;
+    private TextField textfield_client_representative,textfield_client_position,textfield_client_companyname, textfield_searchrecords_keyword
+            ,textfield_suppliers_representative,textfield_suppliers_position,textfield_suppliers_companyname,textfield_suppliers_brand;
     @FXML
     private TableView<ClientEntity> tableview_searchinrecord;
     @FXML
@@ -296,52 +300,44 @@ public class FXMLController implements Initializable
     {
         try
         {
+            
+        if(anchorpane_main.getChildren().contains(gridpane_client))
+        {
             clientEntity.setRepresentative(textfield_client_representative.getText().trim().toUpperCase());
             clientEntity.setPosition(textfield_client_position.getText().trim().toUpperCase());
             clientEntity.setCompany_Name(textfield_client_companyname.getText().trim().toUpperCase());
             clientEntity.setIndustry(combobox_client_industry.getSelectionModel().getSelectedItem().toUpperCase());
-            clientEntity.setType(combobox_client_type.getSelectionModel().getSelectedItem().toUpperCase());
-            
+            clientEntity.setType(combobox_client_type.getSelectionModel().getSelectedItem());
             if(listview_client_FiletoUpload.getItems().size() > 0)
             {
-                ArrayList<File> temp = new ArrayList<>();
-                for(int x = 0; x < listview_client_FiletoUpload.getItems().size(); x++)
+                ArrayList<File> files = new ArrayList<>();
+                for(int counter = 0; counter < listview_client_FiletoUpload.getItems().size(); counter++)
                 {
-                    File current = new File(listview_client_FiletoUpload.getItems().get(x));
-                    temp.add(current);
-                }
-                clientEntity.setFileToUpload(temp);
-                SendPost sendPost = new SendPost(clientEntity, "Client");
-                Thread sendPostThread = new Thread(sendPost);
-                sendPostThread.start();
-                try{sendPostThread.join();}catch(Exception ex){ex.printStackTrace();}
-                if(sendPost.getResult() == "Successful")
-                {
-                    JOptionPane.showMessageDialog(null, "Successful");
-                }
-                else
-                {
-                    JOptionPane.showMessageDialog(null, "Upload failed");
+                    files.add(new File(listview_client_FiletoUpload.getItems().get(counter)));
                 }
             }
-            else
+            ClientUpload clientUpload = new ClientUpload(clientEntity);
+            clientUpload.upload();
+        }
+        else if(anchorpane_main.getChildren().contains(gridpane_suppliers))
+        {
+            suppliersEntity.setRepresentative(textfield_suppliers_representative.getText().trim().toUpperCase());
+            suppliersEntity.setPosition(textfield_suppliers_position.getText().trim().toUpperCase());
+            suppliersEntity.setCompany_Name(textfield_suppliers_companyname.getText().trim().toUpperCase());
+            suppliersEntity.setBrand(textfield_suppliers_brand.getText().trim().toUpperCase());
+            suppliersEntity.setIndustry(combobox_suppliers_industry.getSelectionModel().getSelectedItem().toUpperCase());
+            suppliersEntity.setType(combobox_suppliers_type.getSelectionModel().getSelectedItem().toUpperCase());
+            if(listview_suppliers_FiletoUpload.getItems().size() > 0)
             {
-                SendPost sendPost = new SendPost(clientEntity, "Client");
-                Thread sendPostThread = new Thread(sendPost);
-                sendPostThread.start();
-                try{sendPostThread.join();}catch(Exception ex){ex.printStackTrace();}
-                if(sendPost.getResult() == "Successful")
+                ArrayList<File> files = new ArrayList<>();
+                for(int counter = 0; counter < listview_suppliers_FiletoUpload.getItems().size(); counter++)
                 {
-                    JOptionPane.showMessageDialog(null, "Successful");
-                }
-                else
-                {
-                    JOptionPane.showMessageDialog(null, "Upload failed");
+                    files.add(new File(listview_suppliers_FiletoUpload.getItems().get(counter)));
                 }
             }
-            
-            
-            
+            SuppliersUpload suppliersUpload = new SuppliersUpload(suppliersEntity);
+            suppliersUpload.upload();
+        }
         }catch(Exception ex)
         {
             ex.printStackTrace();
@@ -375,7 +371,6 @@ public class FXMLController implements Initializable
     @FXML
     void button_searchrecords_search(ActionEvent event)
     {
-        ObservableList<ClientEntity> clientObsList = FXCollections.observableArrayList();
         ArrayList<ClientEntity> clientEntityList = new ArrayList<>();
         String searchIn = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem();
         String search = textfield_searchrecords_keyword.getText().trim();
@@ -418,6 +413,7 @@ public class FXMLController implements Initializable
         company.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Company_Name"));
         industry.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Industry"));
         type.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Type"));
+        
     }
     
     @Override
