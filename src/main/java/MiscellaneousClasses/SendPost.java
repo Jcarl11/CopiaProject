@@ -4,6 +4,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import org.apache.commons.io.FilenameUtils;
 import org.json.JSONArray;
 import org.parse4j.ParseException;
 import org.parse4j.ParseFile;
@@ -64,6 +65,7 @@ public class SendPost extends Thread
                                     for(final File individual : client.getFileToUpload() )
                                     {
                                         final ParseFile fileobj = new ParseFile(individual.getName(), Files.readAllBytes(individual.toPath()));
+                        
                                         fileobj.saveInBackground(new SaveCallback() 
                                         {
                                             @Override
@@ -71,21 +73,44 @@ public class SendPost extends Thread
                                             {
                                                 if(fileobj.isUploaded() && parseException == null)
                                                 {
-                                                    ParseObject PO = new ParseObject("Images");
-                                                    PO.put("ImageName", individual.getName());
-                                                    PO.put("Image", fileobj);
-                                                    PO.put("ClientPointer", obj);
-                                                    PO.saveInBackground(new SaveCallback() 
+                                                    if(getFileType(individual.getAbsolutePath()) == "Image")
                                                     {
-                                                        @Override
-                                                        public void done(ParseException parseException) 
+                                                        System.out.println("Goes YHere");
+                                                        ParseObject PO = new ParseObject("Images");
+                                                        PO.put("ImageName", individual.getName());
+                                                        PO.put("Image", fileobj);
+                                                        PO.put("ClientPointer", obj);
+                                                        PO.saveInBackground(new SaveCallback() 
                                                         {
-                                                            if(parseException == null)
+                                                            @Override
+                                                            public void done(ParseException parseException) 
                                                             {
-                                                                iterations++;
+                                                                if(parseException == null)
+                                                                {
+                                                                    iterations++;
+                                                                }
                                                             }
-                                                        }
-                                                    });
+                                                        });
+                                                    }
+                                                    else if(getFileType(individual.getAbsolutePath()) == "pdf")
+                                                    {
+                                                        ParseObject PO = new ParseObject("PDFFiles");
+                                                        PO.put("Title", individual.getName());
+                                                        PO.put("Document", fileobj);
+                                                        PO.put("ClientPointer", obj);
+                                                        PO.saveInBackground(new SaveCallback() 
+                                                        {
+                                                            @Override
+                                                            public void done(ParseException parseException) 
+                                                            {
+                                                                if(parseException == null)
+                                                                {
+                                                                    iterations++;
+                                                                }
+                                                            }
+                                                        });
+                                                    }
+                                                    
                                                 }
                                                 else
                                                 {
@@ -148,6 +173,20 @@ public class SendPost extends Thread
         return tags;
     }
     
+    private String getFileType(String filePath)
+    {
+        String type = "";
+        String extension = FilenameUtils.getExtension(filePath).toLowerCase();
+        if(extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("gif") || extension.equalsIgnoreCase("jpeg"))
+        {
+            type = "Image";
+        }
+        else if(extension.equalsIgnoreCase("pdf"))
+        {
+            type = "pdf";
+        }
+        return type;
+    }
     
     
 }

@@ -62,10 +62,6 @@ public class RetrieveValues extends Thread
                                     cliententity.setRepresentative(po.getString("Representative"));
                                     cliententity.setPosition(po.getString("Position"));
                                     cliententity.setCompany_Name(po.getString("Company"));
-                                    if(searchClass == "Suppliers")
-                                    {
-                                        cliententity.setBrand(po.getString("Brand"));
-                                    }
                                     cliententity.setIndustry(po.getString("Industry"));
                                     cliententity.setType(po.getString("Type"));
                                     cliententityList.add(cliententity);

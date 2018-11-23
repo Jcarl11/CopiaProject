@@ -13,33 +13,20 @@ public class ClientEntity
     private String Representative;
     private String Position;
     private String Company_Name;
-    private String Brand;
     private String Industry;
     private String Type;
     private ArrayList<File> fileToUpload;
 
-    public ClientEntity(String ObjectID, String Representative, String Position, String Company_Name, String Brand,String Industry, String Type) {
+    public ClientEntity(String ObjectID, String Representative, String Position, String Company_Name,String Industry, String Type) {
         this.ObjectID = ObjectID;
         this.Representative = Representative;
         this.Position = Position;
         this.Company_Name = Company_Name;
-        this.Brand = Brand;
         this.Industry = Industry;
         this.Type = Type;
     }
     public ClientEntity(){}
-
-    public String getBrand() {
-        return Brand;
-    }
-
-    public void setBrand(String Brand) {
-        this.Brand = Brand;
-    }
-    
-    
-    
-            
+      
     public ArrayList<File> getFileToUpload() {
         return fileToUpload;
     }
