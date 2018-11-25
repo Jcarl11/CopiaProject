@@ -2,10 +2,13 @@ package com.carlo.copiaproject;
 
 import javafx.application.Application;
 import static javafx.application.Application.launch;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import org.parse4j.Parse;
 
 
@@ -22,6 +25,15 @@ public class MainApp extends Application {
         
         stage.setTitle("JavaFX and Maven");
         stage.setScene(scene);
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() 
+        {
+            @Override
+            public void handle(WindowEvent event) 
+            {
+                Platform.exit();
+                System.exit(0);
+            }
+        });
         stage.show();
     }
 

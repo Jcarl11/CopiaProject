@@ -20,8 +20,9 @@ public class GetOtherControllerAttributesSingleton
     }
     
     private HashMap<String, Object> fields = new HashMap<>();
-    private AnchorPane clientContainer;
-    
+    private AnchorPane clientContainer, supplierContainer, contractorsContainer
+            ,specificationsContainer,searchrecordsContainer;
+    ////////////////////////////////////////////////////////////////////////////
     public void clientSetFields(HashMap<String, Object> fields)
     {
         this.fields = fields;
@@ -38,4 +39,73 @@ public class GetOtherControllerAttributesSingleton
     {
         return this.clientContainer;
     }
+    ////////////////////////////////////////////////////////////////////////////
+    public void supplierSetFields(HashMap<String, Object> fields)
+    {
+        this.fields = fields;
+    }
+    public HashMap<String, Object> supplierGetFields()
+    {
+        return this.fields;
+    }
+    public void supplierSetContainer(AnchorPane container)
+    {
+        this.supplierContainer = container;
+    }
+    public AnchorPane supplierGetContainer()
+    {
+        return this.supplierContainer;
+    }
+    ////////////////////////////////////////////////////////////////////////////
+    public void contractorsSetFields(HashMap<String, Object> fields)
+    {
+        this.fields = fields;
+    }
+    public HashMap<String, Object> contractorsGetFields()
+    {
+        return this.fields;
+    }
+    public void contractorsSetContainer(AnchorPane container)
+    {
+        this.contractorsContainer = container;
+    }
+    public AnchorPane contractorsGetContainer()
+    {
+        return this.contractorsContainer;
+    }
+    ////////////////////////////////////////////////////////////////////////////
+    public void specificationsSetFields(HashMap<String, Object> fields)
+    {
+        this.fields = fields;
+    }
+    public HashMap<String, Object> specificationsGetFields()
+    {
+        return this.fields;
+    }
+    public void specificationsSetContainer(AnchorPane container)
+    {
+        this.specificationsContainer = container;
+    }
+    public AnchorPane specificationsGetContainer()
+    {
+        return this.specificationsContainer;
+    }
+    ////////////////////////////////////////////////////////////////////////////
+    public void searchrecordsSetFields(HashMap<String, Object> fields)
+    {
+        this.fields = fields;
+    }
+    public HashMap<String, Object> searchrecordsGetFields()
+    {
+        return this.fields;
+    }
+    public void searchrecordsSetContainer(AnchorPane container)
+    {
+        this.searchrecordsContainer = container;
+    }
+    public AnchorPane searchrecordsGetContainer()
+    {
+        return this.searchrecordsContainer;
+    }
+    ////////////////////////////////////////////////////////////////////////////
 }

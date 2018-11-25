@@ -1,5 +1,6 @@
 package MiscellaneousClasses;
 
+import javafx.scene.Parent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 
@@ -10,7 +11,7 @@ public class SectionsManager
         
     }
     
-    public static void showPane(AnchorPane container, GridPane toAdd)
+    public static void showPane(AnchorPane container, Parent toAdd)
     {
         if(!container.getChildren().contains(toAdd))
         {

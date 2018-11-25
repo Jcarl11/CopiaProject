@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" fx:id="anchorpane_client" prefHeight="415.0" prefWidth="643.0" stylesheets="@../styles/Styles.css" visible="false" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/10.0.1" fx:controller="com.carlo.copiaproject.ClientController">
+<AnchorPane id="AnchorPane" fx:id="anchorpane_client" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.carlo.copiaproject.ClientController">
     
                 <GridPane fx:id="gridpane_client" prefHeight="543.0" prefWidth="515.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <columnConstraints>

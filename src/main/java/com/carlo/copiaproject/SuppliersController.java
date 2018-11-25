@@ -20,39 +20,37 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-/**
- * FXML Controller class
- *
- * @author Joey Francisco
- */
-public class ClientController implements Initializable 
+public class SuppliersController implements Initializable 
 {
     DatabaseQuery dbQuery = new DatabaseQuery();
-    @FXML private TextField textfield_client_representative,textfield_client_position,textfield_client_companyname;
-    @FXML private ListView<String> listview_client_FiletoUpload;
-    @FXML private ComboBox<String> combobox_client_industry,combobox_client_type;
-    @FXML private AnchorPane anchorpane_client;
+    @FXML private TextField textfield_suppliers_representative, textfield_suppliers_position, 
+            textfield_suppliers_companyname, textfield_suppliers_brand;
+    @FXML private ListView<String> listview_suppliers_FiletoUpload; 
+    @FXML private ComboBox<String> combobox_suppliers_industry,combobox_suppliers_type;
+    @FXML private AnchorPane anchorpane_suppliers;
     
-    @FXML void button_clients_choosefileOnClick(ActionEvent event)
+    @FXML
+    void button_suppliers_choosefileOnClick(ActionEvent event)
     {
-        listview_client_FiletoUpload.getItems().addAll(showChooserDialog("pdf","jpg","png","gif"));
+        listview_suppliers_FiletoUpload.getItems().addAll(showChooserDialog("pdf","jpg","png","gif"));
     }
     
-    @FXML void button_client_previewOnClick(ActionEvent event) 
+    @FXML
+    void button_suppliers_previewOnClick(ActionEvent event) 
     {
-        /*if(listview_client_FiletoUpload.getSelectionModel().getSelectedItem() != null)
+        /*if(listview_suppliers_FiletoUpload.getSelectionModel().getSelectedItem() != null)
         {
             anchorpane_viewdocument.getChildren().clear();
-            String extension = FilenameUtils.getExtension(listview_client_FiletoUpload.getSelectionModel().getSelectedItem());
+            String extension = FilenameUtils.getExtension(listview_suppliers_FiletoUpload.getSelectionModel().getSelectedItem());
             if(extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("gif"))
             {
-                anchorpane_viewdocument.getChildren().add(previewimage.showImage(listview_client_FiletoUpload.getSelectionModel().getSelectedItem()));
+                anchorpane_viewdocument.getChildren().add(previewimage.showImage(listview_suppliers_FiletoUpload.getSelectionModel().getSelectedItem()));
             }
             else if(extension.equalsIgnoreCase("pdf"))
             {
                 try
                 {
-                    //anchorpane_viewdocument.getChildren().add(previewpdf.showPDF(listview_client_FiletoUpload.getSelectionModel().getSelectedItem()));
+                    //anchorpane_viewdocument.getChildren().add(previewpdf.showPDF(listview_suppliers_FiletoUpload.getSelectionModel().getSelectedItem()));
                 }catch(Exception ex)
                 {
                     ex.printStackTrace();
@@ -64,17 +62,18 @@ public class ClientController implements Initializable
             }
         }*/
     }
-    
-    @FXML void button_client_removeOnClick(ActionEvent event) 
+
+    @FXML
+    void button_suppliers_removeOnClick(ActionEvent event) 
     {
-        if(listview_client_FiletoUpload.getSelectionModel().getSelectedItem() != null)
+        if(listview_suppliers_FiletoUpload.getSelectionModel().getSelectedItem() != null)
         {
             int selection = JOptionPane.showConfirmDialog(null, "Delete selected fie?", "Confirm", 
                             JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
             if(selection == JOptionPane.YES_OPTION)
             {
-                int index = listview_client_FiletoUpload.getSelectionModel().getSelectedIndex();
-                listview_client_FiletoUpload.getItems().remove(index);
+                int index = listview_suppliers_FiletoUpload.getSelectionModel().getSelectedIndex();
+                listview_suppliers_FiletoUpload.getItems().remove(index);
             }
         }
     }
@@ -102,22 +101,23 @@ public class ClientController implements Initializable
     {
         try
         {
-            combobox_client_industry.setItems(new SortedList<String>(dbQuery.RetrieveComboboxData("Client", "Industry"), Collator.getInstance()));
-            combobox_client_type.setItems(new SortedList<String>(dbQuery.RetrieveComboboxData("Client", "Type"), Collator.getInstance()));
+            combobox_suppliers_industry.setItems(new SortedList<String>(dbQuery.RetrieveComboboxData("Suppliers", "Industry"), Collator.getInstance()));
+            combobox_suppliers_type.setItems(new SortedList<String>(dbQuery.RetrieveComboboxData("Suppliers", "Type"), Collator.getInstance()));
             HashMap<String, Object> fields = new HashMap<>();
-            fields.put("Representative", textfield_client_representative);
-            fields.put("Position", textfield_client_position);
-            fields.put("Company Name", textfield_client_companyname);
-            fields.put("Industry", combobox_client_industry);
-            fields.put("Type", combobox_client_type);
-            fields.put("Files", listview_client_FiletoUpload);
-            GetOtherControllerAttributesSingleton.getInstance().clientSetFields(fields);
-            GetOtherControllerAttributesSingleton.getInstance().clientSetContainer(anchorpane_client);
+            fields.put("Representative", textfield_suppliers_representative);
+            fields.put("Position", textfield_suppliers_position);
+            fields.put("Company Name", textfield_suppliers_companyname);
+            fields.put("Brand", textfield_suppliers_brand);
+            fields.put("Industry", combobox_suppliers_industry);
+            fields.put("Type", combobox_suppliers_type);
+            fields.put("Files", listview_suppliers_FiletoUpload);
+            GetOtherControllerAttributesSingleton.getInstance().supplierSetFields(fields);
+            GetOtherControllerAttributesSingleton.getInstance().supplierSetContainer(anchorpane_suppliers);
         }catch(Exception ex)
         {
             ex.printStackTrace();
-        }   
-          
-    }    
+        }
+    }   
+    
     
 }
