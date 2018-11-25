@@ -1,5 +1,6 @@
-package MiscellaneousClasses;
+package DatabaseOperations;
 
+import Entities.SuppliersEntity;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.ArrayList;

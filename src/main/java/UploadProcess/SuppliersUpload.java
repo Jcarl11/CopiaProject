@@ -1,9 +1,9 @@
 package UploadProcess;
 
-import MiscellaneousClasses.ClientEntity;
-import MiscellaneousClasses.SendPost;
-import MiscellaneousClasses.SendPostSuppliers;
-import MiscellaneousClasses.SuppliersEntity;
+import Entities.ClientEntity;
+import DatabaseOperations.SendPost;
+import DatabaseOperations.SendPostSuppliers;
+import Entities.SuppliersEntity;
 import javafx.scene.layout.GridPane;
 import javax.swing.JOptionPane;
 

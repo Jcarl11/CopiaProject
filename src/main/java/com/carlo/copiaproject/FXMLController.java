@@ -1,5 +1,7 @@
 package com.carlo.copiaproject;
 
+import Entities.SuppliersEntity;
+import Entities.ClientEntity;
 import MiscellaneousClasses.*;
 import UploadProcess.ClientUpload;
 import java.io.File;
@@ -48,7 +50,6 @@ public class FXMLController implements Initializable
     }
     @FXML void specificationsClicked(ActionEvent event)
     {
-        //SectionsManager.showPane(anchorpane_main, gridpane_specifications);
         SectionsManager.showPane(anchorpane_main, specifications_file);
     }
     @FXML void searchRecordsOnClick(ActionEvent event)
@@ -90,6 +91,6 @@ public class FXMLController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
-        anchorpane_main.getChildren().clear();
+        //anchorpane_main.getChildren().clear();
     }    
 }

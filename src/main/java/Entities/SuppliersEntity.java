@@ -1,4 +1,4 @@
-package MiscellaneousClasses;
+package Entities;
 
 import java.io.File;
 import java.util.ArrayList;

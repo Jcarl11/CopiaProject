@@ -101,8 +101,8 @@ public class SuppliersController implements Initializable
     {
         try
         {
-            combobox_suppliers_industry.setItems(new SortedList<String>(dbQuery.RetrieveComboboxData("Suppliers", "Industry"), Collator.getInstance()));
-            combobox_suppliers_type.setItems(new SortedList<String>(dbQuery.RetrieveComboboxData("Suppliers", "Type"), Collator.getInstance()));
+            //combobox_suppliers_industry.setItems(new SortedList<String>(dbQuery.RetrieveComboboxData("Suppliers", "Industry"), Collator.getInstance()));
+            //combobox_suppliers_type.setItems(new SortedList<String>(dbQuery.RetrieveComboboxData("Suppliers", "Type"), Collator.getInstance()));
             HashMap<String, Object> fields = new HashMap<>();
             fields.put("Representative", textfield_suppliers_representative);
             fields.put("Position", textfield_suppliers_position);

@@ -1,23 +1,21 @@
 package com.carlo.copiaproject;
 
-import MiscellaneousClasses.DatabaseQuery;
-import MiscellaneousClasses.GetOtherControllerAttributesSingleton;
+import DatabaseOperations.RetrieveClientCombobox;
+import Entities.ComboboxDataEntity;
+import MiscellaneousClasses.*;
 import java.io.File;
 import java.net.URL;
 import java.text.Collator;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.ResourceBundle;
+import java.util.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -32,6 +30,8 @@ public class ClientController implements Initializable
     @FXML private ListView<String> listview_client_FiletoUpload;
     @FXML private ComboBox<String> combobox_client_industry,combobox_client_type;
     @FXML private AnchorPane anchorpane_client;
+    
+    
     
     @FXML void button_clients_choosefileOnClick(ActionEvent event)
     {
@@ -100,10 +100,43 @@ public class ClientController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
+        ObservableList<String> industryList = FXCollections.observableArrayList();
+        ObservableList<String> typeList = FXCollections.observableArrayList();
         try
         {
-            combobox_client_industry.setItems(new SortedList<String>(dbQuery.RetrieveComboboxData("Client", "Industry"), Collator.getInstance()));
-            combobox_client_type.setItems(new SortedList<String>(dbQuery.RetrieveComboboxData("Client", "Type"), Collator.getInstance()));
+            if(CacheManage.getInstance().getClientComboboxCache("Client") != null)
+            {
+                System.out.println("Not null");
+            }
+            else
+            {
+                RetrieveClientCombobox retrieve = new RetrieveClientCombobox("Client");
+                Thread retrieveThread = new Thread(retrieve);
+                retrieveThread.start();
+                try{retrieveThread.join();}catch(Exception ex){ex.printStackTrace();}
+                System.out.println(retrieve.getResult().size());
+                
+                for(ComboboxDataEntity comboboxData : retrieve.getResult())
+                {
+                    if(comboboxData.getField().equals("Industry"))
+                    {
+                        industryList.add(comboboxData.getTitle());
+                    }
+                    else if(comboboxData.getField().equals("Type"))
+                    {
+                        typeList.add(comboboxData.getTitle());
+                    }
+                }
+                System.out.println(industryList.size());
+                if(retrieve.getResult() != null)
+                {
+                    CacheManage.getInstance().addClientComboboxCache("Client", retrieve.getResult());
+                }
+                    
+            
+            }
+            combobox_client_industry.setItems(new SortedList<String>(industryList, Collator.getInstance()));
+            combobox_client_type.setItems(new SortedList<String>(typeList, Collator.getInstance()));
             HashMap<String, Object> fields = new HashMap<>();
             fields.put("Representative", textfield_client_representative);
             fields.put("Position", textfield_client_position);

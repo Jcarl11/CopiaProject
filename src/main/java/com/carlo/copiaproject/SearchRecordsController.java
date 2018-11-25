@@ -5,6 +5,9 @@
  */
 package com.carlo.copiaproject;
 
+import DatabaseOperations.RetrieveAssociatedFiles;
+import DatabaseOperations.RetrieveValues;
+import Entities.ClientEntity;
 import MiscellaneousClasses.*;
 import java.net.URL;
 import java.text.Collator;

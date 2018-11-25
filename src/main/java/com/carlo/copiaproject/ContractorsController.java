@@ -100,8 +100,8 @@ public class ContractorsController implements Initializable
     {
         try
         {
-            combobox_contractors_industry.setItems(new SortedList<String>(dbQuery.RetrieveComboboxData("Contractors", "Industry"), Collator.getInstance()));
-            combobox_contractors_classificiation.setItems(new SortedList<String>(dbQuery.RetrieveComboboxData("Contractors", "Classification"), Collator.getInstance()));
+            //combobox_contractors_industry.setItems(new SortedList<String>(dbQuery.RetrieveComboboxData("Contractors", "Industry"), Collator.getInstance()));
+            //combobox_contractors_classificiation.setItems(new SortedList<String>(dbQuery.RetrieveComboboxData("Contractors", "Classification"), Collator.getInstance()));
             HashMap<String, Object> fields = new HashMap<>();
             fields.put("Representative", textfield_contractors_representative);
             fields.put("Position", textfield_contractors_position);

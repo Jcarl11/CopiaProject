@@ -1,5 +1,6 @@
 package MiscellaneousClasses;
 
+import Entities.ComboboxDataEntity;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -25,21 +26,34 @@ public class DatabaseQuery
     
     public DatabaseQuery(){}
     
-    public ObservableList<String> RetrieveComboboxData(String category, String field) throws Exception
+    public ArrayList<ComboboxDataEntity> RetrieveComboboxData(String category) throws Exception
     {
-        final ObservableList<String> list = FXCollections.observableArrayList();
+        
+        //final ObservableList<String> list = FXCollections.observableArrayList();
+        final ArrayList<ComboboxDataEntity> list = new ArrayList<>();
         ParseQuery<ParseObject> query = ParseQuery.getQuery("ComboboxData");
         query.whereEqualTo("Category", category);
-        query.whereEqualTo("Field", field);
+        query.whereEqualTo("Field", "Industry");
+        query.whereEqualTo("Field","Type");
         query.findInBackground(new FindCallback<ParseObject>() 
         {
             @Override
             public void done(List<ParseObject> arg0, ParseException arg1) 
             {
-                for(ParseObject result: arg0)
+                if(arg1 == null && arg0 != null)
                 {
-                    list.add(result.getString("Title"));
+                     for(ParseObject result: arg0)
+                    {
+                        ComboboxDataEntity cde = new ComboboxDataEntity();
+                        cde.setObjectId(result.getObjectId());
+                        cde.setTitle(result.getString("Title"));
+                        cde.setCategory(result.getString("Category"));
+                        cde.setField(result.getString("Field"));
+                        list.add(cde);
+                    }
+                     System.out.println("Finished here");
                 }
+               
             }
         });
         
