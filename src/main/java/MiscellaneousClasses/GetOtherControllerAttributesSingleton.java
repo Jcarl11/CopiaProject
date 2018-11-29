@@ -21,7 +21,7 @@ public class GetOtherControllerAttributesSingleton
     
     private HashMap<String, Object> fields = new HashMap<>();
     private AnchorPane clientContainer, supplierContainer, contractorsContainer
-            ,specificationsContainer,searchrecordsContainer;
+            ,specificationsContainer,searchrecordsContainer, preview_container;
     ////////////////////////////////////////////////////////////////////////////
     public void clientSetFields(HashMap<String, Object> fields)
     {
@@ -106,6 +106,15 @@ public class GetOtherControllerAttributesSingleton
     public AnchorPane searchrecordsGetContainer()
     {
         return this.searchrecordsContainer;
+    }
+    ////////////////////////////////////////////////////////////////////////////
+    public AnchorPane previewGetContainer()
+    {
+        return preview_container;
+    }
+    public void previewSetContainer(AnchorPane container)
+    {
+        this.preview_container = container;
     }
     ////////////////////////////////////////////////////////////////////////////
 }

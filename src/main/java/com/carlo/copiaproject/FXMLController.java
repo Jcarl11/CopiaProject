@@ -1,5 +1,7 @@
 package com.carlo.copiaproject;
 
+import DatabaseOperations.DatabaseQuery;
+import DatabaseOperations.LocalStorage;
 import Entities.SuppliersEntity;
 import Entities.ClientEntity;
 import MiscellaneousClasses.*;
@@ -19,10 +21,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javax.swing.JOptionPane;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 
 public class FXMLController implements Initializable 
 {
@@ -91,6 +89,8 @@ public class FXMLController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
-        //anchorpane_main.getChildren().clear();
+        anchorpane_main.getChildren().clear();
+        
+        GetOtherControllerAttributesSingleton.getInstance().previewSetContainer(anchorpane_viewdocument);
     }    
 }

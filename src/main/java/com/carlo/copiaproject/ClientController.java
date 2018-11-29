@@ -1,5 +1,7 @@
 package com.carlo.copiaproject;
 
+import DatabaseOperations.DatabaseQuery;
+import DatabaseOperations.LocalStorage;
 import DatabaseOperations.RetrieveClientCombobox;
 import Entities.ComboboxDataEntity;
 import MiscellaneousClasses.*;
@@ -17,6 +19,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  * FXML Controller class
@@ -25,6 +28,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class ClientController implements Initializable 
 {
+    PreviewImage previewimage = new PreviewImage();
     DatabaseQuery dbQuery = new DatabaseQuery();
     @FXML private TextField textfield_client_representative,textfield_client_position,textfield_client_companyname;
     @FXML private ListView<String> listview_client_FiletoUpload;
@@ -40,19 +44,19 @@ public class ClientController implements Initializable
     
     @FXML void button_client_previewOnClick(ActionEvent event) 
     {
-        /*if(listview_client_FiletoUpload.getSelectionModel().getSelectedItem() != null)
+        if(listview_client_FiletoUpload.getSelectionModel().getSelectedItem() != null)
         {
-            anchorpane_viewdocument.getChildren().clear();
+            GetOtherControllerAttributesSingleton.getInstance().previewGetContainer().getChildren().clear();
             String extension = FilenameUtils.getExtension(listview_client_FiletoUpload.getSelectionModel().getSelectedItem());
             if(extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("gif"))
             {
-                anchorpane_viewdocument.getChildren().add(previewimage.showImage(listview_client_FiletoUpload.getSelectionModel().getSelectedItem()));
+                GetOtherControllerAttributesSingleton.getInstance().previewGetContainer().getChildren().add(previewimage.showImage(listview_client_FiletoUpload.getSelectionModel().getSelectedItem()));
             }
             else if(extension.equalsIgnoreCase("pdf"))
             {
                 try
                 {
-                    //anchorpane_viewdocument.getChildren().add(previewpdf.showPDF(listview_client_FiletoUpload.getSelectionModel().getSelectedItem()));
+                    //GetOtherControllerAttributesSingleton.getInstance().previewGetContainer().getChildren().add(previewpdf.showPDF(listview_client_FiletoUpload.getSelectionModel().getSelectedItem()));
                 }catch(Exception ex)
                 {
                     ex.printStackTrace();
@@ -62,7 +66,7 @@ public class ClientController implements Initializable
             {
                 JOptionPane.showMessageDialog(null, "File type not supported for preview");
             }
-        }*/
+        }
     }
     
     @FXML void button_client_removeOnClick(ActionEvent event) 
@@ -100,13 +104,27 @@ public class ClientController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
+        LocalStorage.getInstance().initialize_local_ComboboxData();
+        ArrayList<ComboboxDataEntity> result = new ArrayList<>();
         ObservableList<String> industryList = FXCollections.observableArrayList();
         ObservableList<String> typeList = FXCollections.observableArrayList();
         try
         {
-            if(CacheManage.getInstance().getClientComboboxCache("Client") != null)
+            result = LocalStorage.getInstance().retrieve_local_ComboboxData("Client");
+            System.out.println(result.size());
+            if(result.size() > 0)
             {
-                System.out.println("Not null");
+                for(ComboboxDataEntity comboboxData : result)
+                {
+                    if(comboboxData.getField().equals("INDUSTRY"))
+                    {
+                        industryList.add(comboboxData.getTitle());
+                    }
+                    else if(comboboxData.getField().equals("TYPE"))
+                    {
+                        typeList.add(comboboxData.getTitle());
+                    }
+                }
             }
             else
             {
@@ -114,27 +132,24 @@ public class ClientController implements Initializable
                 Thread retrieveThread = new Thread(retrieve);
                 retrieveThread.start();
                 try{retrieveThread.join();}catch(Exception ex){ex.printStackTrace();}
-                System.out.println(retrieve.getResult().size());
                 
                 for(ComboboxDataEntity comboboxData : retrieve.getResult())
                 {
                     if(comboboxData.getField().equals("Industry"))
                     {
                         industryList.add(comboboxData.getTitle());
+                        LocalStorage.getInstance().insert_local_ComboboxData(comboboxData);
                     }
                     else if(comboboxData.getField().equals("Type"))
                     {
                         typeList.add(comboboxData.getTitle());
+                        LocalStorage.getInstance().insert_local_ComboboxData(comboboxData);
                     }
                 }
-                System.out.println(industryList.size());
-                if(retrieve.getResult() != null)
-                {
-                    CacheManage.getInstance().addClientComboboxCache("Client", retrieve.getResult());
-                }
-                    
-            
             }
+            
+            System.out.println(industryList.size());
+            System.out.println(typeList.size());
             combobox_client_industry.setItems(new SortedList<String>(industryList, Collator.getInstance()));
             combobox_client_type.setItems(new SortedList<String>(typeList, Collator.getInstance()));
             HashMap<String, Object> fields = new HashMap<>();

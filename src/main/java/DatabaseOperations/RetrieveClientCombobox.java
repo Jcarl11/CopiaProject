@@ -2,6 +2,7 @@ package DatabaseOperations;
 
 import Entities.ComboboxDataEntity;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.parse4j.ParseException;
 import org.parse4j.ParseObject;
@@ -38,8 +39,8 @@ public class RetrieveClientCombobox extends Thread
         {
             ParseQuery<ParseObject> query = ParseQuery.getQuery("ComboboxData");
             query.whereEqualTo("Category", category);
-            query.whereEqualTo("Field", "Industry");
-            //query.whereEqualTo("Field","Type");
+            String[] data = {"Industry","Type"};
+            query.whereContainedIn("Field", Arrays.asList(data));
             if(iterations <= 0)
             {
                 query.findInBackground(new FindCallback<ParseObject>() 

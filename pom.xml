@@ -20,7 +20,14 @@
     </organization>
     <dependencies>
         
+      <!-- https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc -->
         <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.23.1</version>
+        </dependency>
+
+      <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.5</version>
@@ -40,12 +47,6 @@
             <groupId>com.github.thiagolocatelli</groupId>
             <artifactId>parse4j</artifactId>
             <version>1.5-SNAPSHOT</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>27.0-jre</version>
         </dependency>
     </dependencies>
 

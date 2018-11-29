@@ -5,6 +5,7 @@
  */
 package com.carlo.copiaproject;
 
+import DatabaseOperations.DatabaseQuery;
 import DatabaseOperations.RetrieveAssociatedFiles;
 import DatabaseOperations.RetrieveValues;
 import Entities.ClientEntity;

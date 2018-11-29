@@ -1,6 +1,6 @@
 package com.carlo.copiaproject;
 
-import MiscellaneousClasses.DatabaseQuery;
+import DatabaseOperations.DatabaseQuery;
 import MiscellaneousClasses.GetOtherControllerAttributesSingleton;
 import java.io.File;
 import java.net.URL;
