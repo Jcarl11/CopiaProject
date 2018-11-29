@@ -21,6 +21,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javax.swing.JOptionPane;
 
 public class FXMLController implements Initializable 
 {
@@ -30,9 +31,7 @@ public class FXMLController implements Initializable
     SuppliersEntity suppliersEntity = new SuppliersEntity();
     @FXML private Button button_search;
     @FXML private AnchorPane anchorpane_main,anchorpane_viewdocument;
-    
-    
-    @FXML private Parent client_file,suppliers_file,contractors_file,specifications_file,searchrecord_file;
+    @FXML private Parent client_file,suppliers_file,contractors_file,specifications_file,searchrecord_file, consultants_file;
     
     @FXML void clientOnClicked(ActionEvent event) throws IOException
     {
@@ -46,6 +45,10 @@ public class FXMLController implements Initializable
     {
         SectionsManager.showPane(anchorpane_main, contractors_file);
     }
+    @FXML void button_consultantsOnClick(ActionEvent event)
+    {
+        SectionsManager.showPane(anchorpane_main, consultants_file);
+    }
     @FXML void specificationsClicked(ActionEvent event)
     {
         SectionsManager.showPane(anchorpane_main, specifications_file);
@@ -57,10 +60,10 @@ public class FXMLController implements Initializable
     
     @FXML void button_upload(ActionEvent event)
     {
-        if(anchorpane_main.getChildren().contains(GetOtherControllerAttributesSingleton.getInstance().clientGetContainer()))
+        if(anchorpane_main.getChildren().contains(client_file))
         {
-            
             HashMap<String, Object> clientCategoryFields = GetOtherControllerAttributesSingleton.getInstance().clientGetFields();
+            System.out.println(clientCategoryFields.size());
             clientEntity.setRepresentative(((TextField)clientCategoryFields.get("Representative")).getText().toUpperCase());
             clientEntity.setPosition(((TextField)clientCategoryFields.get("Position")).getText().toUpperCase());
             clientEntity.setCompany_Name(((TextField)clientCategoryFields.get("Company Name")).getText().toUpperCase());
@@ -89,8 +92,8 @@ public class FXMLController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
+        LocalStorage.getInstance().initialize_local_ComboboxData();
         anchorpane_main.getChildren().clear();
-        
         GetOtherControllerAttributesSingleton.getInstance().previewSetContainer(anchorpane_viewdocument);
     }    
 }

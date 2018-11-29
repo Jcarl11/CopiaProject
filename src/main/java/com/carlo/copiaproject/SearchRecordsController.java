@@ -1,11 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.carlo.copiaproject;
 
 import DatabaseOperations.DatabaseQuery;
+import DatabaseOperations.LocalStorage;
 import DatabaseOperations.RetrieveAssociatedFiles;
 import DatabaseOperations.RetrieveValues;
 import Entities.ClientEntity;
@@ -13,6 +9,8 @@ import MiscellaneousClasses.*;
 import java.net.URL;
 import java.text.Collator;
 import java.util.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.*;
@@ -23,7 +21,7 @@ import javax.swing.JOptionPane;
 /**
  * FXML Controller class
  *
- * @author Windows
+ * @author Joey Francisco
  */
 public class SearchRecordsController implements Initializable 
 {
@@ -107,7 +105,12 @@ public class SearchRecordsController implements Initializable
     {
         try
         {
-            combobox_searchrecords_searchin.setItems(new SortedList<String>(dbQuery.RetrieveComboboxDataCategories(), Collator.getInstance()));
+            ObservableList<String> list = FXCollections.observableArrayList();
+            for(String values : LocalStorage.getInstance().retrieve_local_Categories())
+            {
+                list.add(values);
+            }
+            combobox_searchrecords_searchin.setItems(new SortedList<String>(list, Collator.getInstance()));
         }catch(Exception ex)
         {
             ex.printStackTrace();

@@ -83,7 +83,7 @@
                   </AnchorPane>
                   <AnchorPane GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
                      <children>
-                        <Button alignment="CENTER" mnemonicParsing="false" prefHeight="86.0" prefWidth="181.0" styleClass="dark-button" text="CONSULTANTS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <Button alignment="CENTER" mnemonicParsing="false" onAction="#button_consultantsOnClick" prefHeight="86.0" prefWidth="181.0" styleClass="dark-button" text="CONSULTANTS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <font>
                               <Font size="15.0" />
                            </font>
@@ -159,6 +159,7 @@
             <fx:include fx:id="specifications_file" source="Specifications.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             <fx:include fx:id="client_file" source="Client.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             <fx:include fx:id="searchrecord_file" source="SearchRecords.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <fx:include fx:id="consultants_file" source="Consultants.fxml" />
          </children>
       </AnchorPane>
    </center>

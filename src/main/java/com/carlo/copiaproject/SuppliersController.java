@@ -1,6 +1,9 @@
 package com.carlo.copiaproject;
 
 import DatabaseOperations.DatabaseQuery;
+import DatabaseOperations.LocalStorage;
+import DatabaseOperations.RetrieveCombobox;
+import Entities.ComboboxDataEntity;
 import MiscellaneousClasses.GetOtherControllerAttributesSingleton;
 import java.io.File;
 import java.net.URL;
@@ -8,6 +11,8 @@ import java.text.Collator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -99,10 +104,49 @@ public class SuppliersController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
+        ArrayList<ComboboxDataEntity> result = new ArrayList<>();
+        ObservableList<String> industryList = FXCollections.observableArrayList();
+        ObservableList<String> typeList = FXCollections.observableArrayList();
         try
         {
-            //combobox_suppliers_industry.setItems(new SortedList<String>(dbQuery.RetrieveComboboxData("Suppliers", "Industry"), Collator.getInstance()));
-            //combobox_suppliers_type.setItems(new SortedList<String>(dbQuery.RetrieveComboboxData("Suppliers", "Type"), Collator.getInstance()));
+            result = LocalStorage.getInstance().retrieve_local_ComboboxData("Suppliers");
+            if(result.size() > 0)
+            {
+                for(ComboboxDataEntity comboboxData : result)
+                {
+                    if(comboboxData.getField().equals("INDUSTRY"))
+                    {
+                        industryList.add(comboboxData.getTitle());
+                    }
+                    else if(comboboxData.getField().equals("TYPE"))
+                    {
+                        typeList.add(comboboxData.getTitle());
+                    }
+                }
+            }
+            else
+            {
+                RetrieveCombobox retrieve = new RetrieveCombobox("Suppliers");
+                Thread retrieveThread = new Thread(retrieve);
+                retrieveThread.start();
+                try{retrieveThread.join();}catch(Exception ex){ex.printStackTrace();}
+                
+                for(ComboboxDataEntity comboboxData : retrieve.getResult())
+                {
+                    if(comboboxData.getField().equals("Industry"))
+                    {
+                        industryList.add(comboboxData.getTitle());
+                        LocalStorage.getInstance().insert_local_ComboboxData(comboboxData);
+                    }
+                    else if(comboboxData.getField().equals("Type"))
+                    {
+                        typeList.add(comboboxData.getTitle());
+                        LocalStorage.getInstance().insert_local_ComboboxData(comboboxData);
+                    }
+                }
+            }
+            combobox_suppliers_industry.setItems(new SortedList<String>(industryList, Collator.getInstance()));
+            combobox_suppliers_type.setItems(new SortedList<String>(typeList, Collator.getInstance()));
             HashMap<String, Object> fields = new HashMap<>();
             fields.put("Representative", textfield_suppliers_representative);
             fields.put("Position", textfield_suppliers_position);

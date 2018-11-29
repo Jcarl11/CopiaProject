@@ -2,7 +2,7 @@ package com.carlo.copiaproject;
 
 import DatabaseOperations.DatabaseQuery;
 import DatabaseOperations.LocalStorage;
-import DatabaseOperations.RetrieveClientCombobox;
+import DatabaseOperations.RetrieveCombobox;
 import Entities.ComboboxDataEntity;
 import MiscellaneousClasses.*;
 import java.io.File;
@@ -30,12 +30,10 @@ public class ClientController implements Initializable
 {
     PreviewImage previewimage = new PreviewImage();
     DatabaseQuery dbQuery = new DatabaseQuery();
-    @FXML private TextField textfield_client_representative,textfield_client_position,textfield_client_companyname;
-    @FXML private ListView<String> listview_client_FiletoUpload;
-    @FXML private ComboBox<String> combobox_client_industry,combobox_client_type;
-    @FXML private AnchorPane anchorpane_client;
-    
-    
+    @FXML TextField textfield_client_representative,textfield_client_position,textfield_client_companyname;
+    @FXML ListView<String> listview_client_FiletoUpload;
+    @FXML ComboBox<String> combobox_client_industry,combobox_client_type;
+    @FXML AnchorPane anchorpane_client;
     
     @FXML void button_clients_choosefileOnClick(ActionEvent event)
     {
@@ -104,14 +102,12 @@ public class ClientController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
-        LocalStorage.getInstance().initialize_local_ComboboxData();
         ArrayList<ComboboxDataEntity> result = new ArrayList<>();
         ObservableList<String> industryList = FXCollections.observableArrayList();
         ObservableList<String> typeList = FXCollections.observableArrayList();
         try
         {
             result = LocalStorage.getInstance().retrieve_local_ComboboxData("Client");
-            System.out.println(result.size());
             if(result.size() > 0)
             {
                 for(ComboboxDataEntity comboboxData : result)
@@ -128,7 +124,7 @@ public class ClientController implements Initializable
             }
             else
             {
-                RetrieveClientCombobox retrieve = new RetrieveClientCombobox("Client");
+                RetrieveCombobox retrieve = new RetrieveCombobox("Client");
                 Thread retrieveThread = new Thread(retrieve);
                 retrieveThread.start();
                 try{retrieveThread.join();}catch(Exception ex){ex.printStackTrace();}
@@ -147,9 +143,6 @@ public class ClientController implements Initializable
                     }
                 }
             }
-            
-            System.out.println(industryList.size());
-            System.out.println(typeList.size());
             combobox_client_industry.setItems(new SortedList<String>(industryList, Collator.getInstance()));
             combobox_client_type.setItems(new SortedList<String>(typeList, Collator.getInstance()));
             HashMap<String, Object> fields = new HashMap<>();

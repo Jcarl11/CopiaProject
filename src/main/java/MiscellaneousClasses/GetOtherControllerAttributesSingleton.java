@@ -10,12 +10,9 @@ import javafx.scene.layout.AnchorPane;
 public class GetOtherControllerAttributesSingleton 
 {
     private GetOtherControllerAttributesSingleton(){}
-    private static GetOtherControllerAttributesSingleton instance = null;
+    private static GetOtherControllerAttributesSingleton instance = new GetOtherControllerAttributesSingleton();
     public static GetOtherControllerAttributesSingleton getInstance()
     {
-        if(instance == null)
-            instance = new GetOtherControllerAttributesSingleton();
-        
         return instance;
     }
     

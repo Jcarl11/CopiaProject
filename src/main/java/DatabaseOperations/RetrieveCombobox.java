@@ -9,14 +9,15 @@ import org.parse4j.ParseObject;
 import org.parse4j.ParseQuery;
 import org.parse4j.callback.FindCallback;
 
-public class RetrieveClientCombobox extends Thread 
+public class RetrieveCombobox extends Thread 
 {
     String category;
     volatile boolean running = true;
     volatile int iterations = 0;
+    
     final ArrayList<ComboboxDataEntity> comboboxEntity = new ArrayList<>();
     
-    public RetrieveClientCombobox(String category)
+    public RetrieveCombobox(String category)
     {
         this.category = category;
     }
@@ -39,7 +40,7 @@ public class RetrieveClientCombobox extends Thread
         {
             ParseQuery<ParseObject> query = ParseQuery.getQuery("ComboboxData");
             query.whereEqualTo("Category", category);
-            String[] data = {"Industry","Type"};
+            String[] data = {"Industry","Type","Classification"};
             query.whereContainedIn("Field", Arrays.asList(data));
             if(iterations <= 0)
             {

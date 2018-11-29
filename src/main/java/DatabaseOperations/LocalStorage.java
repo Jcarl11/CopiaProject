@@ -37,7 +37,8 @@ public class LocalStorage
     }
     public void initialize_Client()
     {
-        try{
+        try
+        {
             initializeDB();
             String sql = "CREATE TABLE IF NOT EXISTS CLIENT"
                     + "(objectId varchar(50) not null,"
@@ -112,7 +113,6 @@ public class LocalStorage
             if(result>0)
             {
                 isSuccessful= true;
-                System.out.println("inserted to local db: " + result);
             }
             else
             {
@@ -191,6 +191,26 @@ public class LocalStorage
             closeConnections();
         }
         return isSuccessful;
+    }
+    
+    public ArrayList<String> retrieve_local_Categories()
+    {
+        ArrayList<String> data = new ArrayList<>();
+        try
+        {
+            initializeDB();
+            String sql = "SELECT DISTINCT CATEGORY FROM COMBOBOXDATA";
+            statement = connection.prepareStatement(sql);
+            resultSet = statement.executeQuery();
+            while(resultSet.next())
+            {
+                data.add(resultSet.getString("Category"));
+            }
+        }
+        catch(Exception ex){ex.printStackTrace();}
+        finally{closeConnections();}
+        
+        return data;
     }
     private void closeConnections()
     {
