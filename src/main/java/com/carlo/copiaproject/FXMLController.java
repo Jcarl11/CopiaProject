@@ -1,27 +1,18 @@
 package com.carlo.copiaproject;
 
-import DatabaseOperations.DatabaseQuery;
-import DatabaseOperations.LocalStorage;
-import Entities.SuppliersEntity;
-import Entities.ClientEntity;
+import DatabaseOperations.*;
+import Entities.*;
 import MiscellaneousClasses.*;
 import UploadProcess.ClientUpload;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.ResourceBundle;
+import java.util.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javax.swing.JOptionPane;
 
 public class FXMLController implements Initializable 
 {
@@ -62,19 +53,20 @@ public class FXMLController implements Initializable
     {
         if(anchorpane_main.getChildren().contains(client_file))
         {
-            HashMap<String, Object> clientCategoryFields = GetOtherControllerAttributesSingleton.getInstance().clientGetFields();
-            System.out.println(clientCategoryFields.size());
-            clientEntity.setRepresentative(((TextField)clientCategoryFields.get("Representative")).getText().toUpperCase());
-            clientEntity.setPosition(((TextField)clientCategoryFields.get("Position")).getText().toUpperCase());
-            clientEntity.setCompany_Name(((TextField)clientCategoryFields.get("Company Name")).getText().toUpperCase());
-            clientEntity.setIndustry(((ComboBox)clientCategoryFields.get("Industry")).getSelectionModel().getSelectedItem().toString().toUpperCase());
-            clientEntity.setType(((ComboBox)clientCategoryFields.get("Type")).getSelectionModel().getSelectedItem().toString().toUpperCase());
-            if(((ListView)clientCategoryFields.get("Files")).getItems().size() > 0)
+            HashMap<String, TextField> clientCategoryTextFields = GetOtherControllerAttributesSingleton.getInstance().clientGetTextFields();
+            HashMap<String, ComboBox> clientCategoryComboBox = GetOtherControllerAttributesSingleton.getInstance().clientGetComboBox();
+            HashMap<String, ListView> clientCategoryListView = GetOtherControllerAttributesSingleton.getInstance().clientGetListView();
+            clientEntity.setRepresentative(clientCategoryTextFields.get("Representative").getText().toUpperCase());
+            clientEntity.setPosition(clientCategoryTextFields.get("Position").getText().toUpperCase());
+            clientEntity.setCompany_Name(clientCategoryTextFields.get("Company Name").getText().toUpperCase());
+            clientEntity.setIndustry(clientCategoryComboBox.get("Industry").getSelectionModel().getSelectedItem().toString().toUpperCase());
+            clientEntity.setType(clientCategoryComboBox.get("Type").getSelectionModel().getSelectedItem().toString().toUpperCase());
+            if(clientCategoryListView.get("Files").getItems().size() > 0)
             {
                 ArrayList<File> files = new ArrayList<>();
-                for(int counter = 0; counter < ((ListView)clientCategoryFields.get("Files")).getItems().size(); counter++)
+                for(int counter = 0; counter < clientCategoryListView.get("Files").getItems().size(); counter++)
                 {
-                    String path = (String)((ListView)clientCategoryFields.get("Files")).getItems().get(counter);
+                    String path = clientCategoryListView.get("Files").getItems().get(counter).toString();
                     files.add(new File(path));
                 }
                 clientEntity.setFileToUpload(files);
@@ -92,8 +84,8 @@ public class FXMLController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
-        LocalStorage.getInstance().initialize_local_ComboboxData();
         anchorpane_main.getChildren().clear();
+        LocalStorage.getInstance().initialize_local_ComboboxData();
         GetOtherControllerAttributesSingleton.getInstance().previewSetContainer(anchorpane_viewdocument);
     }    
 }

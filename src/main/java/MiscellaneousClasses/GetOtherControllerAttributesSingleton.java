@@ -1,6 +1,9 @@
 package MiscellaneousClasses;
 
 import java.util.HashMap;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 
 /**
@@ -10,23 +13,46 @@ import javafx.scene.layout.AnchorPane;
 public class GetOtherControllerAttributesSingleton 
 {
     private GetOtherControllerAttributesSingleton(){}
-    private static GetOtherControllerAttributesSingleton instance = new GetOtherControllerAttributesSingleton();
+    private static GetOtherControllerAttributesSingleton instance = null;
     public static GetOtherControllerAttributesSingleton getInstance()
     {
+        if(instance == null)
+        {
+            instance = new GetOtherControllerAttributesSingleton();
+        }
         return instance;
     }
     
     private HashMap<String, Object> fields = new HashMap<>();
+    private HashMap<String, TextField> textfieldsList = new HashMap<>();
+    private HashMap<String, ComboBox> comboboxList = new HashMap<>();
+    private HashMap<String, ListView> listviewList = new HashMap<>();
     private AnchorPane clientContainer, supplierContainer, contractorsContainer
             ,specificationsContainer,searchrecordsContainer, preview_container;
     ////////////////////////////////////////////////////////////////////////////
-    public void clientSetFields(HashMap<String, Object> fields)
+    public void clientSetTextFields(HashMap<String, TextField> fields)
     {
-        this.fields = fields;
+        this.textfieldsList = fields;
     }
-    public HashMap<String, Object> clientGetFields()
+    public void clientSetComboBox(HashMap<String, ComboBox> fields)
     {
-        return this.fields;
+        this.comboboxList = fields;
+    }
+    public void clientSetListView(HashMap<String, ListView> fields)
+    {
+        this.listviewList = fields;
+    }
+    public HashMap<String, TextField> clientGetTextFields()
+    {
+        return this.textfieldsList;
+    }
+    public HashMap<String, ComboBox> clientGetComboBox()
+    {
+        return this.comboboxList;
+    }
+     public HashMap<String, ListView> clientGetListView()
+    {
+        return this.listviewList;
     }
     public void clientSetContainer(AnchorPane container)
     {

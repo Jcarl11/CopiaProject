@@ -145,14 +145,18 @@ public class ClientController implements Initializable
             }
             combobox_client_industry.setItems(new SortedList<String>(industryList, Collator.getInstance()));
             combobox_client_type.setItems(new SortedList<String>(typeList, Collator.getInstance()));
-            HashMap<String, Object> fields = new HashMap<>();
-            fields.put("Representative", textfield_client_representative);
-            fields.put("Position", textfield_client_position);
-            fields.put("Company Name", textfield_client_companyname);
-            fields.put("Industry", combobox_client_industry);
-            fields.put("Type", combobox_client_type);
-            fields.put("Files", listview_client_FiletoUpload);
-            GetOtherControllerAttributesSingleton.getInstance().clientSetFields(fields);
+            HashMap<String, TextField> textfieldsList = new HashMap<>();
+            HashMap<String, ComboBox> comboboxList = new HashMap<>();
+            HashMap<String, ListView> listviewList = new HashMap<>();
+            textfieldsList.put("Representative", textfield_client_representative);
+            textfieldsList.put("Position", textfield_client_position);
+            textfieldsList.put("Company Name", textfield_client_companyname);
+            comboboxList.put("Industry", combobox_client_industry);
+            comboboxList.put("Type", combobox_client_type);
+            listviewList.put("Files", listview_client_FiletoUpload);
+            GetOtherControllerAttributesSingleton.getInstance().clientSetTextFields(textfieldsList);
+            GetOtherControllerAttributesSingleton.getInstance().clientSetComboBox(comboboxList);
+            GetOtherControllerAttributesSingleton.getInstance().clientSetListView(listviewList);
             GetOtherControllerAttributesSingleton.getInstance().clientSetContainer(anchorpane_client);
         }catch(Exception ex)
         {
