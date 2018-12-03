@@ -5,6 +5,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import org.apache.commons.io.FilenameUtils;
 import org.json.JSONArray;
 import org.parse4j.ParseException;
 import org.parse4j.ParseFile;
@@ -65,38 +66,19 @@ public class SendPostSuppliers extends Thread
                                 {
                                     for(final File individual : suppliersEntity.getFileToUpload() )
                                     {
-                                        final ParseFile fileobj = new ParseFile(individual.getName(), Files.readAllBytes(individual.toPath()));
-                                        fileobj.saveInBackground(new SaveCallback() 
+                                        FileUpload fileUpload = new FileUpload(individual, individual.getName(), obj.getObjectId(),"SuppliersPointer", "Suppliers");
+                                        if(getFileType(individual.getAbsolutePath()) == "Image")
                                         {
-                                            @Override
-                                            public void done(ParseException parseException) 
-                                            {
-                                                if(fileobj.isUploaded() && parseException == null)
-                                                {
-                                                    ParseObject PO = new ParseObject("Images");
-                                                    PO.put("ImageName", individual.getName());
-                                                    PO.put("Image", fileobj);
-                                                    PO.put("SuppliersPointer", obj);
-                                                    PO.saveInBackground(new SaveCallback() 
-                                                    {
-                                                        @Override
-                                                        public void done(ParseException parseException) 
-                                                        {
-                                                            if(parseException == null)
-                                                            {
-                                                                iterations++;
-                                                            }
-                                                        }
-                                                    });
-                                                }
-                                                else
-                                                {
-                                                        JOptionPane.showMessageDialog(null, "Error uploading files");
-                                                        result = "Failed";
-                                                        terminate();
-                                                }
-                                            }
-                                        });
+                                            Thread t1 = new Thread(fileUpload);
+                                            t1.start();
+                                            t1.join();
+                                        }
+                                        else if(getFileType(individual.getAbsolutePath()) == "pdf")
+                                        {
+                                            Thread t1 = new Thread(fileUpload);
+                                            t1.start();
+                                            t1.join();
+                                        }
                                     }
                                     result = "Successful";
                                     terminate();
@@ -154,5 +136,20 @@ public class SendPostSuppliers extends Thread
             tags.add(values.toUpperCase());
         }
         return tags;
+    }
+    
+    private String getFileType(String filePath)
+    {
+        String type = "";
+        String extension = FilenameUtils.getExtension(filePath).toLowerCase();
+        if(extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("gif") || extension.equalsIgnoreCase("jpeg"))
+        {
+            type = "Image";
+        }
+        else if(extension.equalsIgnoreCase("pdf"))
+        {
+            type = "pdf";
+        }
+        return type;
     }
 }

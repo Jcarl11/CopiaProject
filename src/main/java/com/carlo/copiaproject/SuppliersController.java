@@ -17,9 +17,7 @@ import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -28,11 +26,10 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class SuppliersController implements Initializable 
 {
     DatabaseQuery dbQuery = new DatabaseQuery();
-    @FXML private TextField textfield_suppliers_representative, textfield_suppliers_position, 
-            textfield_suppliers_companyname, textfield_suppliers_brand;
-    @FXML private ListView<String> listview_suppliers_FiletoUpload; 
-    @FXML private ComboBox<String> combobox_suppliers_industry,combobox_suppliers_type;
-    @FXML private AnchorPane anchorpane_suppliers;
+    @FXML TextField textfield_suppliers_representative,textfield_suppliers_position,textfield_suppliers_companyname,textfield_suppliers_brand;
+    @FXML ListView<String> listview_suppliers_FiletoUpload; 
+    @FXML ComboBox<String> combobox_suppliers_industry,combobox_suppliers_type;
+    @FXML AnchorPane anchorpane_suppliers;
     
     @FXML
     void button_suppliers_choosefileOnClick(ActionEvent event)
@@ -147,15 +144,19 @@ public class SuppliersController implements Initializable
             }
             combobox_suppliers_industry.setItems(new SortedList<String>(industryList, Collator.getInstance()));
             combobox_suppliers_type.setItems(new SortedList<String>(typeList, Collator.getInstance()));
-            HashMap<String, Object> fields = new HashMap<>();
-            fields.put("Representative", textfield_suppliers_representative);
-            fields.put("Position", textfield_suppliers_position);
-            fields.put("Company Name", textfield_suppliers_companyname);
-            fields.put("Brand", textfield_suppliers_brand);
-            fields.put("Industry", combobox_suppliers_industry);
-            fields.put("Type", combobox_suppliers_type);
-            fields.put("Files", listview_suppliers_FiletoUpload);
-            GetOtherControllerAttributesSingleton.getInstance().supplierSetFields(fields);
+            HashMap<String, TextField> textfields = new HashMap<>();
+            HashMap<String, ComboBox> comboboxfields = new HashMap<>();
+            HashMap<String, ListView> listviewfields = new HashMap<>();
+            textfields.put("Representative", textfield_suppliers_representative);
+            textfields.put("Position", textfield_suppliers_position);
+            textfields.put("Company Name", textfield_suppliers_companyname);
+            textfields.put("Brand", textfield_suppliers_brand);
+            comboboxfields.put("Industry", combobox_suppliers_industry);
+            comboboxfields.put("Type", combobox_suppliers_type);
+            listviewfields.put("Files", listview_suppliers_FiletoUpload);
+            GetOtherControllerAttributesSingleton.getInstance().supplierSetTextFields(textfields);
+            GetOtherControllerAttributesSingleton.getInstance().supplierSetCombobox(comboboxfields);
+            GetOtherControllerAttributesSingleton.getInstance().supplierSetListView(listviewfields);
             GetOtherControllerAttributesSingleton.getInstance().supplierSetContainer(anchorpane_suppliers);
         }catch(Exception ex)
         {

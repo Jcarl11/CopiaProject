@@ -4,6 +4,7 @@ import Entities.ClientEntity;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.JOptionPane;
 import org.apache.commons.io.FilenameUtils;
 import org.json.JSONArray;
@@ -65,62 +66,20 @@ public class SendPost extends Thread
                                 {
                                     for(final File individual : client.getFileToUpload() )
                                     {
-                                        final ParseFile fileobj = new ParseFile(individual.getName(), Files.readAllBytes(individual.toPath()));
-                        
-                                        fileobj.saveInBackground(new SaveCallback() 
+                                        FileUpload fileUpload = new FileUpload(individual, individual.getName(), obj.getObjectId(),"ClientPointer", "Client");
+                                        if(getFileType(individual.getAbsolutePath()) == "Image")
                                         {
-                                            @Override
-                                            public void done(ParseException parseException) 
-                                            {
-                                                if(fileobj.isUploaded() && parseException == null)
-                                                {
-                                                    if(getFileType(individual.getAbsolutePath()) == "Image")
-                                                    {
-                                                        System.out.println("Goes YHere");
-                                                        ParseObject PO = new ParseObject("Images");
-                                                        PO.put("ImageName", individual.getName());
-                                                        PO.put("Image", fileobj);
-                                                        PO.put("ClientPointer", obj);
-                                                        PO.saveInBackground(new SaveCallback() 
-                                                        {
-                                                            @Override
-                                                            public void done(ParseException parseException) 
-                                                            {
-                                                                if(parseException == null)
-                                                                {
-                                                                    iterations++;
-                                                                }
-                                                            }
-                                                        });
-                                                    }
-                                                    else if(getFileType(individual.getAbsolutePath()) == "pdf")
-                                                    {
-                                                        ParseObject PO = new ParseObject("PDFFiles");
-                                                        PO.put("Title", individual.getName());
-                                                        PO.put("Document", fileobj);
-                                                        PO.put("ClientPointer", obj);
-                                                        PO.saveInBackground(new SaveCallback() 
-                                                        {
-                                                            @Override
-                                                            public void done(ParseException parseException) 
-                                                            {
-                                                                if(parseException == null)
-                                                                {
-                                                                    iterations++;
-                                                                }
-                                                            }
-                                                        });
-                                                    }
-                                                    
-                                                }
-                                                else
-                                                {
-                                                        JOptionPane.showMessageDialog(null, "Error uploading files");
-                                                        result = "Failed";
-                                                        terminate();
-                                                }
-                                            }
-                                        });
+                                            Thread t1 = new Thread(fileUpload);
+                                            t1.start();
+                                            t1.join();
+                                        }
+                                        else if(getFileType(individual.getAbsolutePath()) == "pdf")
+                                        {
+                                            System.out.println("Goes here first");
+                                            Thread t1 = new Thread(fileUpload);
+                                            t1.start();
+                                            t1.join();
+                                        }
                                     }
                                     result = "Successful";
                                     terminate();

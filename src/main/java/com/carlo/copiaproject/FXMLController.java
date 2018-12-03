@@ -4,6 +4,7 @@ import DatabaseOperations.*;
 import Entities.*;
 import MiscellaneousClasses.*;
 import UploadProcess.ClientUpload;
+import UploadProcess.SuppliersUpload;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
@@ -73,6 +74,30 @@ public class FXMLController implements Initializable
             }
             ClientUpload clientUpload = new ClientUpload(clientEntity);
             clientUpload.upload();
+        }
+        else if(anchorpane_main.getChildren().contains(suppliers_file))
+        {
+            HashMap<String, TextField> suppliersCategoryTextFields = GetOtherControllerAttributesSingleton.getInstance().supplierGetTextFields();
+            HashMap<String, ComboBox> suppliersCategoryComboBox = GetOtherControllerAttributesSingleton.getInstance().supplierGetCombobox();
+            HashMap<String, ListView> suppliersCategoryListView = GetOtherControllerAttributesSingleton.getInstance().supplierGetListView();
+            suppliersEntity.setRepresentative(suppliersCategoryTextFields.get("Representative").getText().toUpperCase());
+            suppliersEntity.setPosition(suppliersCategoryTextFields.get("Position").getText().toUpperCase());
+            suppliersEntity.setCompany_Name(suppliersCategoryTextFields.get("Company Name").getText().toUpperCase());
+            suppliersEntity.setBrand(suppliersCategoryTextFields.get("Brand").getText().toUpperCase());
+            suppliersEntity.setIndustry(suppliersCategoryComboBox.get("Industry").getSelectionModel().getSelectedItem().toString().toUpperCase());
+            suppliersEntity.setType(suppliersCategoryComboBox.get("Type").getSelectionModel().getSelectedItem().toString().toUpperCase());
+            if(suppliersCategoryListView.get("Files").getItems().size() > 0)
+            {
+                ArrayList<File> files = new ArrayList<>();
+                for(int counter = 0; counter < suppliersCategoryListView.get("Files").getItems().size(); counter++)
+                {
+                    String path = suppliersCategoryListView.get("Files").getItems().get(counter).toString();
+                    files.add(new File(path));
+                }
+                suppliersEntity.setFileToUpload(files);
+            }
+            SuppliersUpload supplierUpload = new SuppliersUpload(suppliersEntity);
+            supplierUpload.upload();
         }
     }
     
