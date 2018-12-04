@@ -1,25 +1,20 @@
 package UploadProcess;
 
-import Entities.ClientEntity;
-import DatabaseOperations.SendPost;
-import javafx.scene.layout.GridPane;
+import DatabaseOperations.SendPostContractors;
+import Entities.ContractorsEntity;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author Joey Francisco
- */
-public class ClientUpload 
+public class ContractorsUpload 
 {
-    ClientEntity clientEntity;
-    public ClientUpload(ClientEntity client)
+    ContractorsEntity contractorsEntity;
+    public ContractorsUpload(ContractorsEntity contractors)
     {
-        this.clientEntity = client;
+        this.contractorsEntity = contractors;
     }
     
     public void upload()
     {
-        SendPost sendPost = new SendPost(clientEntity, "Client");
+        SendPostContractors sendPost = new SendPostContractors(contractorsEntity, "Contractors");
         Thread sendPostThread = new Thread(sendPost);
         sendPostThread.start();
         try{sendPostThread.join();}catch(Exception ex){ex.printStackTrace();}

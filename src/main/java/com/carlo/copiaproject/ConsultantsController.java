@@ -133,16 +133,20 @@ public class ConsultantsController implements Initializable
             }
             combobox_consultants_industry.setItems(new SortedList<String>(industryList, Collator.getInstance()));
             combobox_consultants_classificiation.setItems(new SortedList<String>(classificationList, Collator.getInstance()));
-            HashMap<String, Object> fields = new HashMap<>();
+            HashMap<String, TextField> fields = new HashMap<>();
+            HashMap<String, ComboBox> combobox = new HashMap<>();
+            HashMap<String, ListView> listView = new HashMap<>();
             fields.put("Representative", textfield_consultants_representative);
             fields.put("Position", textfield_consultants_position);
             fields.put("Company Name", textfield_consultants_companyname);
             fields.put("Specialization", textfield_consultants_specialization);
-            fields.put("Industry", combobox_consultants_industry);
-            fields.put("Classification", combobox_consultants_classificiation);
-            fields.put("Files", listview_consultants_FiletoUpload);
-            GetOtherControllerAttributesSingleton.getInstance().contractorsSetContainer(anchorpane_consultants);
-            GetOtherControllerAttributesSingleton.getInstance().contractorsSetFields(fields);
+            combobox.put("Industry", combobox_consultants_industry);
+            combobox.put("Classification", combobox_consultants_classificiation);
+            listView.put("Files", listview_consultants_FiletoUpload);
+            GetOtherControllerAttributesSingleton.getInstance().consultantsSetTextFields(fields);
+            GetOtherControllerAttributesSingleton.getInstance().consultantsSetCombobox(combobox);
+            GetOtherControllerAttributesSingleton.getInstance().consultantsSetListView(listView);
+            GetOtherControllerAttributesSingleton.getInstance().consultantsSetContainer(anchorpane_consultants);
         }catch(Exception ex)
         {
             ex.printStackTrace();

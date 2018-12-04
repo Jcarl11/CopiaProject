@@ -20,8 +20,7 @@ public class MainApp extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         Parse.initialize("4GCD5XK7GucFbTKnJa0fonFEBlAh3azBS3Gh0NNd", "RYznH1yrJ3DVly2f02aEMkZJNwmPVdDBUQyqRT6H","https://concipiotektura.back4app.io");
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Scene.fxml"));
-        Parent root = loader.load();
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/Scene.fxml"));
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/styles/Styles.css");
         stage.setTitle("JavaFX and Maven");

@@ -29,10 +29,20 @@ public class ContractorsController implements Initializable
 {
     DatabaseQuery dbQuery = new DatabaseQuery();
     @FXML AnchorPane anchorpane_contractors;
-    @FXML private ListView<String> listview_contractors_FiletoUpload;
-    @FXML private ComboBox<String> combobox_contractors_industry,combobox_contractors_classificiation;
-    @FXML private TextField textfield_contractors_representative, textfield_contractors_position,
-            textfield_contractors_companyname,textfield_contractors_specialization;
+    @FXML ListView<String> listview_contractors_FiletoUpload;
+    @FXML ComboBox<String> combobox_contractors_industry,combobox_contractors_classificiation;
+    @FXML
+    private TextField textfield_contractors_representative;
+
+    @FXML
+    private TextField textfield_contractors_position;
+
+    @FXML
+    private TextField textfield_contractors_companyname;
+
+    @FXML
+    private TextField textfield_contractors_specialization;
+    
     @FXML
     void button_contractors_choosefileOnClick(ActionEvent event) 
     {
@@ -147,16 +157,20 @@ public class ContractorsController implements Initializable
             }
             combobox_contractors_industry.setItems(new SortedList<String>(industryList, Collator.getInstance()));
             combobox_contractors_classificiation.setItems(new SortedList<String>(classificationList, Collator.getInstance()));
-            HashMap<String, Object> fields = new HashMap<>();
-            fields.put("Representative", textfield_contractors_representative);
-            fields.put("Position", textfield_contractors_position);
-            fields.put("Company Name", textfield_contractors_companyname);
-            fields.put("Specialization", textfield_contractors_specialization);
-            fields.put("Industry", combobox_contractors_industry);
-            fields.put("Classification", combobox_contractors_classificiation);
-            fields.put("Files", listview_contractors_FiletoUpload);
+            HashMap<String, TextField> contractorstextfieldsList = new HashMap<>();
+            HashMap<String, ComboBox> combobox = new HashMap<>();
+            HashMap<String, ListView> listView = new HashMap<>();
+            contractorstextfieldsList.put("Representative", textfield_contractors_representative);
+            contractorstextfieldsList.put("Position", textfield_contractors_position);
+            contractorstextfieldsList.put("Company", textfield_contractors_companyname);
+            contractorstextfieldsList.put("Specialization", textfield_contractors_specialization);
+            combobox.put("Industry", combobox_contractors_industry);
+            combobox.put("Classification", combobox_contractors_classificiation);
+            listView.put("Files", listview_contractors_FiletoUpload);
+            GetOtherControllerAttributesSingleton.getInstance().contractorsSetTextFields(contractorstextfieldsList);
+            GetOtherControllerAttributesSingleton.getInstance().contractorsSetCombobox(combobox);
+            GetOtherControllerAttributesSingleton.getInstance().contractorsSetListView(listView);
             GetOtherControllerAttributesSingleton.getInstance().contractorsSetContainer(anchorpane_contractors);
-            GetOtherControllerAttributesSingleton.getInstance().contractorsSetFields(fields);
         }catch(Exception ex)
         {
             ex.printStackTrace();

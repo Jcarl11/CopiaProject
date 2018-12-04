@@ -4,6 +4,7 @@ import DatabaseOperations.*;
 import Entities.*;
 import MiscellaneousClasses.*;
 import UploadProcess.ClientUpload;
+import UploadProcess.ContractorsUpload;
 import UploadProcess.SuppliersUpload;
 import java.io.*;
 import java.net.URL;
@@ -21,6 +22,9 @@ public class FXMLController implements Initializable
     PreviewImage previewimage = new PreviewImage();
     ClientEntity clientEntity = new ClientEntity();
     SuppliersEntity suppliersEntity = new SuppliersEntity();
+    ContractorsEntity contractorsEntity = new ContractorsEntity();
+    ConsultantsEntity consultantsEntity = new ConsultantsEntity();
+    
     @FXML private Button button_search;
     @FXML private AnchorPane anchorpane_main,anchorpane_viewdocument;
     @FXML private Parent client_file,suppliers_file,contractors_file,specifications_file,searchrecord_file, consultants_file;
@@ -98,6 +102,52 @@ public class FXMLController implements Initializable
             }
             SuppliersUpload supplierUpload = new SuppliersUpload(suppliersEntity);
             supplierUpload.upload();
+        }
+        else if(anchorpane_main.getChildren().contains(contractors_file))
+        {
+            HashMap<String, TextField> contractorsCategoryTextFields = GetOtherControllerAttributesSingleton.getInstance().contractorsGetTextFields();
+            HashMap<String, ComboBox> contractorsCategoryComboBox = GetOtherControllerAttributesSingleton.getInstance().contractorsGetCombobox();
+            HashMap<String, ListView> contractorsCategoryListView = GetOtherControllerAttributesSingleton.getInstance().contractorsGetListView();
+            contractorsEntity.setRepresentative(contractorsCategoryTextFields.get("Representative").getText().toUpperCase());
+            contractorsEntity.setPosition(contractorsCategoryTextFields.get("Position").getText().toUpperCase());
+            contractorsEntity.setCompanyName(contractorsCategoryTextFields.get("Company").getText().toUpperCase());
+            contractorsEntity.setSpecialization(contractorsCategoryTextFields.get("Specialization").getText().toUpperCase());
+            contractorsEntity.setIndustry(contractorsCategoryComboBox.get("Industry").getSelectionModel().getSelectedItem().toString().toUpperCase());
+            contractorsEntity.setClassification(contractorsCategoryComboBox.get("Classification").getSelectionModel().getSelectedItem().toString().toUpperCase());
+            if(contractorsCategoryListView.get("Files").getItems().size() > 0)
+            {
+                ArrayList<File> files = new ArrayList<>();
+                for(int counter = 0; counter < contractorsCategoryListView.get("Files").getItems().size(); counter++)
+                {
+                    String path = contractorsCategoryListView.get("Files").getItems().get(counter).toString();
+                    files.add(new File(path));
+                }
+                contractorsEntity.setFileToUpload(files);
+            }
+            ContractorsUpload contractorsUpload = new ContractorsUpload(contractorsEntity);
+            contractorsUpload.upload();
+        }
+        else if(anchorpane_main.getChildren().contains(consultants_file))
+        {
+            HashMap<String, TextField> consultantsCategoryTextFields = GetOtherControllerAttributesSingleton.getInstance().contractorsGetTextFields();
+            HashMap<String, ComboBox> consultantsCategoryComboBox = GetOtherControllerAttributesSingleton.getInstance().contractorsGetCombobox();
+            HashMap<String, ListView> consultantsCategoryListView = GetOtherControllerAttributesSingleton.getInstance().contractorsGetListView();
+            consultantsEntity.setRepresentative(consultantsCategoryTextFields.get("Representative").getText().toUpperCase());
+            consultantsEntity.setPosition(consultantsCategoryTextFields.get("Position").getText().toUpperCase());
+            consultantsEntity.setCompanyName(consultantsCategoryTextFields.get("Company Name").getText().toUpperCase());
+            consultantsEntity.setSpecialization(consultantsCategoryTextFields.get("Specialization").getText().toUpperCase());
+            consultantsEntity.setIndustry(consultantsCategoryComboBox.get("Industry").getSelectionModel().getSelectedItem().toString().toUpperCase());
+            consultantsEntity.setClassification(consultantsCategoryComboBox.get("Classification").getSelectionModel().getSelectedItem().toString().toUpperCase());
+            if(consultantsCategoryListView.get("Files").getItems().size() > 0)
+            {
+                ArrayList<File> files = new ArrayList<>();
+                for(int counter = 0; counter < consultantsCategoryListView.get("Files").getItems().size(); counter++)
+                {
+                    String path = consultantsCategoryListView.get("Files").getItems().get(counter).toString();
+                    files.add(new File(path));
+                }
+                consultantsEntity.setFileToUpload(files);
+            }
         }
     }
     

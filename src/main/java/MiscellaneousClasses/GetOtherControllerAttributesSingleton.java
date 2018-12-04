@@ -23,7 +23,6 @@ public class GetOtherControllerAttributesSingleton
         return instance;
     }
     
-    private HashMap<String, Object> fields = new HashMap<>();
     private HashMap<String, TextField> clientTextFieldList = new HashMap<>();
     private HashMap<String, ComboBox> clientComboboxList = new HashMap<>();
     private HashMap<String, ListView> clientListView = new HashMap<>();
@@ -31,8 +30,17 @@ public class GetOtherControllerAttributesSingleton
     private HashMap<String, TextField> suppliersTextFieldList = new HashMap<>();
     private HashMap<String, ComboBox> suppliersComboboxList = new HashMap<>();
     private HashMap<String, ListView> suppliersListView = new HashMap<>();
-    private AnchorPane clientContainer, supplierContainer, contractorsContainer
-            ,specificationsContainer,searchrecordsContainer, preview_container;
+    
+    private HashMap<String, TextField> contractorsTextFieldList = new HashMap<>();
+    private HashMap<String, ComboBox> contractorsComboboxList = new HashMap<>();
+    private HashMap<String, ListView> contractorsListView = new HashMap<>();
+    
+    private HashMap<String, TextField> consultantsTextFieldList = new HashMap<>();
+    private HashMap<String, ComboBox> consultantsComboboxList = new HashMap<>();
+    private HashMap<String, ListView> consultantsListView = new HashMap<>();
+    
+    private AnchorPane clientContainer, supplierContainer, contractorsContainer,
+            consultantsContainer,specificationsContainer,searchrecordsContainer, preview_container;
     ////////////////////////////////////////////////////////////////////////////
     public void clientSetTextFields(HashMap<String, TextField> fields)
     {
@@ -100,13 +108,29 @@ public class GetOtherControllerAttributesSingleton
         return this.supplierContainer;
     }
     ////////////////////////////////////////////////////////////////////////////
-    public void contractorsSetFields(HashMap<String, Object> fields)
+    public void contractorsSetTextFields(HashMap<String, TextField> contractorsField)
     {
-        this.fields = fields;
+        this.contractorsTextFieldList = contractorsField;
     }
-    public HashMap<String, Object> contractorsGetFields()
+    public void contractorsSetCombobox(HashMap<String, ComboBox> combobox)
     {
-        return this.fields;
+        this.contractorsComboboxList = combobox;
+    }
+    public void contractorsSetListView(HashMap<String, ListView> listview)
+    {
+        this.contractorsListView = listview;
+    }
+    public HashMap<String, TextField> contractorsGetTextFields()
+    {
+        return this.contractorsTextFieldList;
+    }
+    public HashMap<String, ComboBox> contractorsGetCombobox()
+    {
+        return this.contractorsComboboxList;
+    }
+    public HashMap<String, ListView> contractorsGetListView()
+    {
+        return this.contractorsListView;
     }
     public void contractorsSetContainer(AnchorPane container)
     {
@@ -117,14 +141,39 @@ public class GetOtherControllerAttributesSingleton
         return this.contractorsContainer;
     }
     ////////////////////////////////////////////////////////////////////////////
-    public void specificationsSetFields(HashMap<String, Object> fields)
+    public void consultantsSetTextFields(HashMap<String, TextField> consultantsField)
     {
-        this.fields = fields;
+        this.consultantsTextFieldList = consultantsField;
     }
-    public HashMap<String, Object> specificationsGetFields()
+    public void consultantsSetCombobox(HashMap<String, ComboBox> combobox)
     {
-        return this.fields;
+        this.consultantsComboboxList = combobox;
     }
+    public void consultantsSetListView(HashMap<String, ListView> listview)
+    {
+        this.consultantsListView = listview;
+    }
+    public HashMap<String, TextField> consultantsGetTextFields()
+    {
+        return this.consultantsTextFieldList;
+    }
+    public HashMap<String, ComboBox> consultantsGetCombobox()
+    {
+        return this.consultantsComboboxList;
+    }
+    public HashMap<String, ListView> consultantsGetListView()
+    {
+        return this.consultantsListView;
+    }
+    public void consultantsSetContainer(AnchorPane container)
+    {
+        this.consultantsContainer = container;
+    }
+    public AnchorPane consultantsGetContainer()
+    {
+        return this.consultantsContainer;
+    }
+    ////////////////////////////////////////////////////////////////////////////
     public void specificationsSetContainer(AnchorPane container)
     {
         this.specificationsContainer = container;
@@ -134,14 +183,7 @@ public class GetOtherControllerAttributesSingleton
         return this.specificationsContainer;
     }
     ////////////////////////////////////////////////////////////////////////////
-    public void searchrecordsSetFields(HashMap<String, Object> fields)
-    {
-        this.fields = fields;
-    }
-    public HashMap<String, Object> searchrecordsGetFields()
-    {
-        return this.fields;
-    }
+    
     public void searchrecordsSetContainer(AnchorPane container)
     {
         this.searchrecordsContainer = container;

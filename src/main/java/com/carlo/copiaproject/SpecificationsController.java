@@ -97,7 +97,7 @@ public class SpecificationsController implements Initializable
             fields.put("Keyword", textfield_specifications_keywords);
             fields.put("Files", listview_specifications_FiletoUpload);
             GetOtherControllerAttributesSingleton.getInstance().specificationsSetContainer(anchorpane_specifications);
-            GetOtherControllerAttributesSingleton.getInstance().specificationsSetFields(fields);
+            //GetOtherControllerAttributesSingleton.getInstance().specificationsSetFields(fields);
         }catch(Exception ex)
         {
             ex.printStackTrace();
