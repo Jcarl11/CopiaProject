@@ -4,6 +4,7 @@ import DatabaseOperations.*;
 import Entities.*;
 import MiscellaneousClasses.*;
 import UploadProcess.ClientUpload;
+import UploadProcess.ConsultantsUpload;
 import UploadProcess.ContractorsUpload;
 import UploadProcess.SuppliersUpload;
 import java.io.*;
@@ -129,9 +130,9 @@ public class FXMLController implements Initializable
         }
         else if(anchorpane_main.getChildren().contains(consultants_file))
         {
-            HashMap<String, TextField> consultantsCategoryTextFields = GetOtherControllerAttributesSingleton.getInstance().contractorsGetTextFields();
-            HashMap<String, ComboBox> consultantsCategoryComboBox = GetOtherControllerAttributesSingleton.getInstance().contractorsGetCombobox();
-            HashMap<String, ListView> consultantsCategoryListView = GetOtherControllerAttributesSingleton.getInstance().contractorsGetListView();
+            HashMap<String, TextField> consultantsCategoryTextFields = GetOtherControllerAttributesSingleton.getInstance().consultantsGetTextFields();
+            HashMap<String, ComboBox> consultantsCategoryComboBox = GetOtherControllerAttributesSingleton.getInstance().consultantsGetCombobox();
+            HashMap<String, ListView> consultantsCategoryListView = GetOtherControllerAttributesSingleton.getInstance().consultantsGetListView();
             consultantsEntity.setRepresentative(consultantsCategoryTextFields.get("Representative").getText().toUpperCase());
             consultantsEntity.setPosition(consultantsCategoryTextFields.get("Position").getText().toUpperCase());
             consultantsEntity.setCompanyName(consultantsCategoryTextFields.get("Company Name").getText().toUpperCase());
@@ -148,6 +149,8 @@ public class FXMLController implements Initializable
                 }
                 consultantsEntity.setFileToUpload(files);
             }
+            ConsultantsUpload consultantsUpload = new ConsultantsUpload(consultantsEntity);
+            consultantsUpload.upload();
         }
     }
     
