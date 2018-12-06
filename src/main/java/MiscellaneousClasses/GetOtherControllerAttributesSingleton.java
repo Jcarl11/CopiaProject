@@ -3,6 +3,7 @@ package MiscellaneousClasses;
 import java.util.HashMap;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 
@@ -38,6 +39,10 @@ public class GetOtherControllerAttributesSingleton
     private HashMap<String, TextField> consultantsTextFieldList = new HashMap<>();
     private HashMap<String, ComboBox> consultantsComboboxList = new HashMap<>();
     private HashMap<String, ListView> consultantsListView = new HashMap<>();
+    
+    private HashMap<String, TextField> specificationsTextFieldList = new HashMap<>();
+    private HashMap<String, TextArea> specificationsTextArea = new HashMap<>();
+    private HashMap<String, ListView> specificationsListView = new HashMap<>();
     
     private AnchorPane clientContainer, supplierContainer, contractorsContainer,
             consultantsContainer,specificationsContainer,searchrecordsContainer, preview_container;
@@ -174,6 +179,30 @@ public class GetOtherControllerAttributesSingleton
         return this.consultantsContainer;
     }
     ////////////////////////////////////////////////////////////////////////////
+    public void specificationsSetTextFields(HashMap<String, TextField> specificationsField)
+    {
+        this.specificationsTextFieldList = specificationsField;
+    }
+    public void specificationsSetTextArea(HashMap<String, TextArea> specificationsTextArea)
+    {
+        this.specificationsTextArea = specificationsTextArea;
+    }
+    public void specificationsSetListView(HashMap<String, ListView> listview)
+    {
+        this.specificationsListView = listview;
+    }
+    public HashMap<String, TextField> specificationsGetTextFields()
+    {
+        return this.specificationsTextFieldList;
+    }
+    public HashMap<String, TextArea> specificationsGetTextArea()
+    {
+        return this.specificationsTextArea;
+    }
+    public HashMap<String, ListView> specificationsGetListView()
+    {
+        return this.specificationsListView;
+    }
     public void specificationsSetContainer(AnchorPane container)
     {
         this.specificationsContainer = container;

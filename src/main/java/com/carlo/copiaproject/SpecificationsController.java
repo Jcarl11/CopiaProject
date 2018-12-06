@@ -89,15 +89,19 @@ public class SpecificationsController implements Initializable
     {
         try
         {
-            HashMap<String, Object> fields = new HashMap<>();
+            HashMap<String, TextField> fields = new HashMap<>();
+            HashMap<String, TextArea> textArea = new HashMap<>();
+            HashMap<String, ListView> listView = new HashMap<>();
             fields.put("Document", textfield_specifications_document);
             fields.put("Division", textfield_specifications_division);
             fields.put("Section", textfield_specifications_section);
             fields.put("Type", textfield_specifications_type);
-            fields.put("Keyword", textfield_specifications_keywords);
-            fields.put("Files", listview_specifications_FiletoUpload);
+            textArea.put("Keyword", textfield_specifications_keywords);
+            listView.put("Files", listview_specifications_FiletoUpload);
+            GetOtherControllerAttributesSingleton.getInstance().specificationsSetTextFields(fields);
+            GetOtherControllerAttributesSingleton.getInstance().specificationsSetTextArea(textArea);
+            GetOtherControllerAttributesSingleton.getInstance().specificationsSetListView(listView);
             GetOtherControllerAttributesSingleton.getInstance().specificationsSetContainer(anchorpane_specifications);
-            //GetOtherControllerAttributesSingleton.getInstance().specificationsSetFields(fields);
         }catch(Exception ex)
         {
             ex.printStackTrace();

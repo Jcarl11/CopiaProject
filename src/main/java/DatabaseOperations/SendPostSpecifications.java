@@ -1,11 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package DatabaseOperations;
 
-import Entities.ContractorsEntity;
+import Entities.SpecificationsEntity;
 import java.io.File;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
@@ -15,23 +10,18 @@ import org.parse4j.ParseException;
 import org.parse4j.ParseObject;
 import org.parse4j.callback.SaveCallback;
 
-/**
- *
- * @author Windows
- */
-public class SendPostContractors extends Thread
+public class SendPostSpecifications extends Thread
 {
-
-    ContractorsEntity contractors;
+    SpecificationsEntity specificationsEntity;
     ParseObject obj;
     ArrayList<String> tags;
     String result = null;
     volatile boolean running = true;
     volatile int iterations = 0;
     
-    public SendPostContractors(ContractorsEntity contractors, String dataClass)
+    public SendPostSpecifications(SpecificationsEntity specificationsEntity, String dataClass)
     {
-        this.contractors = contractors;
+        this.specificationsEntity = specificationsEntity;
         obj = new ParseObject(dataClass);
         tags = new ArrayList<>();
     }    
@@ -51,12 +41,10 @@ public class SendPostContractors extends Thread
         {
             if(iterations <= 0)
             {
-                obj.put("Representative", contractors.getRepresentative());
-                obj.put("Position", contractors.getPosition());
-                obj.put("Company", contractors.getCompanyName());
-                obj.put("Specialization", contractors.getSpecialization());
-                obj.put("Industry", contractors.getIndustry());
-                obj.put("Classification", contractors.getClassification());
+                obj.put("Title", specificationsEntity.getTitle());
+                obj.put("Division", specificationsEntity.getDivision());
+                obj.put("Section", specificationsEntity.getSection());
+                obj.put("Type", specificationsEntity.getType());
                 obj.put("Tags", new JSONArray(extractStringsToTags()));
                 obj.saveInBackground(new SaveCallback() 
                 {
@@ -65,20 +53,14 @@ public class SendPostContractors extends Thread
                     {
                         if(parseException == null)
                         {
-                            if(contractors.getFileToUpload() != null)
+                            if(specificationsEntity.getFileToUpload() != null)
                             {
                                 try
                                 {
-                                    for(final File individual : contractors.getFileToUpload() )
+                                    for(final File individual : specificationsEntity.getFileToUpload() )
                                     {
-                                        FileUpload fileUpload = new FileUpload(individual, individual.getName(), obj.getObjectId(),"ContractorsPointer", "Contractors");
-                                        if(getFileType(individual.getAbsolutePath()) == "Image")
-                                        {
-                                            Thread t1 = new Thread(fileUpload);
-                                            t1.start();
-                                            t1.join();
-                                        }
-                                        else if(getFileType(individual.getAbsolutePath()) == "pdf")
+                                        FileUpload fileUpload = new FileUpload(individual, individual.getName(), obj.getObjectId(),"SpecificationsPointer", "Specifications");
+                                        if(getFileType(individual.getAbsolutePath()) == "pdf")
                                         {
                                             Thread t1 = new Thread(fileUpload);
                                             t1.start();
@@ -114,29 +96,33 @@ public class SendPostContractors extends Thread
     private ArrayList<String> extractStringsToTags()
     {
         ArrayList<String> tags = new ArrayList<>();
-        tags.add(contractors.getRepresentative());
-        tags.add(contractors.getPosition());
-        tags.add(contractors.getCompanyName());
-        tags.add(contractors.getSpecialization());
-        tags.add(contractors.getIndustry());
-        tags.add(contractors.getClassification());
-        String[] representativeSplit = contractors.getRepresentative().split("\\s+");
-        String[] positionSplit = contractors.getPosition().split("\\s+");
-        String[] companySplit = contractors.getCompanyName().split("\\s+");
-        String[] specializationSplit = contractors.getSpecialization().split("\\s+");
-        for(String values : representativeSplit)
+        tags.add(specificationsEntity.getTitle());
+        tags.add(specificationsEntity.getDivision());
+        tags.add(specificationsEntity.getSection());
+        tags.add(specificationsEntity.getType());
+        tags.add(specificationsEntity.getKeywords());
+        String[] titleSplit = specificationsEntity.getTitle().split("\\s+");
+        String[] divisionSplit = specificationsEntity.getDivision().split("\\s+");
+        String[] sectionSplit = specificationsEntity.getSection().split("\\s+");
+        String[] typeSplit = specificationsEntity.getType().split("\\s+");
+        String[] keywordSplit = specificationsEntity.getKeywords().split("\\s+");
+        for(String values : titleSplit)
         {
             tags.add(values.toUpperCase());
         }
-        for(String values : positionSplit)
+        for(String values : divisionSplit)
         {
             tags.add(values.toUpperCase());
         }
-        for(String values : companySplit)
+        for(String values : sectionSplit)
         {
             tags.add(values.toUpperCase());
         }
-        for(String values : specializationSplit)
+        for(String values : typeSplit)
+        {
+            tags.add(values.toUpperCase());
+        }
+        for(String values : keywordSplit)
         {
             tags.add(values.toUpperCase());
         }
@@ -157,5 +143,4 @@ public class SendPostContractors extends Thread
         }
         return type;
     }
-    
 }

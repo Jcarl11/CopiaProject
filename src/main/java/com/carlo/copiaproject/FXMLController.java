@@ -25,6 +25,7 @@ public class FXMLController implements Initializable
     SuppliersEntity suppliersEntity = new SuppliersEntity();
     ContractorsEntity contractorsEntity = new ContractorsEntity();
     ConsultantsEntity consultantsEntity = new ConsultantsEntity();
+    SpecificationsEntity specificationsEntity = new SpecificationsEntity();
     
     @FXML private Button button_search;
     @FXML private AnchorPane anchorpane_main,anchorpane_viewdocument;
@@ -151,6 +152,27 @@ public class FXMLController implements Initializable
             }
             ConsultantsUpload consultantsUpload = new ConsultantsUpload(consultantsEntity);
             consultantsUpload.upload();
+        }
+        else if(anchorpane_main.getChildren().contains(specifications_file))
+        {
+            HashMap<String, TextField> fields = GetOtherControllerAttributesSingleton.getInstance().specificationsGetTextFields();
+            HashMap<String, TextArea> textArea = GetOtherControllerAttributesSingleton.getInstance().specificationsGetTextArea();
+            HashMap<String, ListView> listView = GetOtherControllerAttributesSingleton.getInstance().specificationsGetListView();
+            specificationsEntity.setTitle(fields.get("Document").getText().trim().toUpperCase());
+            specificationsEntity.setDivision(fields.get("Division").getText().trim().toUpperCase());
+            specificationsEntity.setSection(fields.get("Section").getText().trim().toUpperCase());
+            specificationsEntity.setType(fields.get("Type").getText().trim().toUpperCase());
+            specificationsEntity.setKeywords(textArea.get("Keyword").getText().trim().toUpperCase());
+            if(listView.get("Files").getItems().size() > 0)
+            {
+                ArrayList<File> files = new ArrayList<>();
+                for(int counter = 0; counter < listView.get("Files").getItems().size(); counter++)
+                {
+                    String path = listView.get("Files").getItems().get(counter).toString();
+                    files.add(new File(path));
+                }
+                specificationsEntity.setFileToUpload(files);
+            }
         }
     }
     
