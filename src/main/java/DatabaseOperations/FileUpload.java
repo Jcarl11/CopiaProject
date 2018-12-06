@@ -74,14 +74,20 @@ public class FileUpload extends Thread
                 JSONObject data = new JSONObject(stringBuffer.toString());
                 if(FilenameUtils.getExtension(fileName).equalsIgnoreCase("pdf"))
                 {
-                    associateFile(String.valueOf(data.get("url")), String.valueOf(data.get("name")), fileName, "PDFFiles", objectId, field,pointerClass);
+                    if(pointerClass == "Specifications")
+                    {
+                        associateFile(String.valueOf(data.get("url")), String.valueOf(data.get("name")), fileName, "Specifications_PDFFiles", objectId, field,pointerClass);
+                    }
+                    else
+                    {
+                        associateFile(String.valueOf(data.get("url")), String.valueOf(data.get("name")), fileName, "PDFFiles", objectId, field,pointerClass);
+                    }
+                    
                 }
                 else
                 {
                     associateFile(String.valueOf(data.get("url")), String.valueOf(data.get("name")), fileName, "Images", objectId, field,pointerClass);
                 }
-                
-              
             }
             else
             {

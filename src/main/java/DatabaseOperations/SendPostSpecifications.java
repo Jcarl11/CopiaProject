@@ -2,6 +2,7 @@ package DatabaseOperations;
 
 import Entities.SpecificationsEntity;
 import java.io.File;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import org.apache.commons.io.FilenameUtils;
@@ -13,6 +14,7 @@ import org.parse4j.callback.SaveCallback;
 public class SendPostSpecifications extends Thread
 {
     SpecificationsEntity specificationsEntity;
+    UploadFile uploadFile = new UploadFile();
     ParseObject obj;
     ArrayList<String> tags;
     String result = null;
@@ -60,7 +62,13 @@ public class SendPostSpecifications extends Thread
                                     for(final File individual : specificationsEntity.getFileToUpload() )
                                     {
                                         FileUpload fileUpload = new FileUpload(individual, individual.getName(), obj.getObjectId(),"SpecificationsPointer", "Specifications");
-                                        if(getFileType(individual.getAbsolutePath()) == "pdf")
+                                        if(getFileType(individual.getAbsolutePath()) == "Image")
+                                        {
+                                            Thread t1 = new Thread(fileUpload);
+                                            t1.start();
+                                            t1.join();
+                                        }
+                                        else if(getFileType(individual.getAbsolutePath()) == "pdf")
                                         {
                                             Thread t1 = new Thread(fileUpload);
                                             t1.start();

@@ -6,10 +6,13 @@ import MiscellaneousClasses.*;
 import UploadProcess.ClientUpload;
 import UploadProcess.ConsultantsUpload;
 import UploadProcess.ContractorsUpload;
+import UploadProcess.SpecificationsUpload;
 import UploadProcess.SuppliersUpload;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -173,6 +176,8 @@ public class FXMLController implements Initializable
                 }
                 specificationsEntity.setFileToUpload(files);
             }
+            SpecificationsUpload specificationsUpload = new SpecificationsUpload(specificationsEntity);
+            specificationsUpload.upload();
         }
     }
     
