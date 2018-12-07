@@ -12,14 +12,14 @@ import org.parse4j.callback.FindCallback;
  *
  * @author Windows
  */
-public class RetrieveValues extends Thread
+public class RetrieveValuesClient extends Thread
 {
     volatile boolean running = true;
     volatile int iterations = 0;
     private String searchData;
     private String searchClass;
     final ArrayList<ClientEntity> cliententityList = new ArrayList<>();
-    public RetrieveValues(String searchData, String searchClass)
+    public RetrieveValuesClient(String searchData, String searchClass)
     {
         this.searchData = searchData;
         this.searchClass = searchClass;

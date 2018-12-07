@@ -3,7 +3,7 @@ package com.carlo.copiaproject;
 import DatabaseOperations.DatabaseQuery;
 import DatabaseOperations.LocalStorage;
 import DatabaseOperations.RetrieveAssociatedFiles;
-import DatabaseOperations.RetrieveValues;
+import DatabaseOperations.RetrieveValuesClient;
 import Entities.ClientEntity;
 import MiscellaneousClasses.*;
 import java.net.URL;
@@ -57,10 +57,12 @@ public class SearchRecordsController implements Initializable
     @FXML
     void button_searchrecords_search(ActionEvent event)
     {
+        
         ArrayList<ClientEntity> clientEntityList = new ArrayList<>();
-        String searchIn = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem();
+        String searchIn = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase();
+        String output = searchIn.substring(0, 1).toUpperCase() + searchIn.substring(1);
         String search = textfield_searchrecords_keyword.getText().trim();
-        RetrieveValues ret = new RetrieveValues(search, searchIn);
+        RetrieveValuesClient ret = new RetrieveValuesClient(search, output);
         Thread thread = new Thread(ret);
         thread.start();
         try{thread.join();}catch(Exception ex){ex.printStackTrace();}

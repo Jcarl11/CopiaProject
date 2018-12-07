@@ -59,7 +59,7 @@ public class RetrieveAssociatedFiles extends Thread
                                         for(ParseObject mylist : list)
                                         {
                                             //ParseFile file = mylist.getParseFile("Image");
-                                            String filename = mylist.getString("ImageName");
+                                            String filename = mylist.getString("Name");
                                             fileNames.add(filename);
                                         }
                                         terminate();

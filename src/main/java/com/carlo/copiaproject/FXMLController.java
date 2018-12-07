@@ -11,8 +11,6 @@ import UploadProcess.SuppliersUpload;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -178,6 +176,10 @@ public class FXMLController implements Initializable
             }
             SpecificationsUpload specificationsUpload = new SpecificationsUpload(specificationsEntity);
             specificationsUpload.upload();
+        }
+        else if(anchorpane_main.getChildren().contains(searchrecord_file))
+        {
+            
         }
     }
     
