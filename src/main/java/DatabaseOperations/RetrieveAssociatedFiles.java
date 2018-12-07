@@ -18,9 +18,17 @@ public class RetrieveAssociatedFiles extends Thread
     String id;
     volatile int iterations = 0;
     final ArrayList<String> fileNames = new ArrayList<String>();
-    public RetrieveAssociatedFiles(String id)
+    String searchClass;
+    String field;
+    String imageClass;
+    String pdfClass;
+    public RetrieveAssociatedFiles(String id, String searchClass, String field, String imageClass, String pdfClass)
     {
         this.id = id;
+        this.searchClass = searchClass;
+        this.field= field;
+        this.imageClass = imageClass;
+        this.pdfClass = pdfClass;
     }
     public void terminate()
     {
@@ -35,7 +43,7 @@ public class RetrieveAssociatedFiles extends Thread
     {
         while(running)
         {
-            final ParseQuery<ParseObject> query = ParseQuery.getQuery("Client");
+            final ParseQuery<ParseObject> query = ParseQuery.getQuery(searchClass);
             query.whereEqualTo("objectId", id);
             if(iterations <= 0)
             {
@@ -46,32 +54,78 @@ public class RetrieveAssociatedFiles extends Thread
                     {
                         if(parseException == null && list != null)
                         {
-                            ParseQuery<ParseObject> query2 = ParseQuery.getQuery("Images");
-                            query2.include("ClientPointer");
-                            query2.whereMatchesQuery("ClientPointer", query);
-                            query2.findInBackground(new FindCallback<ParseObject>() 
+                            if(searchClass.equalsIgnoreCase("Specifications"))
                             {
-                                @Override
-                                public void done(List<ParseObject> list, ParseException parseException) 
-                                {
-                                    if(parseException == null && list != null)
-                                    {
-                                        for(ParseObject mylist : list)
+                                ParseQuery<ParseObject> query3 = ParseQuery.getQuery(pdfClass);
+                                        query3.include(field);
+                                        query3.whereMatchesQuery(field, query);
+                                        query3.findInBackground(new FindCallback<ParseObject>() 
                                         {
-                                            //ParseFile file = mylist.getParseFile("Image");
-                                            String filename = mylist.getString("Name");
-                                            fileNames.add(filename);
-                                        }
-                                        terminate();
-                                    }
-                                    else
+                                            @Override
+                                            public void done(List<ParseObject> list, ParseException parseException) 
+                                            {
+                                                if(parseException == null && list != null)
+                                                {
+                                                    for(ParseObject mylist : list)
+                                                    {
+                                                        String filename = mylist.getString("Name");
+                                                        fileNames.add(filename);
+                                                    }
+                                                    
+                                                }
+                                                terminate();
+                                            }
+                                        });
+                            }
+                            else
+                            {
+                               
+                                ParseQuery<ParseObject> query2 = ParseQuery.getQuery(imageClass);
+                                query2.include(field);
+                                query2.whereMatchesQuery(field, query);
+                                query2.findInBackground(new FindCallback<ParseObject>() 
+                                {
+                                    @Override
+                                    public void done(List<ParseObject> list, ParseException parseException) 
                                     {
-                                        fileNames.add("No records found");
-                                        terminate();
+                                        if(parseException == null && list != null)
+                                        {
+                                            for(ParseObject mylist : list)
+                                            {
+                                                String filename = mylist.getString("Name");
+                                                fileNames.add(filename);
+                                            }
+                                            ParseQuery<ParseObject> query3 = ParseQuery.getQuery(pdfClass);
+                                            query3.include(field);
+                                            query3.whereMatchesQuery(field, query);
+                                            query3.findInBackground(new FindCallback<ParseObject>() 
+                                            {
+                                                @Override
+                                                public void done(List<ParseObject> list, ParseException parseException) 
+                                                {
+                                                    if(parseException == null && list != null)
+                                                    {
+                                                        for(ParseObject mylist : list)
+                                                        {
+                                                            String filename = mylist.getString("Name");
+                                                            fileNames.add(filename);
+                                                        }
+
+                                                    }
+                                                    terminate();
+                                                }
+                                            });
+
+                                        }
+                                        else
+                                        {
+                                            fileNames.add("No records found");
+                                            terminate();
+                                        }
+
                                     }
-                                    
-                                }
-                            });
+                                });
+                            }
                         }
                     }
                 });

@@ -31,23 +31,107 @@ public class SearchRecordsController implements Initializable
     void button_searchrecords_showfilesOnClick(ActionEvent event)
     {
         listview_searchrecord_fileshowcase.getItems().clear();
-        ClientEntity ce = (ClientEntity) tableview_searchinrecord.getSelectionModel().getSelectedItem();
-        String objId = ce.getObjectID();
-        RetrieveAssociatedFiles raf = new RetrieveAssociatedFiles(objId);
-        Thread thread = new Thread(raf);
-        thread.start();
-        try{thread.join();}catch(Exception ex){ex.printStackTrace();}
-        ArrayList<String> result = raf.getResult();
-        if(result.size() > 0)
+        if(tableview_searchinrecord.getSelectionModel().getSelectedItem() instanceof ClientEntity)
         {
-            listview_searchrecord_fileshowcase.getItems().clear();
-            listview_searchrecord_fileshowcase.getItems().addAll(result);
+            ClientEntity ce = (ClientEntity) tableview_searchinrecord.getSelectionModel().getSelectedItem();
+            String objId = ce.getObjectID();
+            RetrieveAssociatedFiles raf = new RetrieveAssociatedFiles(objId,"Client","ClientPointer","Images","PDFFiles");
+            Thread thread = new Thread(raf);
+            thread.start();
+            try{thread.join();}catch(Exception ex){ex.printStackTrace();}
+            ArrayList<String> result = raf.getResult();
+            if(result.size() > 0)
+            {
+                listview_searchrecord_fileshowcase.getItems().clear();
+                listview_searchrecord_fileshowcase.getItems().addAll(result);
+            }
+            else
+            {
+                listview_searchrecord_fileshowcase.getItems().clear();
+                JOptionPane.showMessageDialog(null, "No Files found");
+            }
         }
-        else
+        else if(tableview_searchinrecord.getSelectionModel().getSelectedItem() instanceof SuppliersEntity)
         {
-            listview_searchrecord_fileshowcase.getItems().clear();
-            JOptionPane.showMessageDialog(null, "No Files found");
+            SuppliersEntity ce = (SuppliersEntity) tableview_searchinrecord.getSelectionModel().getSelectedItem();
+            String objId = ce.getObjectID();
+            RetrieveAssociatedFiles raf = new RetrieveAssociatedFiles(objId,"Suppliers","SuppliersPointer","Images","PDFFiles");
+            Thread thread = new Thread(raf);
+            thread.start();
+            try{thread.join();}catch(Exception ex){ex.printStackTrace();}
+            ArrayList<String> result = raf.getResult();
+            if(result.size() > 0)
+            {
+                listview_searchrecord_fileshowcase.getItems().clear();
+                listview_searchrecord_fileshowcase.getItems().addAll(result);
+            }
+            else
+            {
+                listview_searchrecord_fileshowcase.getItems().clear();
+                JOptionPane.showMessageDialog(null, "No Files found");
+            }
         }
+        else if(tableview_searchinrecord.getSelectionModel().getSelectedItem() instanceof ContractorsEntity)
+        {
+            ContractorsEntity ce = (ContractorsEntity) tableview_searchinrecord.getSelectionModel().getSelectedItem();
+            String objId = ce.getObjectId();
+            RetrieveAssociatedFiles raf = new RetrieveAssociatedFiles(objId,"Contractors","ContractorsPointer","Images","PDFFiles");
+            Thread thread = new Thread(raf);
+            thread.start();
+            try{thread.join();}catch(Exception ex){ex.printStackTrace();}
+            ArrayList<String> result = raf.getResult();
+            if(result.size() > 0)
+            {
+                listview_searchrecord_fileshowcase.getItems().clear();
+                listview_searchrecord_fileshowcase.getItems().addAll(result);
+            }
+            else
+            {
+                listview_searchrecord_fileshowcase.getItems().clear();
+                JOptionPane.showMessageDialog(null, "No Files found");
+            }
+        }
+        else if(tableview_searchinrecord.getSelectionModel().getSelectedItem() instanceof ConsultantsEntity)
+        {
+            ConsultantsEntity ce = (ConsultantsEntity) tableview_searchinrecord.getSelectionModel().getSelectedItem();
+            String objId = ce.getObjectId();
+            RetrieveAssociatedFiles raf = new RetrieveAssociatedFiles(objId,"Consultants","ConsultantsPointer","Images","PDFFiles");
+            Thread thread = new Thread(raf);
+            thread.start();
+            try{thread.join();}catch(Exception ex){ex.printStackTrace();}
+            ArrayList<String> result = raf.getResult();
+            if(result.size() > 0)
+            {
+                listview_searchrecord_fileshowcase.getItems().clear();
+                listview_searchrecord_fileshowcase.getItems().addAll(result);
+            }
+            else
+            {
+                listview_searchrecord_fileshowcase.getItems().clear();
+                JOptionPane.showMessageDialog(null, "No Files found");
+            }
+        }
+        else if(tableview_searchinrecord.getSelectionModel().getSelectedItem() instanceof SpecificationsEntity)
+        {
+            SpecificationsEntity ce = (SpecificationsEntity) tableview_searchinrecord.getSelectionModel().getSelectedItem();
+            String objId = ce.getObjectId();
+            RetrieveAssociatedFiles raf = new RetrieveAssociatedFiles(objId,"Specifications","SpecificationsPointer","Images","Specifications_PDFFiles");
+            Thread thread = new Thread(raf);
+            thread.start();
+            try{thread.join();}catch(Exception ex){ex.printStackTrace();}
+            ArrayList<String> result = raf.getResult();
+            if(result.size() > 0)
+            {
+                listview_searchrecord_fileshowcase.getItems().clear();
+                listview_searchrecord_fileshowcase.getItems().addAll(result);
+            }
+            else
+            {
+                listview_searchrecord_fileshowcase.getItems().clear();
+                JOptionPane.showMessageDialog(null, "No Files found");
+            }
+        }
+        
     }
     
     @FXML
@@ -78,6 +162,8 @@ public class SearchRecordsController implements Initializable
             else
             {
                 tableview_searchinrecord.getItems().clear();
+                tableview_searchinrecord.getColumns().clear();
+                initializeTable(searchClass);
                 tableview_searchinrecord.getItems().addAll(clientEntityList);
             }
         }
@@ -100,6 +186,8 @@ public class SearchRecordsController implements Initializable
             else
             {
                 tableview_searchinrecord.getItems().clear();
+                tableview_searchinrecord.getColumns().clear();
+                initializeTable(searchClass);
                 tableview_searchinrecord.getItems().addAll(suppliersEntity);
             }
         }
@@ -122,6 +210,8 @@ public class SearchRecordsController implements Initializable
             else
             {
                 tableview_searchinrecord.getItems().clear();
+                tableview_searchinrecord.getColumns().clear();
+                initializeTable(searchClass);
                 tableview_searchinrecord.getItems().addAll(contractorsEntitys);
             }
         }
@@ -144,6 +234,8 @@ public class SearchRecordsController implements Initializable
             else
             {
                 tableview_searchinrecord.getItems().clear();
+                tableview_searchinrecord.getColumns().clear();
+                initializeTable(searchClass);
                 tableview_searchinrecord.getItems().addAll(consultantsEntitys);
             }
         }
@@ -166,6 +258,8 @@ public class SearchRecordsController implements Initializable
             else
             {
                 tableview_searchinrecord.getItems().clear();
+                tableview_searchinrecord.getColumns().clear();
+                initializeTable(searchClass);
                 tableview_searchinrecord.getItems().addAll(specificationsEntitys);
             }
         }

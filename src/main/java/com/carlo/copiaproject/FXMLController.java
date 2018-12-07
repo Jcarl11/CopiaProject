@@ -28,32 +28,38 @@ public class FXMLController implements Initializable
     ConsultantsEntity consultantsEntity = new ConsultantsEntity();
     SpecificationsEntity specificationsEntity = new SpecificationsEntity();
     
-    @FXML private Button button_search;
+    @FXML private Button button_search, button_upload_id;
     @FXML private AnchorPane anchorpane_main,anchorpane_viewdocument;
     @FXML private Parent client_file,suppliers_file,contractors_file,specifications_file,searchrecord_file, consultants_file;
     
     @FXML void clientOnClicked(ActionEvent event) throws IOException
     {
+        button_upload_id.setDisable(false);
         SectionsManager.showPane(anchorpane_main, client_file);
     }
     @FXML void suppliersOnClicked(ActionEvent event)
     {
+        button_upload_id.setDisable(false);
         SectionsManager.showPane(anchorpane_main, suppliers_file);
     }
     @FXML void button_contractorsOnClick(ActionEvent event)
     {
+        button_upload_id.setDisable(false);
         SectionsManager.showPane(anchorpane_main, contractors_file);
     }
     @FXML void button_consultantsOnClick(ActionEvent event)
     {
+        button_upload_id.setDisable(false);
         SectionsManager.showPane(anchorpane_main, consultants_file);
     }
     @FXML void specificationsClicked(ActionEvent event)
     {
+        button_upload_id.setDisable(false);
         SectionsManager.showPane(anchorpane_main, specifications_file);
     }
     @FXML void searchRecordsOnClick(ActionEvent event)
     {
+        button_upload_id.setDisable(true);
         SectionsManager.showPane(anchorpane_main, searchrecord_file);
     }
     
@@ -176,10 +182,6 @@ public class FXMLController implements Initializable
             }
             SpecificationsUpload specificationsUpload = new SpecificationsUpload(specificationsEntity);
             specificationsUpload.upload();
-        }
-        else if(anchorpane_main.getChildren().contains(searchrecord_file))
-        {
-            
         }
     }
     
