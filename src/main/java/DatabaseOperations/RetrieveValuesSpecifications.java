@@ -1,6 +1,6 @@
 package DatabaseOperations;
 
-import Entities.SuppliersEntity;
+import Entities.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -10,25 +10,21 @@ import org.parse4j.ParseObject;
 import org.parse4j.ParseQuery;
 import org.parse4j.callback.FindCallback;
 
-/**
- *
- * @author Joey Francisco
- */
-public class RetrieveValuesSuppliers extends Thread
+public class RetrieveValuesSpecifications extends Thread
 {
     volatile boolean running = true;
     volatile int iterations = 0;
     private String searchData;
     private String searchClass;
-    final ArrayList<SuppliersEntity> suppliersEntity = new ArrayList<>();
-    public RetrieveValuesSuppliers(String searchData, String searchClass)
+    final ArrayList<SpecificationsEntity> specificationsEntitys = new ArrayList<>();
+    public RetrieveValuesSpecifications(String searchData, String searchClass)
     {
         this.searchData = searchData;
         this.searchClass = searchClass;
     }
-    public ArrayList<SuppliersEntity> getResult()
+    public ArrayList<SpecificationsEntity> getResult()
     {
-        return suppliersEntity;
+        return specificationsEntitys;
     }
     public void terminate()
     {
@@ -42,17 +38,17 @@ public class RetrieveValuesSuppliers extends Thread
         {
             try
             {
-                final ParseQuery<ParseObject> suppliers = ParseQuery.getQuery(searchClass);
+                final ParseQuery<ParseObject> specifications = ParseQuery.getQuery(searchClass);
                 ArrayList<String> parameters = new ArrayList<String>();
                 String[] getValues = searchData.toUpperCase().split(",");
                 for(String values : getValues)
                 {
                     parameters.add(values);
                 }
-                suppliers.whereContainedIn("Tags", Arrays.asList(parameters));
+                specifications.whereContainedIn("Tags", Arrays.asList(parameters));
                 if(iterations <= 0)
                 {
-                    suppliers.findInBackground(new FindCallback<ParseObject>() 
+                    specifications.findInBackground(new FindCallback<ParseObject>() 
                     {
                         @Override
                         public void done(List<ParseObject> list, ParseException parseException) 
@@ -61,15 +57,13 @@ public class RetrieveValuesSuppliers extends Thread
                             {
                                 for(ParseObject po : list)
                                 {
-                                    SuppliersEntity suppliersentity = new SuppliersEntity();
-                                    suppliersentity.setObjectID(po.getObjectId());
-                                    suppliersentity.setRepresentative(po.getString("Representative"));
-                                    suppliersentity.setPosition(po.getString("Position"));
-                                    suppliersentity.setCompany_Name(po.getString("Company_Name"));
-                                    suppliersentity.setBrand(po.getString("Brand"));
-                                    suppliersentity.setIndustry(po.getString("Industry"));
-                                    suppliersentity.setType(po.getString("Type"));
-                                    suppliersEntity.add(suppliersentity);
+                                    SpecificationsEntity specificationsEntity = new SpecificationsEntity();
+                                    specificationsEntity.setObjectId(po.getObjectId());
+                                    specificationsEntity.setTitle(po.getString("Title"));
+                                    specificationsEntity.setDivision(po.getString("Division"));
+                                    specificationsEntity.setSection(po.getString("Section"));
+                                    specificationsEntity.setType(po.getString("Type"));
+                                    specificationsEntitys.add(specificationsEntity);
                                 } 
                                 terminate();
                             }
@@ -88,6 +82,4 @@ public class RetrieveValuesSuppliers extends Thread
             }
         }
     }
-    
-    
 }

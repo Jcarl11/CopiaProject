@@ -193,6 +193,11 @@ public class FXMLController implements Initializable
     {
         anchorpane_main.getChildren().clear();
         LocalStorage.getInstance().initialize_local_ComboboxData();
+        ArrayList<String> constants = LocalStorage.getInstance().retrieve_local_Categories_CONSTANTS();
+        if(constants.size() <= 0)
+        {
+            LocalStorage.getInstance().insert_constants();
+        }
         GetOtherControllerAttributesSingleton.getInstance().previewSetContainer(anchorpane_viewdocument);
     }    
 }

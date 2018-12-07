@@ -212,6 +212,63 @@ public class LocalStorage
         
         return data;
     }
+    
+    public ArrayList<String> retrieve_local_Categories_CONSTANTS()
+    {
+        ArrayList<String> data = new ArrayList<>();
+        try
+        {
+            initializeDB();
+            String sql = "SELECT CATEGORY FROM COMBOBOXDATA WHERE CATEGORY = 'CONSULTANTS' OR CATEGORY = 'SPECIFICATIONS'";
+            statement = connection.prepareStatement(sql);
+            resultSet = statement.executeQuery();
+            while(resultSet.next())
+            {
+                data.add(resultSet.getString("Category"));
+            }
+        }
+        catch(Exception ex){ex.printStackTrace();}
+        finally{closeConnections();}
+        
+        return data;
+    }
+    
+    public boolean insert_constants()
+    {
+        boolean isSuccessful = false;
+        try
+        {
+            initializeDB();
+            String sql = "INSERT INTO COMBOBOXDATA(objectId, Title, Category, Field) VALUES(?,?,?,?),(?,?,?,?)";
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, "yjX2CWfxZz");
+            statement.setString(2, null);
+            statement.setString(3, "CONSULTANTS");
+            statement.setString(4, null);
+            statement.setString(5, "FACbGp156f");
+            statement.setString(6, null);
+            statement.setString(7, "SPECIFICATIONS");
+            statement.setString(8, null);
+            int result = statement.executeUpdate();
+            if(result>0)
+            {
+                isSuccessful= true;
+            }
+            else
+            {
+                System.out.println("result: " + result);
+            }
+        }catch(Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        finally
+        {
+            closeConnections();
+        }
+        return isSuccessful;
+    }
+    
     private void closeConnections()
     {
         try

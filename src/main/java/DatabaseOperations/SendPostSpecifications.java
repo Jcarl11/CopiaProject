@@ -14,7 +14,6 @@ import org.parse4j.callback.SaveCallback;
 public class SendPostSpecifications extends Thread
 {
     SpecificationsEntity specificationsEntity;
-    UploadFile uploadFile = new UploadFile();
     ParseObject obj;
     ArrayList<String> tags;
     String result = null;

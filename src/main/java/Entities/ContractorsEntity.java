@@ -5,6 +5,9 @@ import java.util.ArrayList;
 
 public class ContractorsEntity 
 {
+
+    
+    private String objectId;
     private String representative;
     private String position;
     private String companyName;
@@ -13,8 +16,9 @@ public class ContractorsEntity
     private String classification;
     private ArrayList<File> fileToUpload;
     
-    public ContractorsEntity(String representative, String position, String companyName, String specialization, String industry, String classification, ArrayList<File> fileToUpload) 
+    public ContractorsEntity(String objectId, String representative, String position, String companyName, String specialization, String industry, String classification, ArrayList<File> fileToUpload) 
     {
+        this.objectId = objectId;
         this.representative = representative;
         this.position = position;
         this.companyName = companyName;
@@ -25,6 +29,13 @@ public class ContractorsEntity
     }
     public ContractorsEntity(){}
     
+    public String getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
+    }
     public String getRepresentative() {
         return representative;
     }

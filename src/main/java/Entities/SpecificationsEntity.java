@@ -6,6 +6,8 @@ import java.util.ArrayList;
 public class SpecificationsEntity
 {
 
+    
+    private String objectId;
     private String title;
     private String division;
     private String section;
@@ -13,8 +15,9 @@ public class SpecificationsEntity
     private String keywords;
     private ArrayList<File> fileToUpload;
     
-    public SpecificationsEntity(String title, String division, String section, String type, String keywords, ArrayList<File> fileToUpload) 
+    public SpecificationsEntity(String objectId, String title, String division, String section, String type, String keywords, ArrayList<File> fileToUpload) 
     {
+        this.objectId = objectId;
         this.title = title;
         this.division = division;
         this.section = section;
@@ -25,6 +28,13 @@ public class SpecificationsEntity
     
     public SpecificationsEntity(){}
     
+    public String getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
+    }
     public String getTitle() {
         return title;
     }

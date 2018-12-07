@@ -1,6 +1,6 @@
 package DatabaseOperations;
 
-import Entities.SuppliersEntity;
+import Entities.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -10,25 +10,21 @@ import org.parse4j.ParseObject;
 import org.parse4j.ParseQuery;
 import org.parse4j.callback.FindCallback;
 
-/**
- *
- * @author Joey Francisco
- */
-public class RetrieveValuesSuppliers extends Thread
+public class RetrieveValuesConsultants extends Thread
 {
     volatile boolean running = true;
     volatile int iterations = 0;
     private String searchData;
     private String searchClass;
-    final ArrayList<SuppliersEntity> suppliersEntity = new ArrayList<>();
-    public RetrieveValuesSuppliers(String searchData, String searchClass)
+    final ArrayList<ConsultantsEntity> consultantsEntitys = new ArrayList<>();
+    public RetrieveValuesConsultants(String searchData, String searchClass)
     {
         this.searchData = searchData;
         this.searchClass = searchClass;
     }
-    public ArrayList<SuppliersEntity> getResult()
+    public ArrayList<ConsultantsEntity> getResult()
     {
-        return suppliersEntity;
+        return consultantsEntitys;
     }
     public void terminate()
     {
@@ -42,17 +38,17 @@ public class RetrieveValuesSuppliers extends Thread
         {
             try
             {
-                final ParseQuery<ParseObject> suppliers = ParseQuery.getQuery(searchClass);
+                final ParseQuery<ParseObject> consultants = ParseQuery.getQuery(searchClass);
                 ArrayList<String> parameters = new ArrayList<String>();
                 String[] getValues = searchData.toUpperCase().split(",");
                 for(String values : getValues)
                 {
                     parameters.add(values);
                 }
-                suppliers.whereContainedIn("Tags", Arrays.asList(parameters));
+                consultants.whereContainedIn("Tags", Arrays.asList(parameters));
                 if(iterations <= 0)
                 {
-                    suppliers.findInBackground(new FindCallback<ParseObject>() 
+                    consultants.findInBackground(new FindCallback<ParseObject>() 
                     {
                         @Override
                         public void done(List<ParseObject> list, ParseException parseException) 
@@ -61,15 +57,15 @@ public class RetrieveValuesSuppliers extends Thread
                             {
                                 for(ParseObject po : list)
                                 {
-                                    SuppliersEntity suppliersentity = new SuppliersEntity();
-                                    suppliersentity.setObjectID(po.getObjectId());
-                                    suppliersentity.setRepresentative(po.getString("Representative"));
-                                    suppliersentity.setPosition(po.getString("Position"));
-                                    suppliersentity.setCompany_Name(po.getString("Company_Name"));
-                                    suppliersentity.setBrand(po.getString("Brand"));
-                                    suppliersentity.setIndustry(po.getString("Industry"));
-                                    suppliersentity.setType(po.getString("Type"));
-                                    suppliersEntity.add(suppliersentity);
+                                    ConsultantsEntity consultantsEntity = new ConsultantsEntity();
+                                    consultantsEntity.setObjectId(po.getObjectId());
+                                    consultantsEntity.setRepresentative(po.getString("Representative"));
+                                    consultantsEntity.setPosition(po.getString("Position"));
+                                    consultantsEntity.setCompanyName(po.getString("Company"));
+                                    consultantsEntity.setSpecialization(po.getString("Specialization"));
+                                    consultantsEntity.setIndustry(po.getString("Industry"));
+                                    consultantsEntity.setClassification(po.getString("Classification"));
+                                    consultantsEntitys.add(consultantsEntity);
                                 } 
                                 terminate();
                             }
@@ -88,6 +84,4 @@ public class RetrieveValuesSuppliers extends Thread
             }
         }
     }
-    
-    
 }

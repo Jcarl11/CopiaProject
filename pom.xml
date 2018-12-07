@@ -43,11 +43,6 @@
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.asynchttpclient/async-http-client -->
         <dependency>
-            <groupId>org.asynchttpclient</groupId>
-            <artifactId>async-http-client</artifactId>
-            <version>2.6.0</version>
-        </dependency>
-        <dependency>
             <groupId>com.github.thiagolocatelli</groupId>
             <artifactId>parse4j</artifactId>
             <version>1.5-SNAPSHOT</version>
