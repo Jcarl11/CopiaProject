@@ -11,6 +11,10 @@ import UploadProcess.SuppliersUpload;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
@@ -21,6 +25,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javax.swing.JOptionPane;
+import org.asynchttpclient.Response;
 
 public class FXMLController implements Initializable 
 {
@@ -90,13 +95,23 @@ public class FXMLController implements Initializable
                 clientEntity.setFileToUpload(files);
             }
             AlternateUpload.getInstance().clientInsertRecord(clientEntity, "Client");
+            button_upload_id.disableProperty().bind(AlternateUpload.getInstance().getTask().runningProperty());
             progress_indicator.visibleProperty().bind(AlternateUpload.getInstance().getTask().runningProperty());
             AlternateUpload.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
             {
                 @Override
                 public void handle(WorkerStateEvent event) 
                 {
-                    JOptionPane.showMessageDialog(null, "RECORD ADDED");
+                    for(Future<Response> responses : AlternateUpload.getInstance().getTask().getValue())
+                    {
+                        try {
+                            System.out.println(responses.get());
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (ExecutionException ex) {
+                            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
                 }
             });
             /*ClientUpload clientUpload = new ClientUpload(clientEntity);
