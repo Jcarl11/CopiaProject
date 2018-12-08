@@ -11,12 +11,16 @@ import UploadProcess.SuppliersUpload;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javax.swing.JOptionPane;
 
 public class FXMLController implements Initializable 
 {
@@ -31,7 +35,7 @@ public class FXMLController implements Initializable
     @FXML private Button button_search, button_upload_id;
     @FXML private AnchorPane anchorpane_main,anchorpane_viewdocument;
     @FXML private Parent client_file,suppliers_file,contractors_file,specifications_file,searchrecord_file, consultants_file;
-    
+    @FXML private ProgressIndicator progress_indicator;
     @FXML void clientOnClicked(ActionEvent event) throws IOException
     {
         button_upload_id.setDisable(false);
@@ -85,8 +89,18 @@ public class FXMLController implements Initializable
                 }
                 clientEntity.setFileToUpload(files);
             }
-            ClientUpload clientUpload = new ClientUpload(clientEntity);
-            clientUpload.upload();
+            AlternateUpload.getInstance().clientInsertRecord(clientEntity, "Client");
+            progress_indicator.visibleProperty().bind(AlternateUpload.getInstance().getTask().runningProperty());
+            AlternateUpload.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
+            {
+                @Override
+                public void handle(WorkerStateEvent event) 
+                {
+                    JOptionPane.showMessageDialog(null, "RECORD ADDED");
+                }
+            });
+            /*ClientUpload clientUpload = new ClientUpload(clientEntity);
+            clientUpload.upload();*/
         }
         else if(anchorpane_main.getChildren().contains(suppliers_file))
         {

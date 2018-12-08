@@ -23,4 +23,9 @@
     -fx-font-weight: bold;
     -fx-text-fill:  white;
 }
-
+.orange-buton:hover{
+    -fx-background-color:  #f59956;
+}
+.orange-buton:pressed{
+    -fx-background-color:  #a94c0a;
+}
