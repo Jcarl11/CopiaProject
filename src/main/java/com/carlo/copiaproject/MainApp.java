@@ -1,6 +1,7 @@
 package com.carlo.copiaproject;
 
 import DatabaseOperations.LocalStorage;
+import DatabaseOperations.ExecuteFileUpload;
 import MiscellaneousClasses.SectionsManager;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
@@ -30,6 +31,7 @@ public class MainApp extends Application {
             @Override
             public void handle(WindowEvent event) 
             {
+                ExecuteFileUpload.getInstance().shutdownExecutor();
                 Platform.exit();
                 System.exit(0);
             }

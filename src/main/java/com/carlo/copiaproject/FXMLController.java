@@ -3,19 +3,9 @@ package com.carlo.copiaproject;
 import DatabaseOperations.*;
 import Entities.*;
 import MiscellaneousClasses.*;
-import UploadProcess.ClientUpload;
-import UploadProcess.ConsultantsUpload;
-import UploadProcess.ContractorsUpload;
-import UploadProcess.SpecificationsUpload;
-import UploadProcess.SuppliersUpload;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -25,7 +15,6 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javax.swing.JOptionPane;
-import org.asynchttpclient.Response;
 
 public class FXMLController implements Initializable 
 {
@@ -36,39 +25,33 @@ public class FXMLController implements Initializable
     ContractorsEntity contractorsEntity = new ContractorsEntity();
     ConsultantsEntity consultantsEntity = new ConsultantsEntity();
     SpecificationsEntity specificationsEntity = new SpecificationsEntity();
-    
+  
     @FXML private Button button_search, button_upload_id;
     @FXML private AnchorPane anchorpane_main,anchorpane_viewdocument;
     @FXML private Parent client_file,suppliers_file,contractors_file,specifications_file,searchrecord_file, consultants_file;
     @FXML private ProgressIndicator progress_indicator;
     @FXML void clientOnClicked(ActionEvent event) throws IOException
     {
-        button_upload_id.setDisable(false);
         SectionsManager.showPane(anchorpane_main, client_file);
     }
     @FXML void suppliersOnClicked(ActionEvent event)
     {
-        button_upload_id.setDisable(false);
         SectionsManager.showPane(anchorpane_main, suppliers_file);
     }
     @FXML void button_contractorsOnClick(ActionEvent event)
     {
-        button_upload_id.setDisable(false);
         SectionsManager.showPane(anchorpane_main, contractors_file);
     }
     @FXML void button_consultantsOnClick(ActionEvent event)
     {
-        button_upload_id.setDisable(false);
         SectionsManager.showPane(anchorpane_main, consultants_file);
     }
     @FXML void specificationsClicked(ActionEvent event)
     {
-        button_upload_id.setDisable(false);
         SectionsManager.showPane(anchorpane_main, specifications_file);
     }
     @FXML void searchRecordsOnClick(ActionEvent event)
     {
-        button_upload_id.setDisable(true);
         SectionsManager.showPane(anchorpane_main, searchrecord_file);
     }
     
@@ -95,6 +78,8 @@ public class FXMLController implements Initializable
                 clientEntity.setFileToUpload(files);
             }
             AlternateUpload.getInstance().clientInsertRecord(clientEntity, "Client");
+            button_upload_id.disableProperty().unbind();
+            progress_indicator.visibleProperty().unbind();
             button_upload_id.disableProperty().bind(AlternateUpload.getInstance().getTask().runningProperty());
             progress_indicator.visibleProperty().bind(AlternateUpload.getInstance().getTask().runningProperty());
             AlternateUpload.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
@@ -102,16 +87,7 @@ public class FXMLController implements Initializable
                 @Override
                 public void handle(WorkerStateEvent event) 
                 {
-                    for(Future<Response> responses : AlternateUpload.getInstance().getTask().getValue())
-                    {
-                        try {
-                            System.out.println(responses.get());
-                        } catch (InterruptedException ex) {
-                            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (ExecutionException ex) {
-                            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
+                    JOptionPane.showMessageDialog(null, "Record(s) Added");
                 }
             });
             /*ClientUpload clientUpload = new ClientUpload(clientEntity);
@@ -138,8 +114,22 @@ public class FXMLController implements Initializable
                 }
                 suppliersEntity.setFileToUpload(files);
             }
-            SuppliersUpload supplierUpload = new SuppliersUpload(suppliersEntity);
-            supplierUpload.upload();
+            AlternateUpload.getInstance().suppliersInsertRecord(suppliersEntity, "Suppliers");
+            button_upload_id.disableProperty().unbind();
+            progress_indicator.visibleProperty().unbind();
+            button_upload_id.disableProperty().bind(AlternateUpload.getInstance().getTask().runningProperty());
+            progress_indicator.visibleProperty().bind(AlternateUpload.getInstance().getTask().runningProperty());
+            AlternateUpload.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
+            {
+                @Override
+                public void handle(WorkerStateEvent event) 
+                {
+                    JOptionPane.showMessageDialog(null, "Record(s) Added");
+                    
+                }
+            });
+            /*SuppliersUpload supplierUpload = new SuppliersUpload(suppliersEntity);
+            supplierUpload.upload();*/
         }
         else if(anchorpane_main.getChildren().contains(contractors_file))
         {
@@ -162,8 +152,21 @@ public class FXMLController implements Initializable
                 }
                 contractorsEntity.setFileToUpload(files);
             }
-            ContractorsUpload contractorsUpload = new ContractorsUpload(contractorsEntity);
-            contractorsUpload.upload();
+            AlternateUpload.getInstance().contractorsInsertRecord(contractorsEntity, "Contractors");
+            button_upload_id.disableProperty().unbind();
+            progress_indicator.visibleProperty().unbind();
+            button_upload_id.disableProperty().bind(AlternateUpload.getInstance().getTask().runningProperty());
+            progress_indicator.visibleProperty().bind(AlternateUpload.getInstance().getTask().runningProperty());
+            AlternateUpload.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
+            {
+                @Override
+                public void handle(WorkerStateEvent event) 
+                {
+                    JOptionPane.showMessageDialog(null, "Record(s) Added");
+                }
+            });
+            /*ContractorsUpload contractorsUpload = new ContractorsUpload(contractorsEntity);
+            contractorsUpload.upload();*/
         }
         else if(anchorpane_main.getChildren().contains(consultants_file))
         {
@@ -186,8 +189,21 @@ public class FXMLController implements Initializable
                 }
                 consultantsEntity.setFileToUpload(files);
             }
-            ConsultantsUpload consultantsUpload = new ConsultantsUpload(consultantsEntity);
-            consultantsUpload.upload();
+            AlternateUpload.getInstance().consultantsInsertRecord(consultantsEntity, "Consultants");
+            button_upload_id.disableProperty().unbind();
+            progress_indicator.visibleProperty().unbind();
+            button_upload_id.disableProperty().bind(AlternateUpload.getInstance().getTask().runningProperty());
+            progress_indicator.visibleProperty().bind(AlternateUpload.getInstance().getTask().runningProperty());
+            AlternateUpload.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
+            {
+                @Override
+                public void handle(WorkerStateEvent event) 
+                {
+                    JOptionPane.showMessageDialog(null, "Record(s) Added");
+                }
+            });
+            /*ConsultantsUpload consultantsUpload = new ConsultantsUpload(consultantsEntity);
+            consultantsUpload.upload();*/
         }
         else if(anchorpane_main.getChildren().contains(specifications_file))
         {
@@ -209,8 +225,21 @@ public class FXMLController implements Initializable
                 }
                 specificationsEntity.setFileToUpload(files);
             }
-            SpecificationsUpload specificationsUpload = new SpecificationsUpload(specificationsEntity);
-            specificationsUpload.upload();
+            AlternateUpload.getInstance().specificationsInsertRecord(specificationsEntity, "Specifications");
+            button_upload_id.disableProperty().unbind();
+            progress_indicator.visibleProperty().unbind();
+            button_upload_id.disableProperty().bind(AlternateUpload.getInstance().getTask().runningProperty());
+            progress_indicator.visibleProperty().bind(AlternateUpload.getInstance().getTask().runningProperty());
+            AlternateUpload.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
+            {
+                @Override
+                public void handle(WorkerStateEvent event) 
+                {
+                    JOptionPane.showMessageDialog(null, "Record(s) Added");
+                }
+            });
+            /*SpecificationsUpload specificationsUpload = new SpecificationsUpload(specificationsEntity);
+            specificationsUpload.upload();*/
         }
     }
     

@@ -8,7 +8,9 @@ import java.util.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.*;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -26,7 +28,8 @@ public class SearchRecordsController implements Initializable
     @FXML private TableView tableview_searchinrecord;
     @FXML private ComboBox<String> combobox_searchrecords_searchin;
     @FXML private TextField textfield_searchrecords_keyword;
-    
+    @FXML private ProgressIndicator searchpage_progress;
+    @FXML private Button searchrecords_searchbutton;
     @FXML
     void button_searchrecords_showfilesOnClick(ActionEvent event)
     {
@@ -137,59 +140,95 @@ public class SearchRecordsController implements Initializable
     @FXML
     void button_searchrecords_search(ActionEvent event)
     {
+        
         String searchClass = new String();
-        ArrayList<ClientEntity> clientEntityList = new ArrayList<>();
-        ArrayList<SuppliersEntity> suppliersEntity = new ArrayList<>();
-        ArrayList<ContractorsEntity> contractorsEntitys = new ArrayList<>();
-        ArrayList<ConsultantsEntity> consultantsEntitys = new ArrayList<>();
-        ArrayList<SpecificationsEntity> specificationsEntitys = new ArrayList<>();
         if(combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase().equalsIgnoreCase("client"))
         {
             searchClass = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase();
             String searchIn = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase();
             String output = searchIn.substring(0, 1).toUpperCase() + searchIn.substring(1);
             String search = textfield_searchrecords_keyword.getText().trim();
-            RetrieveValuesClient ret = new RetrieveValuesClient(search, output);
-            Thread thread = new Thread(ret);
-            thread.start();
-            try{thread.join();}catch(Exception ex){ex.printStackTrace();}
-            clientEntityList = ret.getResult();
-            if(tableview_searchinrecord.getColumns().isEmpty())
+            AlternateSearchRecords.getInstance().Search(search, output);
+            searchpage_progress.visibleProperty().unbind();
+            searchrecords_searchbutton.disableProperty().unbind();
+            searchpage_progress.visibleProperty().bind(AlternateSearchRecords.getInstance().getTask().runningProperty());
+            searchrecords_searchbutton.disableProperty().bind(AlternateSearchRecords.getInstance().getTask().runningProperty());
+            AlternateSearchRecords.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
             {
-                initializeTable(searchClass);
-                tableview_searchinrecord.getItems().addAll(clientEntityList);
-            }
-            else
+                String searchClass1 = new String();
+                ArrayList<ClientEntity> clientEntityList = new ArrayList<>();
+                @Override
+                public void handle(WorkerStateEvent event) 
+                {
+                    clientEntityList = (ArrayList<ClientEntity>) AlternateSearchRecords.getInstance().getTask().getValue();
+                    searchClass1 = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase();
+                    if(tableview_searchinrecord.getColumns().isEmpty())
+                    {
+                        initializeTable(searchClass1);
+                        tableview_searchinrecord.getItems().addAll(clientEntityList);
+                    }
+                    else
+                    {
+                        tableview_searchinrecord.getItems().clear();
+                        tableview_searchinrecord.getColumns().clear();
+                        initializeTable(searchClass1);
+                        tableview_searchinrecord.getItems().addAll(clientEntityList);
+                    }
+                }
+            });
+            AlternateSearchRecords.getInstance().getTask().setOnFailed(new EventHandler<WorkerStateEvent>()
             {
-                tableview_searchinrecord.getItems().clear();
-                tableview_searchinrecord.getColumns().clear();
-                initializeTable(searchClass);
-                tableview_searchinrecord.getItems().addAll(clientEntityList);
-            }
+                @Override
+                public void handle(WorkerStateEvent event) 
+                {
+                    System.out.println(AlternateSearchRecords.getInstance().getTask().getMessage());
+                    System.out.println(AlternateSearchRecords.getInstance().getTask().getException());
+                }
+            });
         }
         else if(combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase().equalsIgnoreCase("suppliers"))
         {
-            searchClass = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase();
             String searchIn = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase();
             String output = searchIn.substring(0, 1).toUpperCase() + searchIn.substring(1);
             String search = textfield_searchrecords_keyword.getText().trim();
-            RetrieveValuesSuppliers ret = new RetrieveValuesSuppliers(search, output);
-            Thread thread = new Thread(ret);
-            thread.start();
-            try{thread.join();}catch(Exception ex){ex.printStackTrace();}
-            suppliersEntity = ret.getResult();
-            if(tableview_searchinrecord.getColumns().isEmpty())
+            AlternateSearchRecords.getInstance().Search(search, output);
+            searchpage_progress.visibleProperty().unbind();
+            searchrecords_searchbutton.disableProperty().unbind();
+            searchpage_progress.visibleProperty().bind(AlternateSearchRecords.getInstance().getTask().runningProperty());
+            searchrecords_searchbutton.disableProperty().bind(AlternateSearchRecords.getInstance().getTask().runningProperty());
+            AlternateSearchRecords.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
             {
-                initializeTable(searchClass);
-                tableview_searchinrecord.getItems().addAll(suppliersEntity);
-            }
-            else
+                String searchClass1 = new String();
+                ArrayList<SuppliersEntity> suppliersEntitys = new ArrayList<>();
+                @Override
+                public void handle(WorkerStateEvent event) 
+                {
+                    System.out.println("Succeded");
+                    suppliersEntitys = (ArrayList<SuppliersEntity>) AlternateSearchRecords.getInstance().getTask().getValue();
+                    searchClass1 = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase();
+                    if(tableview_searchinrecord.getColumns().isEmpty())
+                    {
+                        initializeTable(searchClass1);
+                        tableview_searchinrecord.getItems().addAll(suppliersEntitys);
+                    }
+                    else
+                    {
+                        tableview_searchinrecord.getItems().clear();
+                        tableview_searchinrecord.getColumns().clear();
+                        initializeTable(searchClass1);
+                        tableview_searchinrecord.getItems().addAll(suppliersEntitys);
+                    }
+                }
+            });
+            AlternateSearchRecords.getInstance().getTask().setOnFailed(new EventHandler<WorkerStateEvent>()
             {
-                tableview_searchinrecord.getItems().clear();
-                tableview_searchinrecord.getColumns().clear();
-                initializeTable(searchClass);
-                tableview_searchinrecord.getItems().addAll(suppliersEntity);
-            }
+                @Override
+                public void handle(WorkerStateEvent event) 
+                {
+                    System.out.println(AlternateSearchRecords.getInstance().getTask().getMessage());
+                    System.out.println(AlternateSearchRecords.getInstance().getTask().getException());
+                }
+            });
         }
         else if(combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase().equalsIgnoreCase("contractors"))
         {
@@ -197,23 +236,44 @@ public class SearchRecordsController implements Initializable
             String searchIn = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase();
             String output = searchIn.substring(0, 1).toUpperCase() + searchIn.substring(1);
             String search = textfield_searchrecords_keyword.getText().trim();
-            RetrieveValuesContractors ret = new RetrieveValuesContractors(search, output);
-            Thread thread = new Thread(ret);
-            thread.start();
-            try{thread.join();}catch(Exception ex){ex.printStackTrace();}
-            contractorsEntitys = ret.getResult();
-            if(tableview_searchinrecord.getColumns().isEmpty())
+            AlternateSearchRecords.getInstance().Search(search, output);
+            searchpage_progress.visibleProperty().unbind();
+            searchrecords_searchbutton.disableProperty().unbind();
+            searchpage_progress.visibleProperty().bind(AlternateSearchRecords.getInstance().getTask().runningProperty());
+            searchrecords_searchbutton.disableProperty().bind(AlternateSearchRecords.getInstance().getTask().runningProperty());
+            AlternateSearchRecords.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
             {
-                initializeTable(searchClass);
-                tableview_searchinrecord.getItems().addAll(contractorsEntitys);
-            }
-            else
+                String searchClass1 = new String();
+                ArrayList<ContractorsEntity> contractorsEntitys = new ArrayList<>();
+                @Override
+                public void handle(WorkerStateEvent event) 
+                {
+                    System.out.println("Succeded");
+                    contractorsEntitys = (ArrayList<ContractorsEntity>) AlternateSearchRecords.getInstance().getTask().getValue();
+                    searchClass1 = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase();
+                    if(tableview_searchinrecord.getColumns().isEmpty())
+                    {
+                        initializeTable(searchClass1);
+                        tableview_searchinrecord.getItems().addAll(contractorsEntitys);
+                    }
+                    else
+                    {
+                        tableview_searchinrecord.getItems().clear();
+                        tableview_searchinrecord.getColumns().clear();
+                        initializeTable(searchClass1);
+                        tableview_searchinrecord.getItems().addAll(contractorsEntitys);
+                    }
+                }
+            });
+            AlternateSearchRecords.getInstance().getTask().setOnFailed(new EventHandler<WorkerStateEvent>()
             {
-                tableview_searchinrecord.getItems().clear();
-                tableview_searchinrecord.getColumns().clear();
-                initializeTable(searchClass);
-                tableview_searchinrecord.getItems().addAll(contractorsEntitys);
-            }
+                @Override
+                public void handle(WorkerStateEvent event) 
+                {
+                    System.out.println(AlternateSearchRecords.getInstance().getTask().getMessage());
+                    System.out.println(AlternateSearchRecords.getInstance().getTask().getException());
+                }
+            });
         }
         else if(combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase().equalsIgnoreCase("consultants"))
         {
@@ -221,23 +281,44 @@ public class SearchRecordsController implements Initializable
             String searchIn = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase();
             String output = searchIn.substring(0, 1).toUpperCase() + searchIn.substring(1);
             String search = textfield_searchrecords_keyword.getText().trim();
-            RetrieveValuesConsultants ret = new RetrieveValuesConsultants(search, output);
-            Thread thread = new Thread(ret);
-            thread.start();
-            try{thread.join();}catch(Exception ex){ex.printStackTrace();}
-            consultantsEntitys = ret.getResult();
-            if(tableview_searchinrecord.getColumns().isEmpty())
+            AlternateSearchRecords.getInstance().Search(search, output);
+            searchpage_progress.visibleProperty().unbind();
+            searchrecords_searchbutton.disableProperty().unbind();
+            searchpage_progress.visibleProperty().bind(AlternateSearchRecords.getInstance().getTask().runningProperty());
+            searchrecords_searchbutton.disableProperty().bind(AlternateSearchRecords.getInstance().getTask().runningProperty());
+            AlternateSearchRecords.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
             {
-                initializeTable(searchClass);
-                tableview_searchinrecord.getItems().addAll(consultantsEntitys);
-            }
-            else
+                String searchClass1 = new String();
+                ArrayList<ConsultantsEntity> consultantsEntitys = new ArrayList<>();
+                @Override
+                public void handle(WorkerStateEvent event) 
+                {
+                    System.out.println("Succeded");
+                    consultantsEntitys = (ArrayList<ConsultantsEntity>) AlternateSearchRecords.getInstance().getTask().getValue();
+                    searchClass1 = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase();
+                    if(tableview_searchinrecord.getColumns().isEmpty())
+                    {
+                        initializeTable(searchClass1);
+                        tableview_searchinrecord.getItems().addAll(consultantsEntitys);
+                    }
+                    else
+                    {
+                        tableview_searchinrecord.getItems().clear();
+                        tableview_searchinrecord.getColumns().clear();
+                        initializeTable(searchClass1);
+                        tableview_searchinrecord.getItems().addAll(consultantsEntitys);
+                    }
+                }
+            });
+            AlternateSearchRecords.getInstance().getTask().setOnFailed(new EventHandler<WorkerStateEvent>()
             {
-                tableview_searchinrecord.getItems().clear();
-                tableview_searchinrecord.getColumns().clear();
-                initializeTable(searchClass);
-                tableview_searchinrecord.getItems().addAll(consultantsEntitys);
-            }
+                @Override
+                public void handle(WorkerStateEvent event) 
+                {
+                    System.out.println(AlternateSearchRecords.getInstance().getTask().getMessage());
+                    System.out.println(AlternateSearchRecords.getInstance().getTask().getException());
+                }
+            });
         }
         else if(combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase().equalsIgnoreCase("specifications"))
         {
@@ -245,23 +326,44 @@ public class SearchRecordsController implements Initializable
             String searchIn = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase();
             String output = searchIn.substring(0, 1).toUpperCase() + searchIn.substring(1);
             String search = textfield_searchrecords_keyword.getText().trim();
-            RetrieveValuesSpecifications ret = new RetrieveValuesSpecifications(search, output);
-            Thread thread = new Thread(ret);
-            thread.start();
-            try{thread.join();}catch(Exception ex){ex.printStackTrace();}
-            specificationsEntitys = ret.getResult();
-            if(tableview_searchinrecord.getColumns().isEmpty())
+            AlternateSearchRecords.getInstance().Search(search, output);
+            searchpage_progress.visibleProperty().unbind();
+            searchrecords_searchbutton.disableProperty().unbind();
+            searchpage_progress.visibleProperty().bind(AlternateSearchRecords.getInstance().getTask().runningProperty());
+            searchrecords_searchbutton.disableProperty().bind(AlternateSearchRecords.getInstance().getTask().runningProperty());
+            AlternateSearchRecords.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
             {
-                initializeTable(searchClass);
-                tableview_searchinrecord.getItems().addAll(specificationsEntitys);
-            }
-            else
+                String searchClass1 = new String();
+                ArrayList<SpecificationsEntity> specificationsEntitys = new ArrayList<>();
+                @Override
+                public void handle(WorkerStateEvent event) 
+                {
+                    System.out.println("Succeded");
+                    specificationsEntitys = (ArrayList<SpecificationsEntity>) AlternateSearchRecords.getInstance().getTask().getValue();
+                    searchClass1 = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase();
+                    if(tableview_searchinrecord.getColumns().isEmpty())
+                    {
+                        initializeTable(searchClass1);
+                        tableview_searchinrecord.getItems().addAll(specificationsEntitys);
+                    }
+                    else
+                    {
+                        tableview_searchinrecord.getItems().clear();
+                        tableview_searchinrecord.getColumns().clear();
+                        initializeTable(searchClass1);
+                        tableview_searchinrecord.getItems().addAll(specificationsEntitys);
+                    }
+                }
+            });
+            AlternateSearchRecords.getInstance().getTask().setOnFailed(new EventHandler<WorkerStateEvent>()
             {
-                tableview_searchinrecord.getItems().clear();
-                tableview_searchinrecord.getColumns().clear();
-                initializeTable(searchClass);
-                tableview_searchinrecord.getItems().addAll(specificationsEntitys);
-            }
+                @Override
+                public void handle(WorkerStateEvent event) 
+                {
+                    System.out.println(AlternateSearchRecords.getInstance().getTask().getMessage());
+                    System.out.println(AlternateSearchRecords.getInstance().getTask().getException());
+                }
+            });
         }
         
         

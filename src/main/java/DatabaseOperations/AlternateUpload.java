@@ -1,30 +1,18 @@
 package DatabaseOperations;
 
 import Entities.*;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.concurrent.Task;
 import org.apache.commons.io.FilenameUtils;
 import org.asynchttpclient.Response;
-import org.json.JSONArray;
-import org.parse4j.ParseException;
 import org.parse4j.ParseObject;
-import org.parse4j.callback.SaveCallback;
-
 public class AlternateUpload
 {
-    boolean isFinished;
     Task<List<Future<Response>>> myTask;
     ClientEntity clientEntity;
+    InsertRecord insertRecord = new InsertRecord();
     private AlternateUpload(){}
     private static AlternateUpload instance = null;
     public static  AlternateUpload getInstance()
@@ -36,102 +24,146 @@ public class AlternateUpload
 
     public void clientInsertRecord(final ClientEntity clientEntity, final String searchClass)
     {
-        final AlternateFileUpload alt = new AlternateFileUpload();
-        final boolean isFinished = false;
-        
-        this.clientEntity = clientEntity;
         myTask = new Task<List<Future<Response>>>() 
         {
-            List<Future<Response>> responses;
+            
             @Override
             protected List<Future<Response>> call() throws Exception 
             {
-                setIsFinished(false);
-                final ParseObject parseObject = new ParseObject(searchClass);
-                parseObject.put("Representative", clientEntity.getRepresentative());
-                parseObject.put("Position", clientEntity.getPosition());
-                parseObject.put("Company", clientEntity.getCompany_Name());
-                parseObject.put("Industry", clientEntity.getIndustry());
-                parseObject.put("Type", clientEntity.getType());
-                parseObject.put("Tags", new JSONArray(extractStringsToTags()));
-                parseObject.saveInBackground(new SaveCallback() 
+                List<Future<Response>> myResponse = new ArrayList<>();
+                ParseObject clientObject = insertRecord.clientInsert("Client", clientEntity);
+                if(clientEntity.getFileToUpload().size() > 0)
                 {
-                    @Override
-                    public void done(ParseException parseException) 
+                    ArrayList<String> jsonResponses = new ArrayList<>();
+                    List<Future<Response>> response = ExecuteFileUpload.getInstance().execute(clientEntity.getFileToUpload());
+                    for(Future<Response> responses : response)
                     {
-                        if(parseException == null)
-                        {
-                            setIsFinished(true);
-                        }
+                        System.out.println(responses.get().getResponseBody());
+                        String responseBody = responses.get().getResponseBody();
+                        jsonResponses.add(responseBody);
                     }
-                });
-               
-                while(getIsFinished() == false)
-                {
-                    Thread.sleep(500);
+                    myResponse = ExecuteFileUpload.getInstance().associateFile(jsonResponses, "Client", clientObject.getObjectId(), "ClientPointer");
+                    
                 }
-                
-                ExecutorService executor = Executors.newFixedThreadPool(5);
-                            List<Callable<Response>> callables = new ArrayList<Callable<Response>>();
-                            for(File file : clientEntity.getFileToUpload())
-                            {
-                                try {
-                                    byte[] data = Files.readAllBytes(file.toPath());
-                                    alt.setData(data);
-                                    alt.setFilename(file.getName());
-                                    callables.add(alt);
-                                } catch (IOException ex) {
-                                    Logger.getLogger(AlternateUpload.class.getName()).log(Level.SEVERE, null, ex);
-                                }
-                            }
-                            try {
-                                responses = executor.invokeAll(callables);
-                            } catch (InterruptedException ex) {
-                                Logger.getLogger(AlternateUpload.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                return responses;
+                return myResponse;
             }
         };
         new Thread(myTask).start();
     }
     
+    public void suppliersInsertRecord(final SuppliersEntity suppliersEntity, final String searchClass)
+    {
+        myTask = new Task<List<Future<Response>>>() 
+        {
+            @Override
+            protected List<Future<Response>> call() throws Exception 
+            {
+                List<Future<Response>> myResponse = new ArrayList<>();
+                ParseObject supplierObject = insertRecord.suppliersInsert("Suppliers", suppliersEntity);
+                if(suppliersEntity.getFileToUpload().size() > 0)
+                {
+                    ArrayList<String> jsonResponses = new ArrayList<>();
+                    List<Future<Response>> response = ExecuteFileUpload.getInstance().execute(suppliersEntity.getFileToUpload());
+                    for(Future<Response> responses : response)
+                    {
+                        System.out.println(responses.get().getResponseBody());
+                        String responseBody = responses.get().getResponseBody();
+                        jsonResponses.add(responseBody);
+                    }
+                    myResponse = ExecuteFileUpload.getInstance().associateFile(jsonResponses, "Suppliers", supplierObject.getObjectId(), "SuppliersPointer");
+                    
+                }
+                return myResponse;
+            }
+        };
+        new Thread(myTask).start();
+    }
+    public void contractorsInsertRecord(final ContractorsEntity contractorsEntity, final String searchClass)
+    {
+        myTask = new Task<List<Future<Response>>>() 
+        {
+            @Override
+            protected List<Future<Response>> call() throws Exception 
+            {
+                List<Future<Response>> myResponse = new ArrayList<>();
+                ParseObject contractorsObject = insertRecord.contractorsInsert("Contractors", contractorsEntity);
+                if(contractorsEntity.getFileToUpload().size() > 0)
+                {
+                    ArrayList<String> jsonResponses = new ArrayList<>();
+                    List<Future<Response>> response = ExecuteFileUpload.getInstance().execute(contractorsEntity.getFileToUpload());
+                    for(Future<Response> responses : response)
+                    {
+                        System.out.println(responses.get().getResponseBody());
+                        String responseBody = responses.get().getResponseBody();
+                        jsonResponses.add(responseBody);
+                    }
+                    myResponse = ExecuteFileUpload.getInstance().associateFile(jsonResponses, "Contractors", contractorsObject.getObjectId(), "ContractorsPointer");
+                    
+                }
+                return myResponse;
+            }
+        };
+        new Thread(myTask).start();
+    }
+    
+    public void consultantsInsertRecord(final ConsultantsEntity consultantsEntity, final String searchClass)
+    {
+        myTask = new Task<List<Future<Response>>>() 
+        {
+            @Override
+            protected List<Future<Response>> call() throws Exception 
+            {
+                List<Future<Response>> myResponse = new ArrayList<>();
+                ParseObject consultantsObject = insertRecord.consultantsInsert("Consultants", consultantsEntity);
+                if(consultantsEntity.getFileToUpload().size() > 0)
+                {
+                    ArrayList<String> jsonResponses = new ArrayList<>();
+                    List<Future<Response>> response = ExecuteFileUpload.getInstance().execute(consultantsEntity.getFileToUpload());
+                    for(Future<Response> responses : response)
+                    {
+                        System.out.println(responses.get().getResponseBody());
+                        String responseBody = responses.get().getResponseBody();
+                        jsonResponses.add(responseBody);
+                    }
+                    myResponse = ExecuteFileUpload.getInstance().associateFile(jsonResponses, "Consultants", consultantsObject.getObjectId(), "ConsultantsPointer");
+                    
+                }
+                return myResponse;
+            }
+        };
+        new Thread(myTask).start();
+    }
+    public void specificationsInsertRecord(final SpecificationsEntity specificationsEntity, final String searchClass)
+    {
+        myTask = new Task<List<Future<Response>>>() 
+        {
+            @Override
+            protected List<Future<Response>> call() throws Exception 
+            {
+                List<Future<Response>> myResponse = new ArrayList<>();
+                ParseObject specificationsObject = insertRecord.specificationsInsert("Specifications", specificationsEntity);
+                if(specificationsEntity.getFileToUpload().size() > 0)
+                {
+                    ArrayList<String> jsonResponses = new ArrayList<>();
+                    List<Future<Response>> response = ExecuteFileUpload.getInstance().execute(specificationsEntity.getFileToUpload());
+                    for(Future<Response> responses : response)
+                    {
+                        System.out.println(responses.get().getResponseBody());
+                        String responseBody = responses.get().getResponseBody();
+                        jsonResponses.add(responseBody);
+                    }
+                    myResponse = ExecuteFileUpload.getInstance().associateFile(jsonResponses, "Specifications", specificationsObject.getObjectId(), "SpecificationsPointer");
+                    
+                }
+                return myResponse;
+            }
+        };
+        new Thread(myTask).start();
+    }
     public Task<List<Future<Response>>> getTask()
     {
         return myTask;
     }
-    public boolean getIsFinished() {
-        return isFinished;
-    }
-
-    public void setIsFinished(boolean isFinished) {
-        this.isFinished = isFinished;
-    }
-    private ArrayList<String> extractStringsToTags()
-    {
-        ArrayList<String> tags = new ArrayList<>();
-        tags.add(clientEntity.getRepresentative());
-        tags.add(clientEntity.getPosition());
-        tags.add(clientEntity.getCompany_Name());
-        tags.add(clientEntity.getIndustry());
-        tags.add(clientEntity.getType());
-        String[] representativeSplit = clientEntity.getRepresentative().split("\\s+");
-        String[] positionSplit = clientEntity.getPosition().split("\\s+");
-        String[] companySplit = clientEntity.getCompany_Name().split("\\s+");
-        for(String values : representativeSplit)
-        {
-            tags.add(values.toUpperCase());
-        }
-        for(String values : positionSplit)
-        {
-            tags.add(values.toUpperCase());
-        }
-        for(String values : companySplit)
-        {
-            tags.add(values.toUpperCase());
-        }
-        return tags;
-    }
-    
     private String getFileType(String filePath)
     {
         String type = "";
