@@ -148,11 +148,18 @@ public class MyUtils
         tags.add(specificationsEntity.getSection());
         tags.add(specificationsEntity.getType());
         tags.add(specificationsEntity.getKeywords());
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(specificationsEntity.getDivision().trim());
+        stringBuilder.append("-");
+        stringBuilder.append(specificationsEntity.getSection().trim());
+        stringBuilder.append("-");
+        stringBuilder.append(specificationsEntity.getType().trim());
+        tags.add(stringBuilder.toString());
         String[] titleSplit = specificationsEntity.getTitle().split("\\s+");
         String[] divisionSplit = specificationsEntity.getDivision().split("\\s+");
         String[] sectionSplit = specificationsEntity.getSection().split("\\s+");
         String[] typeSplit = specificationsEntity.getType().split("\\s+");
-        String[] keywordSplit = specificationsEntity.getKeywords().split("\\s+");
+        String[] keywordSplit = specificationsEntity.getKeywords().split(",");
         for(String values : titleSplit)
         {
             tags.add(values.toUpperCase());

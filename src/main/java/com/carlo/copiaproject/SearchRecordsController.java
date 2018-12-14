@@ -29,7 +29,9 @@ public class SearchRecordsController implements Initializable
     @FXML private ComboBox<String> combobox_searchrecords_searchin;
     @FXML private TextField textfield_searchrecords_keyword;
     @FXML private ProgressIndicator searchpage_progress;
-    @FXML private Button searchrecords_searchbutton;
+    @FXML private Button searchrecords_searchbutton,button_searchinrecord_showfiles;
+    @FXML private ProgressIndicator showFile_progress;
+    
     @FXML
     void button_searchrecords_showfilesOnClick(ActionEvent event)
     {
@@ -38,101 +40,166 @@ public class SearchRecordsController implements Initializable
         {
             ClientEntity ce = (ClientEntity) tableview_searchinrecord.getSelectionModel().getSelectedItem();
             String objId = ce.getObjectID();
-            RetrieveAssociatedFiles raf = new RetrieveAssociatedFiles(objId,"Client","ClientPointer","Images","PDFFiles");
-            Thread thread = new Thread(raf);
-            thread.start();
-            try{thread.join();}catch(Exception ex){ex.printStackTrace();}
-            ArrayList<String> result = raf.getResult();
-            if(result.size() > 0)
+            RetrieveFileTask.getInstance().setId(objId);
+            RetrieveFileTask.getInstance().setSearchClass("Client");
+            RetrieveFileTask.getInstance().setField("ClientPointer");
+            RetrieveFileTask.getInstance().setImageClass("Images");
+            RetrieveFileTask.getInstance().setPdfClass("PDFFiles");
+            RetrieveFileTask.getInstance().retrieveFile();
+            showFile_progress.visibleProperty().unbind();
+            button_searchinrecord_showfiles.disableProperty().unbind();
+            showFile_progress.visibleProperty().bind(RetrieveFileTask.getInstance().getTask().runningProperty());
+            button_searchinrecord_showfiles.disableProperty().bind(RetrieveFileTask.getInstance().getTask().runningProperty());
+            
+            RetrieveFileTask.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
             {
-                listview_searchrecord_fileshowcase.getItems().clear();
-                listview_searchrecord_fileshowcase.getItems().addAll(result);
-            }
-            else
-            {
-                listview_searchrecord_fileshowcase.getItems().clear();
-                JOptionPane.showMessageDialog(null, "No Files found");
-            }
+                @Override
+                public void handle(WorkerStateEvent event) 
+                {
+                    if(RetrieveFileTask.getInstance().getTask().getValue().size() > 0)
+                    {
+                        listview_searchrecord_fileshowcase.getItems().clear();
+                        listview_searchrecord_fileshowcase.getItems().addAll(RetrieveFileTask.getInstance().getTask().getValue());
+                    }
+                    else
+                    {
+                        listview_searchrecord_fileshowcase.getItems().clear();
+                        JOptionPane.showMessageDialog(null, "No Files found");
+                    }
+                }
+            });
         }
         else if(tableview_searchinrecord.getSelectionModel().getSelectedItem() instanceof SuppliersEntity)
         {
             SuppliersEntity ce = (SuppliersEntity) tableview_searchinrecord.getSelectionModel().getSelectedItem();
             String objId = ce.getObjectID();
-            RetrieveAssociatedFiles raf = new RetrieveAssociatedFiles(objId,"Suppliers","SuppliersPointer","Images","PDFFiles");
-            Thread thread = new Thread(raf);
-            thread.start();
-            try{thread.join();}catch(Exception ex){ex.printStackTrace();}
-            ArrayList<String> result = raf.getResult();
-            if(result.size() > 0)
+            RetrieveFileTask.getInstance().setId(objId);
+            RetrieveFileTask.getInstance().setSearchClass("Suppliers");
+            RetrieveFileTask.getInstance().setField("SuppliersPointer");
+            RetrieveFileTask.getInstance().setImageClass("Images");
+            RetrieveFileTask.getInstance().setPdfClass("PDFFiles");
+            RetrieveFileTask.getInstance().retrieveFile();
+            showFile_progress.visibleProperty().unbind();
+            button_searchinrecord_showfiles.disableProperty().unbind();
+            showFile_progress.visibleProperty().bind(RetrieveFileTask.getInstance().getTask().runningProperty());
+            button_searchinrecord_showfiles.disableProperty().bind(RetrieveFileTask.getInstance().getTask().runningProperty());
+            
+            RetrieveFileTask.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
             {
-                listview_searchrecord_fileshowcase.getItems().clear();
-                listview_searchrecord_fileshowcase.getItems().addAll(result);
-            }
-            else
-            {
-                listview_searchrecord_fileshowcase.getItems().clear();
-                JOptionPane.showMessageDialog(null, "No Files found");
-            }
+                @Override
+                public void handle(WorkerStateEvent event) 
+                {
+                    if(RetrieveFileTask.getInstance().getTask().getValue().size() > 0)
+                    {
+                        listview_searchrecord_fileshowcase.getItems().clear();
+                        listview_searchrecord_fileshowcase.getItems().addAll(RetrieveFileTask.getInstance().getTask().getValue());
+                    }
+                    else
+                    {
+                        listview_searchrecord_fileshowcase.getItems().clear();
+                        JOptionPane.showMessageDialog(null, "No Files found");
+                    }
+                }
+            });
         }
         else if(tableview_searchinrecord.getSelectionModel().getSelectedItem() instanceof ContractorsEntity)
         {
             ContractorsEntity ce = (ContractorsEntity) tableview_searchinrecord.getSelectionModel().getSelectedItem();
             String objId = ce.getObjectId();
-            RetrieveAssociatedFiles raf = new RetrieveAssociatedFiles(objId,"Contractors","ContractorsPointer","Images","PDFFiles");
-            Thread thread = new Thread(raf);
-            thread.start();
-            try{thread.join();}catch(Exception ex){ex.printStackTrace();}
-            ArrayList<String> result = raf.getResult();
-            if(result.size() > 0)
+            RetrieveFileTask.getInstance().setId(objId);
+            RetrieveFileTask.getInstance().setSearchClass("Contractors");
+            RetrieveFileTask.getInstance().setField("ContractorsPointer");
+            RetrieveFileTask.getInstance().setImageClass("Images");
+            RetrieveFileTask.getInstance().setPdfClass("PDFFiles");
+            RetrieveFileTask.getInstance().retrieveFile();
+            showFile_progress.visibleProperty().unbind();
+            button_searchinrecord_showfiles.disableProperty().unbind();
+            showFile_progress.visibleProperty().bind(RetrieveFileTask.getInstance().getTask().runningProperty());
+            button_searchinrecord_showfiles.disableProperty().bind(RetrieveFileTask.getInstance().getTask().runningProperty());
+            
+            RetrieveFileTask.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
             {
-                listview_searchrecord_fileshowcase.getItems().clear();
-                listview_searchrecord_fileshowcase.getItems().addAll(result);
-            }
-            else
-            {
-                listview_searchrecord_fileshowcase.getItems().clear();
-                JOptionPane.showMessageDialog(null, "No Files found");
-            }
+                @Override
+                public void handle(WorkerStateEvent event) 
+                {
+                    if(RetrieveFileTask.getInstance().getTask().getValue().size() > 0)
+                    {
+                        listview_searchrecord_fileshowcase.getItems().clear();
+                        listview_searchrecord_fileshowcase.getItems().addAll(RetrieveFileTask.getInstance().getTask().getValue());
+                    }
+                    else
+                    {
+                        listview_searchrecord_fileshowcase.getItems().clear();
+                        JOptionPane.showMessageDialog(null, "No Files found");
+                    }
+                }
+            });
         }
         else if(tableview_searchinrecord.getSelectionModel().getSelectedItem() instanceof ConsultantsEntity)
         {
             ConsultantsEntity ce = (ConsultantsEntity) tableview_searchinrecord.getSelectionModel().getSelectedItem();
             String objId = ce.getObjectId();
-            RetrieveAssociatedFiles raf = new RetrieveAssociatedFiles(objId,"Consultants","ConsultantsPointer","Images","PDFFiles");
-            Thread thread = new Thread(raf);
-            thread.start();
-            try{thread.join();}catch(Exception ex){ex.printStackTrace();}
-            ArrayList<String> result = raf.getResult();
-            if(result.size() > 0)
+            RetrieveFileTask.getInstance().setId(objId);
+            RetrieveFileTask.getInstance().setSearchClass("Consultants");
+            RetrieveFileTask.getInstance().setField("ConsultantsPointer");
+            RetrieveFileTask.getInstance().setImageClass("Images");
+            RetrieveFileTask.getInstance().setPdfClass("PDFFiles");
+            RetrieveFileTask.getInstance().retrieveFile();
+            showFile_progress.visibleProperty().unbind();
+            button_searchinrecord_showfiles.disableProperty().unbind();
+            showFile_progress.visibleProperty().bind(RetrieveFileTask.getInstance().getTask().runningProperty());
+            button_searchinrecord_showfiles.disableProperty().bind(RetrieveFileTask.getInstance().getTask().runningProperty());
+            
+            RetrieveFileTask.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
             {
-                listview_searchrecord_fileshowcase.getItems().clear();
-                listview_searchrecord_fileshowcase.getItems().addAll(result);
-            }
-            else
-            {
-                listview_searchrecord_fileshowcase.getItems().clear();
-                JOptionPane.showMessageDialog(null, "No Files found");
-            }
+                @Override
+                public void handle(WorkerStateEvent event) 
+                {
+                    if(RetrieveFileTask.getInstance().getTask().getValue().size() > 0)
+                    {
+                        listview_searchrecord_fileshowcase.getItems().clear();
+                        listview_searchrecord_fileshowcase.getItems().addAll(RetrieveFileTask.getInstance().getTask().getValue());
+                    }
+                    else
+                    {
+                        listview_searchrecord_fileshowcase.getItems().clear();
+                        JOptionPane.showMessageDialog(null, "No Files found");
+                    }
+                }
+            });
         }
         else if(tableview_searchinrecord.getSelectionModel().getSelectedItem() instanceof SpecificationsEntity)
         {
             SpecificationsEntity ce = (SpecificationsEntity) tableview_searchinrecord.getSelectionModel().getSelectedItem();
             String objId = ce.getObjectId();
-            RetrieveAssociatedFiles raf = new RetrieveAssociatedFiles(objId,"Specifications","SpecificationsPointer","Images","Specifications_PDFFiles");
-            Thread thread = new Thread(raf);
-            thread.start();
-            try{thread.join();}catch(Exception ex){ex.printStackTrace();}
-            ArrayList<String> result = raf.getResult();
-            if(result.size() > 0)
+            RetrieveFileTask.getInstance().setId(objId);
+            RetrieveFileTask.getInstance().setSearchClass("Specifications");
+            RetrieveFileTask.getInstance().setField("SpecificationsPointer");
+            RetrieveFileTask.getInstance().setImageClass("Images");
+            RetrieveFileTask.getInstance().setPdfClass("PDFFiles");
+            RetrieveFileTask.getInstance().retrieveFile();
+            showFile_progress.visibleProperty().unbind();
+            button_searchinrecord_showfiles.disableProperty().unbind();
+            showFile_progress.visibleProperty().bind(RetrieveFileTask.getInstance().getTask().runningProperty());
+            button_searchinrecord_showfiles.disableProperty().bind(RetrieveFileTask.getInstance().getTask().runningProperty());
+            
+            RetrieveFileTask.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
             {
-                listview_searchrecord_fileshowcase.getItems().clear();
-                listview_searchrecord_fileshowcase.getItems().addAll(result);
-            }
-            else
-            {
-                listview_searchrecord_fileshowcase.getItems().clear();
-                JOptionPane.showMessageDialog(null, "No Files found");
-            }
+                @Override
+                public void handle(WorkerStateEvent event) 
+                {
+                    if(RetrieveFileTask.getInstance().getTask().getValue().size() > 0)
+                    {
+                        listview_searchrecord_fileshowcase.getItems().clear();
+                        listview_searchrecord_fileshowcase.getItems().addAll(RetrieveFileTask.getInstance().getTask().getValue());
+                    }
+                    else
+                    {
+                        listview_searchrecord_fileshowcase.getItems().clear();
+                        JOptionPane.showMessageDialog(null, "No Files found");
+                    }
+                }
+            });
         }
         
     }

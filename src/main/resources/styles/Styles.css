@@ -8,6 +8,9 @@
     -fx-text-fill: black;
     
 }
+.anchor-pane{
+    -fx-background-color:white;
+}
 .dark-button{
     -fx-background-color: #454545;
     -fx-font: 15px Calibri;

@@ -15,7 +15,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.io.FilenameUtils;
 import org.asynchttpclient.AsyncCompletionHandler;
 import org.asynchttpclient.AsyncHttpClient;
 import org.asynchttpclient.Dsl;
@@ -97,10 +96,7 @@ public class ExecuteFileUpload
                     String fileClass = new String();
                     if(MyUtils.getInstance().getFileType(name).equalsIgnoreCase("pdf"))
                     {
-                        if(searchClass.equalsIgnoreCase("Specifications"))
-                            fileClass = "Specifications_PDFFiles";
-                        else
-                            fileClass = "PDFFiles";
+                        fileClass = "PDFFiles";
                     }
                     else if(MyUtils.getInstance().getFileType(name).equalsIgnoreCase("Image"))
                     {
@@ -123,8 +119,6 @@ public class ExecuteFileUpload
                     return lf.get();
                 }
             };
-               
-                
             callables.add(callable);
         }
         try {
