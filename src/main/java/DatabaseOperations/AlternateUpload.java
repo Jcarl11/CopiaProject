@@ -32,13 +32,16 @@ public class AlternateUpload
             {
                 List<Future<Response>> myResponse = new ArrayList<>();
                 ParseObject clientObject = insertRecord.clientInsert("Client", clientEntity);
+                if(clientEntity.getNotes() != null)
+                {
+                    ExecuteFileUpload.getInstance().associateNotes(clientObject.getObjectId(), "ClientPointer", clientEntity.getNotes(),"Client");
+                }
                 if(clientEntity.getFileToUpload().size() > 0)
                 {
                     ArrayList<String> jsonResponses = new ArrayList<>();
                     List<Future<Response>> response = ExecuteFileUpload.getInstance().execute(clientEntity.getFileToUpload());
                     for(Future<Response> responses : response)
                     {
-                        System.out.println(responses.get().getResponseBody());
                         String responseBody = responses.get().getResponseBody();
                         jsonResponses.add(responseBody);
                     }
@@ -60,6 +63,10 @@ public class AlternateUpload
             {
                 List<Future<Response>> myResponse = new ArrayList<>();
                 ParseObject supplierObject = insertRecord.suppliersInsert("Suppliers", suppliersEntity);
+                if(suppliersEntity.getNotes() != null)
+                {
+                    ExecuteFileUpload.getInstance().associateNotes(supplierObject.getObjectId(), "SuppliersPointer", suppliersEntity.getNotes(),"Suppliers");
+                }
                 if(suppliersEntity.getFileToUpload().size() > 0)
                 {
                     ArrayList<String> jsonResponses = new ArrayList<>();
@@ -87,6 +94,10 @@ public class AlternateUpload
             {
                 List<Future<Response>> myResponse = new ArrayList<>();
                 ParseObject contractorsObject = insertRecord.contractorsInsert("Contractors", contractorsEntity);
+                if(contractorsEntity.getNotes() != null)
+                {
+                    ExecuteFileUpload.getInstance().associateNotes(contractorsObject.getObjectId(), "ContractorsPointer", contractorsEntity.getNotes(),"Contractors");
+                }
                 if(contractorsEntity.getFileToUpload().size() > 0)
                 {
                     ArrayList<String> jsonResponses = new ArrayList<>();
@@ -115,6 +126,10 @@ public class AlternateUpload
             {
                 List<Future<Response>> myResponse = new ArrayList<>();
                 ParseObject consultantsObject = insertRecord.consultantsInsert("Consultants", consultantsEntity);
+                if(consultantsEntity.getNotes() != null)
+                {
+                    ExecuteFileUpload.getInstance().associateNotes(consultantsObject.getObjectId(), "ConsultantsPointer", consultantsEntity.getNotes(),"Consultants");
+                }
                 if(consultantsEntity.getFileToUpload().size() > 0)
                 {
                     ArrayList<String> jsonResponses = new ArrayList<>();
@@ -142,6 +157,10 @@ public class AlternateUpload
             {
                 List<Future<Response>> myResponse = new ArrayList<>();
                 ParseObject specificationsObject = insertRecord.specificationsInsert("Specifications", specificationsEntity);
+                if(specificationsEntity.getNotes() != null)
+                {
+                    ExecuteFileUpload.getInstance().associateNotes(specificationsObject.getObjectId(), "SpecificationsPointer", specificationsEntity.getNotes(),"Specifications");
+                }
                 if(specificationsEntity.getFileToUpload().size() > 0)
                 {
                     ArrayList<String> jsonResponses = new ArrayList<>();

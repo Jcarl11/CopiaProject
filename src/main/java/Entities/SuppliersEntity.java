@@ -17,6 +17,7 @@ public class SuppliersEntity
     private String Industry;
     private String Type;
     private ArrayList<File> fileToUpload;
+    private ArrayList<NotesEntity> notes;
 
     public SuppliersEntity(String ObjectID, String Representative, String Position, String Company_Name, String Brand,String Industry, String Type) {
         this.ObjectID = ObjectID;
@@ -93,5 +94,12 @@ public class SuppliersEntity
 
     public void setType(String Type) {
         this.Type = Type;
+    }
+    public ArrayList<NotesEntity> getNotes() {
+        return notes;
+    }
+
+    public void setNotes(ArrayList<NotesEntity> notes) {
+        this.notes = notes;
     }
 }

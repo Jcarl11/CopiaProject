@@ -84,7 +84,7 @@
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </GridPane.margin>
                   </AnchorPane>
-                  <AnchorPane GridPane.columnSpan="5" GridPane.rowIndex="5" GridPane.rowSpan="3">
+                  <AnchorPane GridPane.columnSpan="5" GridPane.rowIndex="5" GridPane.rowSpan="2">
                      <children>
                         <TextArea fx:id="textfield_specifications_keywords" prefHeight="211.0" prefWidth="571.0" promptText="Keywords(Separate with comma)" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>
@@ -108,7 +108,7 @@
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </GridPane.margin>
                   </AnchorPane>
-                  <AnchorPane GridPane.columnSpan="3" GridPane.rowIndex="9">
+                  <AnchorPane GridPane.columnSpan="3" GridPane.rowIndex="10">
                      <children>
                         <Button fx:id="button_specifications_choosefile" mnemonicParsing="false" onAction="#button_specifications_choosefileOnClick" prefHeight="68.0" prefWidth="193.0" styleClass="orange-buton" text="Choose file" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>
@@ -124,6 +124,14 @@
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </GridPane.margin>
                   </AnchorPane>
+         <AnchorPane GridPane.columnSpan="5" GridPane.rowIndex="7" GridPane.rowSpan="3">
+            <children>
+               <TextArea fx:id="specifications_textarea" prefHeight="200.0" prefWidth="200.0" promptText="Remarks" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            </children>
+            <GridPane.margin>
+               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </GridPane.margin>
+         </AnchorPane>
                </children>
             </GridPane>
 </AnchorPane>

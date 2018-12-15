@@ -19,6 +19,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javax.swing.JFileChooser;
@@ -38,7 +39,7 @@ public class ConsultantsController implements Initializable
     @FXML private ComboBox<String> combobox_consultants_industry, combobox_consultants_classificiation;
     @FXML private TextField textfield_consultants_representative, textfield_consultants_position, textfield_consultants_companyname
             ,textfield_consultants_specialization;
-    
+    @FXML TextArea consultants_textarea;
     
     @FXML 
     void button_consultants_choosefileOnClick(ActionEvent event)
@@ -136,6 +137,7 @@ public class ConsultantsController implements Initializable
             HashMap<String, TextField> fields = new HashMap<>();
             HashMap<String, ComboBox> combobox = new HashMap<>();
             HashMap<String, ListView> listView = new HashMap<>();
+            HashMap<String, TextArea> textarea = new HashMap<>();
             fields.put("Representative", textfield_consultants_representative);
             fields.put("Position", textfield_consultants_position);
             fields.put("Company Name", textfield_consultants_companyname);
@@ -143,9 +145,11 @@ public class ConsultantsController implements Initializable
             combobox.put("Industry", combobox_consultants_industry);
             combobox.put("Classification", combobox_consultants_classificiation);
             listView.put("Files", listview_consultants_FiletoUpload);
+            textarea.put("Remarks", consultants_textarea);
             GetOtherControllerAttributesSingleton.getInstance().consultantsSetTextFields(fields);
             GetOtherControllerAttributesSingleton.getInstance().consultantsSetCombobox(combobox);
             GetOtherControllerAttributesSingleton.getInstance().consultantsSetListView(listView);
+            GetOtherControllerAttributesSingleton.getInstance().consultantsSetTextArea(textarea);
             GetOtherControllerAttributesSingleton.getInstance().consultantsSetContainer(anchorpane_consultants);
         }catch(Exception ex)
         {

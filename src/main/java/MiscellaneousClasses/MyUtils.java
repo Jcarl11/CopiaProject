@@ -3,6 +3,7 @@ package MiscellaneousClasses;
 
 import Entities.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import org.apache.commons.io.FilenameUtils;
 
 public class MyUtils 
@@ -195,6 +196,18 @@ public class MyUtils
             type = "pdf";
         }
         return type;
+    }
+    public ArrayList<NotesEntity> extractNotes(String raw_notes)
+    {
+        String[] notes = raw_notes.split(",");
+        ArrayList<NotesEntity> result = new ArrayList<>();
+        for(String note : notes)
+        {
+            NotesEntity notesEntity = new NotesEntity();
+            notesEntity.setRemarks(note);
+            result.add(notesEntity);
+        }
+        return result;
     }
     
 }

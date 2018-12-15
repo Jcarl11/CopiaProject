@@ -19,6 +19,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javax.swing.JFileChooser;
@@ -31,17 +32,9 @@ public class ContractorsController implements Initializable
     @FXML AnchorPane anchorpane_contractors;
     @FXML ListView<String> listview_contractors_FiletoUpload;
     @FXML ComboBox<String> combobox_contractors_industry,combobox_contractors_classificiation;
-    @FXML
-    private TextField textfield_contractors_representative;
-
-    @FXML
-    private TextField textfield_contractors_position;
-
-    @FXML
-    private TextField textfield_contractors_companyname;
-
-    @FXML
-    private TextField textfield_contractors_specialization;
+    @FXML TextField textfield_contractors_representative,textfield_contractors_position,textfield_contractors_companyname
+            ,textfield_contractors_specialization;
+    @FXML TextArea contractors_textarea;
     
     @FXML
     void button_contractors_choosefileOnClick(ActionEvent event) 
@@ -160,6 +153,7 @@ public class ContractorsController implements Initializable
             HashMap<String, TextField> contractorstextfieldsList = new HashMap<>();
             HashMap<String, ComboBox> combobox = new HashMap<>();
             HashMap<String, ListView> listView = new HashMap<>();
+            HashMap<String, TextArea> textarea = new HashMap<>();
             contractorstextfieldsList.put("Representative", textfield_contractors_representative);
             contractorstextfieldsList.put("Position", textfield_contractors_position);
             contractorstextfieldsList.put("Company", textfield_contractors_companyname);
@@ -167,9 +161,11 @@ public class ContractorsController implements Initializable
             combobox.put("Industry", combobox_contractors_industry);
             combobox.put("Classification", combobox_contractors_classificiation);
             listView.put("Files", listview_contractors_FiletoUpload);
+            textarea.put("Remarks", contractors_textarea);
             GetOtherControllerAttributesSingleton.getInstance().contractorsSetTextFields(contractorstextfieldsList);
             GetOtherControllerAttributesSingleton.getInstance().contractorsSetCombobox(combobox);
             GetOtherControllerAttributesSingleton.getInstance().contractorsSetListView(listView);
+            GetOtherControllerAttributesSingleton.getInstance().contractorsSetTextArea(textarea);
             GetOtherControllerAttributesSingleton.getInstance().contractorsSetContainer(anchorpane_contractors);
         }catch(Exception ex)
         {

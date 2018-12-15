@@ -62,11 +62,13 @@ public class FXMLController implements Initializable
             HashMap<String, TextField> clientCategoryTextFields = GetOtherControllerAttributesSingleton.getInstance().clientGetTextFields();
             HashMap<String, ComboBox> clientCategoryComboBox = GetOtherControllerAttributesSingleton.getInstance().clientGetComboBox();
             HashMap<String, ListView> clientCategoryListView = GetOtherControllerAttributesSingleton.getInstance().clientGetListView();
+            HashMap<String, TextArea> clientCategoryTextArea = GetOtherControllerAttributesSingleton.getInstance().clientGetTextArea();
             clientEntity.setRepresentative(clientCategoryTextFields.get("Representative").getText().toUpperCase());
             clientEntity.setPosition(clientCategoryTextFields.get("Position").getText().toUpperCase());
             clientEntity.setCompany_Name(clientCategoryTextFields.get("Company Name").getText().toUpperCase());
             clientEntity.setIndustry(clientCategoryComboBox.get("Industry").getSelectionModel().getSelectedItem().toString().toUpperCase());
             clientEntity.setType(clientCategoryComboBox.get("Type").getSelectionModel().getSelectedItem().toString().toUpperCase());
+            
             if(clientCategoryListView.get("Files").getItems().size() > 0)
             {
                 ArrayList<File> files = new ArrayList<>();
@@ -76,6 +78,10 @@ public class FXMLController implements Initializable
                     files.add(new File(path));
                 }
                 clientEntity.setFileToUpload(files);
+            }
+            if(!clientCategoryTextArea.get("Remarks").getText().trim().isEmpty())
+            {
+                clientEntity.setNotes(MyUtils.getInstance().extractNotes(clientCategoryTextArea.get("Remarks").getText().trim().toUpperCase()));
             }
             AlternateUpload.getInstance().clientInsertRecord(clientEntity, "Client");
             button_upload_id.disableProperty().unbind();
@@ -98,6 +104,7 @@ public class FXMLController implements Initializable
             HashMap<String, TextField> suppliersCategoryTextFields = GetOtherControllerAttributesSingleton.getInstance().supplierGetTextFields();
             HashMap<String, ComboBox> suppliersCategoryComboBox = GetOtherControllerAttributesSingleton.getInstance().supplierGetCombobox();
             HashMap<String, ListView> suppliersCategoryListView = GetOtherControllerAttributesSingleton.getInstance().supplierGetListView();
+            HashMap<String, TextArea> suppliersCategoryTextArea = GetOtherControllerAttributesSingleton.getInstance().supplierGetTextArea();
             suppliersEntity.setRepresentative(suppliersCategoryTextFields.get("Representative").getText().toUpperCase());
             suppliersEntity.setPosition(suppliersCategoryTextFields.get("Position").getText().toUpperCase());
             suppliersEntity.setCompany_Name(suppliersCategoryTextFields.get("Company Name").getText().toUpperCase());
@@ -113,6 +120,10 @@ public class FXMLController implements Initializable
                     files.add(new File(path));
                 }
                 suppliersEntity.setFileToUpload(files);
+            }
+            if(!suppliersCategoryTextArea.get("Remarks").getText().trim().isEmpty())
+            {
+                suppliersEntity.setNotes(MyUtils.getInstance().extractNotes(suppliersCategoryTextArea.get("Remarks").getText().trim().toUpperCase()));
             }
             AlternateUpload.getInstance().suppliersInsertRecord(suppliersEntity, "Suppliers");
             button_upload_id.disableProperty().unbind();
@@ -136,6 +147,7 @@ public class FXMLController implements Initializable
             HashMap<String, TextField> contractorsCategoryTextFields = GetOtherControllerAttributesSingleton.getInstance().contractorsGetTextFields();
             HashMap<String, ComboBox> contractorsCategoryComboBox = GetOtherControllerAttributesSingleton.getInstance().contractorsGetCombobox();
             HashMap<String, ListView> contractorsCategoryListView = GetOtherControllerAttributesSingleton.getInstance().contractorsGetListView();
+            HashMap<String, TextArea> contractorsCategoryTextArea = GetOtherControllerAttributesSingleton.getInstance().contractorsGetTextArea();
             contractorsEntity.setRepresentative(contractorsCategoryTextFields.get("Representative").getText().toUpperCase());
             contractorsEntity.setPosition(contractorsCategoryTextFields.get("Position").getText().toUpperCase());
             contractorsEntity.setCompanyName(contractorsCategoryTextFields.get("Company").getText().toUpperCase());
@@ -151,6 +163,10 @@ public class FXMLController implements Initializable
                     files.add(new File(path));
                 }
                 contractorsEntity.setFileToUpload(files);
+            }
+            if(!contractorsCategoryTextArea.get("Remarks").getText().trim().isEmpty())
+            {
+                contractorsEntity.setNotes(MyUtils.getInstance().extractNotes(contractorsCategoryTextArea.get("Remarks").getText().trim().toUpperCase()));
             }
             AlternateUpload.getInstance().contractorsInsertRecord(contractorsEntity, "Contractors");
             button_upload_id.disableProperty().unbind();
@@ -173,6 +189,7 @@ public class FXMLController implements Initializable
             HashMap<String, TextField> consultantsCategoryTextFields = GetOtherControllerAttributesSingleton.getInstance().consultantsGetTextFields();
             HashMap<String, ComboBox> consultantsCategoryComboBox = GetOtherControllerAttributesSingleton.getInstance().consultantsGetCombobox();
             HashMap<String, ListView> consultantsCategoryListView = GetOtherControllerAttributesSingleton.getInstance().consultantsGetListView();
+            HashMap<String, TextArea> consultantsCategoryTextArea = GetOtherControllerAttributesSingleton.getInstance().consultantsGetTextArea();
             consultantsEntity.setRepresentative(consultantsCategoryTextFields.get("Representative").getText().toUpperCase());
             consultantsEntity.setPosition(consultantsCategoryTextFields.get("Position").getText().toUpperCase());
             consultantsEntity.setCompanyName(consultantsCategoryTextFields.get("Company Name").getText().toUpperCase());
@@ -188,6 +205,10 @@ public class FXMLController implements Initializable
                     files.add(new File(path));
                 }
                 consultantsEntity.setFileToUpload(files);
+            }
+            if(!consultantsCategoryTextArea.get("Remarks").getText().trim().isEmpty())
+            {
+                consultantsEntity.setNotes(MyUtils.getInstance().extractNotes(consultantsCategoryTextArea.get("Remarks").getText().trim().toUpperCase()));
             }
             AlternateUpload.getInstance().consultantsInsertRecord(consultantsEntity, "Consultants");
             button_upload_id.disableProperty().unbind();
@@ -210,6 +231,7 @@ public class FXMLController implements Initializable
             HashMap<String, TextField> fields = GetOtherControllerAttributesSingleton.getInstance().specificationsGetTextFields();
             HashMap<String, TextArea> textArea = GetOtherControllerAttributesSingleton.getInstance().specificationsGetTextArea();
             HashMap<String, ListView> listView = GetOtherControllerAttributesSingleton.getInstance().specificationsGetListView();
+            HashMap<String, TextArea> remarks = GetOtherControllerAttributesSingleton.getInstance().specificationsGetRemarks();
             specificationsEntity.setTitle(fields.get("Document").getText().trim().toUpperCase());
             specificationsEntity.setDivision(fields.get("Division").getText().trim().toUpperCase());
             specificationsEntity.setSection(fields.get("Section").getText().trim().toUpperCase());
@@ -224,6 +246,10 @@ public class FXMLController implements Initializable
                     files.add(new File(path));
                 }
                 specificationsEntity.setFileToUpload(files);
+            }
+            if(!remarks.get("Remarks").getText().trim().isEmpty())
+            {
+                specificationsEntity.setNotes(MyUtils.getInstance().extractNotes(remarks.get("Remarks").getText().trim().toUpperCase()));
             }
             AlternateUpload.getInstance().specificationsInsertRecord(specificationsEntity, "Specifications");
             button_upload_id.disableProperty().unbind();

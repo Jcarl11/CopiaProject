@@ -34,6 +34,7 @@ public class ClientController implements Initializable
     @FXML ListView<String> listview_client_FiletoUpload;
     @FXML ComboBox<String> combobox_client_industry,combobox_client_type;
     @FXML AnchorPane anchorpane_client;
+    @FXML TextArea client_textarea;
     
     @FXML void button_clients_choosefileOnClick(ActionEvent event)
     {
@@ -73,7 +74,7 @@ public class ClientController implements Initializable
     {
         if(listview_client_FiletoUpload.getSelectionModel().getSelectedItem() != null)
         {
-            int selection = JOptionPane.showConfirmDialog(null, "Delete selected fie?", "Confirm", 
+            int selection = JOptionPane.showConfirmDialog(null, "Delete selected file?", "Confirm", 
                             JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
             if(selection == JOptionPane.YES_OPTION)
             {
@@ -150,15 +151,18 @@ public class ClientController implements Initializable
             HashMap<String, TextField> textfieldsList = new HashMap<>();
             HashMap<String, ComboBox> comboboxList = new HashMap<>();
             HashMap<String, ListView> listviewList = new HashMap<>();
+            HashMap<String, TextArea> textArea = new HashMap<>();
             textfieldsList.put("Representative", textfield_client_representative);
             textfieldsList.put("Position", textfield_client_position);
             textfieldsList.put("Company Name", textfield_client_companyname);
             comboboxList.put("Industry", combobox_client_industry);
             comboboxList.put("Type", combobox_client_type);
             listviewList.put("Files", listview_client_FiletoUpload);
+            textArea.put("Remarks", client_textarea);
             GetOtherControllerAttributesSingleton.getInstance().clientSetTextFields(textfieldsList);
             GetOtherControllerAttributesSingleton.getInstance().clientSetComboBox(comboboxList);
             GetOtherControllerAttributesSingleton.getInstance().clientSetListView(listviewList);
+            GetOtherControllerAttributesSingleton.getInstance().clientSetTextArea(textArea);
             GetOtherControllerAttributesSingleton.getInstance().clientSetContainer(anchorpane_client);
         }catch(Exception ex)
         {

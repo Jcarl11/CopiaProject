@@ -14,6 +14,7 @@ public class SpecificationsEntity
     private String type;
     private String keywords;
     private ArrayList<File> fileToUpload;
+    private ArrayList<NotesEntity> notes;
     
     public SpecificationsEntity(String objectId, String title, String division, String section, String type, String keywords, ArrayList<File> fileToUpload) 
     {
@@ -81,6 +82,13 @@ public class SpecificationsEntity
 
     public void setFileToUpload(ArrayList<File> fileToUpload) {
         this.fileToUpload = fileToUpload;
+    }
+    public ArrayList<NotesEntity> getNotes() {
+        return notes;
+    }
+
+    public void setNotes(ArrayList<NotesEntity> notes) {
+        this.notes = notes;
     }
     
 }

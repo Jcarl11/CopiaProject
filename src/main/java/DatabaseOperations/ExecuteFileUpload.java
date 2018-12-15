@@ -2,6 +2,7 @@
 package DatabaseOperations;
 
 import DatabaseOperations.AlternateUpload;
+import Entities.NotesEntity;
 import MiscellaneousClasses.MyUtils;
 import java.io.File;
 import java.io.IOException;
@@ -59,7 +60,6 @@ public class ExecuteFileUpload
                                     @Override
                                     public Response onCompleted(Response rspns) throws Exception 
                                     {
-                                        System.out.println("Done");
                                         return rspns;
                                     }
                             });
@@ -73,7 +73,6 @@ public class ExecuteFileUpload
         }
         try {
             responses = executor.invokeAll(callables);
-            System.out.println("Went here");
         } catch (InterruptedException ex) {
             Logger.getLogger(AlternateUpload.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -112,10 +111,45 @@ public class ExecuteFileUpload
                         @Override
                         public Response onCompleted(Response rspns) throws Exception 
                         {
-                            System.out.println("Done");
                             return rspns;
                         }
                     });
+                    return lf.get();
+                }
+            };
+            callables.add(callable);
+        }
+        try {
+            responses = executor.invokeAll(callables);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ExecuteFileUpload.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return responses;
+    }
+    
+    public List<Future<Response>> associateNotes(final String objectId, final String pointer, ArrayList<NotesEntity> notesList, final String searchClass)
+    {
+        callables = new ArrayList<>();
+        for(final NotesEntity notes : notesList)
+        {
+            Callable<Response> callable = new Callable<Response>() 
+            {
+                @Override
+                public Response call() throws Exception 
+                {
+                    ListenableFuture<Response> lf = asyncHttpClient.preparePost(MyUtils.URL + "Notes")
+                            .addHeader("X-Parse-Application-Id", MyUtils.APP_ID)
+                            .setHeader("X-Parse-REST-API-Key", MyUtils.REST_API_KEY)
+                            .setHeader("Content-type", "application/json")
+                            .setBody(buildBodyNoteClass(notes.getRemarks(), searchClass, pointer, objectId))
+                            .execute(new AsyncCompletionHandler<Response>() 
+                            {
+                                @Override
+                                public Response onCompleted(Response rspns) throws Exception 
+                                {
+                                    return rspns;
+                                }
+                            });
                     return lf.get();
                 }
             };
@@ -153,6 +187,17 @@ public class ExecuteFileUpload
         json.put("Name", fileName);
         json.put("Files", file);
         json.put(pointername, pointer);
+        return json.toString();
+    }
+    private String buildBodyNoteClass(String remark, String searchClass, String pointerName, String objectId)
+    {
+        JSONObject json = new JSONObject();
+        JSONObject pointer = new JSONObject();
+        pointer.put("__type", "Pointer");
+        pointer.put("className", searchClass);
+        pointer.put("objectId", objectId);
+        json.put("Remark", remark.trim().toUpperCase());
+        json.put(pointerName, pointer);
         return json.toString();
     }
 }

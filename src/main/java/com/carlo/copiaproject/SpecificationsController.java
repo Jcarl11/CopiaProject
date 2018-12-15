@@ -23,8 +23,7 @@ public class SpecificationsController implements Initializable
     @FXML AnchorPane anchorpane_specifications;
     @FXML TextField textfield_specifications_document, textfield_specifications_division
             ,textfield_specifications_section,textfield_specifications_type;
-    @FXML TextArea textfield_specifications_keywords;
-    
+    @FXML TextArea textfield_specifications_keywords, specifications_textarea;
     
     @FXML
     void button_specifications_choosefileOnClick(ActionEvent event) 
@@ -92,15 +91,18 @@ public class SpecificationsController implements Initializable
             HashMap<String, TextField> fields = new HashMap<>();
             HashMap<String, TextArea> textArea = new HashMap<>();
             HashMap<String, ListView> listView = new HashMap<>();
+            HashMap<String, TextArea> remarks = new HashMap<>();
             fields.put("Document", textfield_specifications_document);
             fields.put("Division", textfield_specifications_division);
             fields.put("Section", textfield_specifications_section);
             fields.put("Type", textfield_specifications_type);
             textArea.put("Keyword", textfield_specifications_keywords);
             listView.put("Files", listview_specifications_FiletoUpload);
+            remarks.put("Remarks", specifications_textarea);
             GetOtherControllerAttributesSingleton.getInstance().specificationsSetTextFields(fields);
             GetOtherControllerAttributesSingleton.getInstance().specificationsSetTextArea(textArea);
             GetOtherControllerAttributesSingleton.getInstance().specificationsSetListView(listView);
+            GetOtherControllerAttributesSingleton.getInstance().specificationsSetRemarks(remarks);
             GetOtherControllerAttributesSingleton.getInstance().specificationsSetContainer(anchorpane_specifications);
         }catch(Exception ex)
         {

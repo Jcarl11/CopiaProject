@@ -15,6 +15,7 @@ public class ConsultantsEntity
     private String industry;
     private String classification;
     private ArrayList<File> fileToUpload;
+    private ArrayList<NotesEntity> notes;
     
     public ConsultantsEntity(String objectId,String representative, String position, String companyName, String specialization, String industry, String classification, ArrayList<File> fileToUpload) 
     {
@@ -91,5 +92,11 @@ public class ConsultantsEntity
     public void setFileToUpload(ArrayList<File> fileToUpload) {
         this.fileToUpload = fileToUpload;
     }
-    
+    public ArrayList<NotesEntity> getNotes() {
+        return notes;
+    }
+
+    public void setNotes(ArrayList<NotesEntity> notes) {
+        this.notes = notes;
+    }
 }

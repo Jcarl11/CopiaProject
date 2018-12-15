@@ -134,7 +134,7 @@
                   </AnchorPane>
          <AnchorPane GridPane.columnSpan="5" GridPane.rowIndex="7" GridPane.rowSpan="3">
             <children>
-               <TextArea prefHeight="200.0" prefWidth="200.0" promptText="Remarks" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               <TextArea fx:id="contractors_textarea" prefHeight="200.0" prefWidth="200.0" promptText="Remarks" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             </children>
             <GridPane.margin>
                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

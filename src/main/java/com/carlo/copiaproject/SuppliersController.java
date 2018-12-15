@@ -30,7 +30,7 @@ public class SuppliersController implements Initializable
     @FXML ListView<String> listview_suppliers_FiletoUpload; 
     @FXML ComboBox<String> combobox_suppliers_industry,combobox_suppliers_type;
     @FXML AnchorPane anchorpane_suppliers;
-    
+    @FXML TextArea suppliers_textarea;
     @FXML
     void button_suppliers_choosefileOnClick(ActionEvent event)
     {
@@ -147,6 +147,7 @@ public class SuppliersController implements Initializable
             HashMap<String, TextField> textfields = new HashMap<>();
             HashMap<String, ComboBox> comboboxfields = new HashMap<>();
             HashMap<String, ListView> listviewfields = new HashMap<>();
+            HashMap<String, TextArea> textarea = new HashMap<>();
             textfields.put("Representative", textfield_suppliers_representative);
             textfields.put("Position", textfield_suppliers_position);
             textfields.put("Company Name", textfield_suppliers_companyname);
@@ -154,9 +155,11 @@ public class SuppliersController implements Initializable
             comboboxfields.put("Industry", combobox_suppliers_industry);
             comboboxfields.put("Type", combobox_suppliers_type);
             listviewfields.put("Files", listview_suppliers_FiletoUpload);
+            textarea.put("Remarks", suppliers_textarea);
             GetOtherControllerAttributesSingleton.getInstance().supplierSetTextFields(textfields);
             GetOtherControllerAttributesSingleton.getInstance().supplierSetCombobox(comboboxfields);
             GetOtherControllerAttributesSingleton.getInstance().supplierSetListView(listviewfields);
+            GetOtherControllerAttributesSingleton.getInstance().supplierSetTextArea(textarea);
             GetOtherControllerAttributesSingleton.getInstance().supplierSetContainer(anchorpane_suppliers);
         }catch(Exception ex)
         {
