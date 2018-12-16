@@ -83,12 +83,12 @@ public class FXMLController implements Initializable
             {
                 clientEntity.setNotes(MyUtils.getInstance().extractNotes(clientCategoryTextArea.get("Remarks").getText().trim().toUpperCase()));
             }
-            AlternateUpload.getInstance().clientInsertRecord(clientEntity, "Client");
+            Upload.getInstance().clientInsertRecord(clientEntity, "Client", "ClientPointer");
             button_upload_id.disableProperty().unbind();
             progress_indicator.visibleProperty().unbind();
-            button_upload_id.disableProperty().bind(AlternateUpload.getInstance().getTask().runningProperty());
-            progress_indicator.visibleProperty().bind(AlternateUpload.getInstance().getTask().runningProperty());
-            AlternateUpload.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
+            button_upload_id.disableProperty().bind(Upload.getInstance().getTask().runningProperty());
+            progress_indicator.visibleProperty().bind(Upload.getInstance().getTask().runningProperty());
+            Upload.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
             {
                 @Override
                 public void handle(WorkerStateEvent event) 
@@ -96,8 +96,6 @@ public class FXMLController implements Initializable
                     JOptionPane.showMessageDialog(null, "Record(s) Added");
                 }
             });
-            /*ClientUpload clientUpload = new ClientUpload(clientEntity);
-            clientUpload.upload();*/
         }
         else if(anchorpane_main.getChildren().contains(suppliers_file))
         {
@@ -125,12 +123,12 @@ public class FXMLController implements Initializable
             {
                 suppliersEntity.setNotes(MyUtils.getInstance().extractNotes(suppliersCategoryTextArea.get("Remarks").getText().trim().toUpperCase()));
             }
-            AlternateUpload.getInstance().suppliersInsertRecord(suppliersEntity, "Suppliers");
+            Upload.getInstance().suppliersInsertRecord(suppliersEntity, "Suppliers","SuppliersPointer");
             button_upload_id.disableProperty().unbind();
             progress_indicator.visibleProperty().unbind();
-            button_upload_id.disableProperty().bind(AlternateUpload.getInstance().getTask().runningProperty());
-            progress_indicator.visibleProperty().bind(AlternateUpload.getInstance().getTask().runningProperty());
-            AlternateUpload.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
+            button_upload_id.disableProperty().bind(Upload.getInstance().getTask().runningProperty());
+            progress_indicator.visibleProperty().bind(Upload.getInstance().getTask().runningProperty());
+            Upload.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
             {
                 @Override
                 public void handle(WorkerStateEvent event) 
@@ -139,8 +137,6 @@ public class FXMLController implements Initializable
                     
                 }
             });
-            /*SuppliersUpload supplierUpload = new SuppliersUpload(suppliersEntity);
-            supplierUpload.upload();*/
         }
         else if(anchorpane_main.getChildren().contains(contractors_file))
         {
@@ -168,12 +164,12 @@ public class FXMLController implements Initializable
             {
                 contractorsEntity.setNotes(MyUtils.getInstance().extractNotes(contractorsCategoryTextArea.get("Remarks").getText().trim().toUpperCase()));
             }
-            AlternateUpload.getInstance().contractorsInsertRecord(contractorsEntity, "Contractors");
+            Upload.getInstance().contractorsInsertRecord(contractorsEntity, "Contractors", "ContractorsPointer");
             button_upload_id.disableProperty().unbind();
             progress_indicator.visibleProperty().unbind();
-            button_upload_id.disableProperty().bind(AlternateUpload.getInstance().getTask().runningProperty());
-            progress_indicator.visibleProperty().bind(AlternateUpload.getInstance().getTask().runningProperty());
-            AlternateUpload.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
+            button_upload_id.disableProperty().bind(Upload.getInstance().getTask().runningProperty());
+            progress_indicator.visibleProperty().bind(Upload.getInstance().getTask().runningProperty());
+            Upload.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
             {
                 @Override
                 public void handle(WorkerStateEvent event) 
@@ -181,8 +177,6 @@ public class FXMLController implements Initializable
                     JOptionPane.showMessageDialog(null, "Record(s) Added");
                 }
             });
-            /*ContractorsUpload contractorsUpload = new ContractorsUpload(contractorsEntity);
-            contractorsUpload.upload();*/
         }
         else if(anchorpane_main.getChildren().contains(consultants_file))
         {
@@ -210,12 +204,12 @@ public class FXMLController implements Initializable
             {
                 consultantsEntity.setNotes(MyUtils.getInstance().extractNotes(consultantsCategoryTextArea.get("Remarks").getText().trim().toUpperCase()));
             }
-            AlternateUpload.getInstance().consultantsInsertRecord(consultantsEntity, "Consultants");
+            Upload.getInstance().consultantsInsertRecord(consultantsEntity, "Consultants", "ConsultantsPointer");
             button_upload_id.disableProperty().unbind();
             progress_indicator.visibleProperty().unbind();
-            button_upload_id.disableProperty().bind(AlternateUpload.getInstance().getTask().runningProperty());
-            progress_indicator.visibleProperty().bind(AlternateUpload.getInstance().getTask().runningProperty());
-            AlternateUpload.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
+            button_upload_id.disableProperty().bind(Upload.getInstance().getTask().runningProperty());
+            progress_indicator.visibleProperty().bind(Upload.getInstance().getTask().runningProperty());
+            Upload.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
             {
                 @Override
                 public void handle(WorkerStateEvent event) 
@@ -223,8 +217,6 @@ public class FXMLController implements Initializable
                     JOptionPane.showMessageDialog(null, "Record(s) Added");
                 }
             });
-            /*ConsultantsUpload consultantsUpload = new ConsultantsUpload(consultantsEntity);
-            consultantsUpload.upload();*/
         }
         else if(anchorpane_main.getChildren().contains(specifications_file))
         {
@@ -251,12 +243,12 @@ public class FXMLController implements Initializable
             {
                 specificationsEntity.setNotes(MyUtils.getInstance().extractNotes(remarks.get("Remarks").getText().trim().toUpperCase()));
             }
-            AlternateUpload.getInstance().specificationsInsertRecord(specificationsEntity, "Specifications");
+            Upload.getInstance().specificationsInsertRecord(specificationsEntity, "Specifications", "SpecificationsPointer");
             button_upload_id.disableProperty().unbind();
             progress_indicator.visibleProperty().unbind();
-            button_upload_id.disableProperty().bind(AlternateUpload.getInstance().getTask().runningProperty());
-            progress_indicator.visibleProperty().bind(AlternateUpload.getInstance().getTask().runningProperty());
-            AlternateUpload.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
+            button_upload_id.disableProperty().bind(Upload.getInstance().getTask().runningProperty());
+            progress_indicator.visibleProperty().bind(Upload.getInstance().getTask().runningProperty());
+            Upload.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
             {
                 @Override
                 public void handle(WorkerStateEvent event) 

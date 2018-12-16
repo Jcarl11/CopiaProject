@@ -1,12 +1,13 @@
 package Entities;
 
+import MiscellaneousClasses.MyUtils;
 import java.io.File;
 import java.util.ArrayList;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class SpecificationsEntity
 {
-
-    
     private String objectId;
     private String title;
     private String division;
@@ -90,5 +91,14 @@ public class SpecificationsEntity
     public void setNotes(ArrayList<NotesEntity> notes) {
         this.notes = notes;
     }
-    
+    public JSONObject buildJSON()
+    {
+        JSONObject json = new JSONObject();
+        json.put("Title", getTitle());
+        json.put("Division", getDivision());
+        json.put("Section", getSection());
+        json.put("Type", getType());
+        json.put("Tags", new JSONArray(MyUtils.getInstance().speicifications_extractStringsToTags(this)));
+        return json;
+    }
 }

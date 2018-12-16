@@ -1,8 +1,5 @@
 package com.carlo.copiaproject;
 
-import DatabaseOperations.LocalStorage;
-import DatabaseOperations.ExecuteFileUpload;
-import MiscellaneousClasses.SectionsManager;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.application.Platform;
@@ -10,7 +7,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.parse4j.Parse;
@@ -31,7 +27,6 @@ public class MainApp extends Application {
             @Override
             public void handle(WindowEvent event) 
             {
-                ExecuteFileUpload.getInstance().shutdownExecutor();
                 Platform.exit();
                 System.exit(0);
             }

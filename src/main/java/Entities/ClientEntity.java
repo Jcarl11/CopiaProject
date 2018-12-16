@@ -1,7 +1,10 @@
 package Entities;
 
+import MiscellaneousClasses.MyUtils;
 import java.io.File;
 import java.util.ArrayList;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  *
@@ -89,5 +92,17 @@ public class ClientEntity
 
     public void setNotes(ArrayList<NotesEntity> notes) {
         this.notes = notes;
+    }
+    
+    public JSONObject buildJSON()
+    {
+        JSONObject json = new JSONObject();
+        json.put("Representative", getRepresentative());
+        json.put("Position", getPosition());
+        json.put("Company", getCompany_Name());
+        json.put("Industry", getIndustry());
+        json.put("Type", getType());
+        json.put("Tags", new JSONArray(MyUtils.getInstance().client_extractStringsToTags(this)));
+        return json;
     }
 }

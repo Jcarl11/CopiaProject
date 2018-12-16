@@ -1,14 +1,14 @@
 package DatabaseOperations;
 import javafx.concurrent.Task;
-public class AlternateSearchRecords 
+public class SearchRecords 
 {
     Task<Object> searchTask;
-    private AlternateSearchRecords(){}
-    private static AlternateSearchRecords instance = null;
-    public static AlternateSearchRecords getInstance()
+    private SearchRecords(){}
+    private static SearchRecords instance = null;
+    public static SearchRecords getInstance()
     {
         if(instance == null)
-            instance = new AlternateSearchRecords();
+            instance = new SearchRecords();
         return instance;
     }
     

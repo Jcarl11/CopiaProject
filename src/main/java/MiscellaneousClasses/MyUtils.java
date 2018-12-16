@@ -5,6 +5,7 @@ import Entities.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import org.apache.commons.io.FilenameUtils;
+import org.json.JSONObject;
 
 public class MyUtils 
 {
@@ -209,5 +210,32 @@ public class MyUtils
         }
         return result;
     }
-    
+    public String buildBody(String url, String name, String fileName, String pointerClass, String pointer, String objectId)
+    {
+        JSONObject json = new JSONObject();
+        JSONObject pointerField = new JSONObject();
+        JSONObject file = new JSONObject();
+        pointerField.put("__type", "Pointer");
+        pointerField.put("className", pointerClass);
+        pointerField.put("objectId", objectId);
+        file.put("__type", "File");
+        file.put("url", url);
+        file.put("name", name);
+        json.put("Name", fileName);
+        json.put("Files", file);
+        json.put(pointer, pointerField);
+        
+        return json.toString();
+    }
+    public String buildBodyNoteClass(String remark, String searchClass, String pointerName, String objectId)
+    {
+        JSONObject json = new JSONObject();
+        JSONObject pointer = new JSONObject();
+        pointer.put("__type", "Pointer");
+        pointer.put("className", searchClass);
+        pointer.put("objectId", objectId);
+        json.put("Remark", remark.trim().toUpperCase());
+        json.put(pointerName, pointer);
+        return json.toString();
+    }
 }
