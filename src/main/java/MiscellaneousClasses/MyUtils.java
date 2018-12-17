@@ -2,8 +2,20 @@
 package MiscellaneousClasses;
 
 import Entities.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import org.apache.commons.io.FilenameUtils;
 import org.json.JSONObject;
 
@@ -238,4 +250,143 @@ public class MyUtils
         json.put(pointerName, pointer);
         return json.toString();
     }
+    public void initializeTable(String searchClass, TableView tableview_searchinrecord)
+    {
+        if(searchClass.equalsIgnoreCase("Client"))
+        {
+            TableColumn objectid = new TableColumn("ObjectID");
+            TableColumn representative = new TableColumn("Representative");
+            TableColumn position = new TableColumn("Position");
+            TableColumn company = new TableColumn("Company");
+            TableColumn industry = new TableColumn("Industry");
+            TableColumn type = new TableColumn("Type");
+            tableview_searchinrecord.getColumns().add(objectid);
+            tableview_searchinrecord.getColumns().add(representative);
+            tableview_searchinrecord.getColumns().add(position);
+            tableview_searchinrecord.getColumns().add(company);
+            tableview_searchinrecord.getColumns().add(industry);
+            tableview_searchinrecord.getColumns().add(type);
+            objectid.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("ObjectID"));
+            representative.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Representative"));
+            position.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Position"));
+            company.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Company_Name"));
+            industry.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Industry"));
+            type.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Type"));
+        }
+        else if(searchClass.equalsIgnoreCase("Suppliers"))
+        {
+            TableColumn objectid = new TableColumn("ObjectID");
+            TableColumn representative = new TableColumn("Representative");
+            TableColumn position = new TableColumn("Position");
+            TableColumn company = new TableColumn("Company");
+            TableColumn brand = new TableColumn("Brand");
+            TableColumn industry = new TableColumn("Industry");
+            TableColumn type = new TableColumn("Type");
+            tableview_searchinrecord.getColumns().add(objectid);
+            tableview_searchinrecord.getColumns().add(representative);
+            tableview_searchinrecord.getColumns().add(position);
+            tableview_searchinrecord.getColumns().add(company);
+            tableview_searchinrecord.getColumns().add(brand);
+            tableview_searchinrecord.getColumns().add(industry);
+            tableview_searchinrecord.getColumns().add(type);
+            objectid.setCellValueFactory(new PropertyValueFactory<SuppliersEntity, String>("ObjectID"));
+            representative.setCellValueFactory(new PropertyValueFactory<SuppliersEntity, String>("Representative"));
+            position.setCellValueFactory(new PropertyValueFactory<SuppliersEntity, String>("Position"));
+            company.setCellValueFactory(new PropertyValueFactory<SuppliersEntity, String>("Company_Name"));
+            brand.setCellValueFactory(new PropertyValueFactory<SuppliersEntity, String>("Brand"));
+            industry.setCellValueFactory(new PropertyValueFactory<SuppliersEntity, String>("Industry"));
+            type.setCellValueFactory(new PropertyValueFactory<SuppliersEntity, String>("Type"));
+        }
+        else if(searchClass.equalsIgnoreCase("Contractors"))
+        {
+            TableColumn objectid = new TableColumn("ObjectID");
+            TableColumn representative = new TableColumn("Representative");
+            TableColumn position = new TableColumn("Position");
+            TableColumn company = new TableColumn("Company");
+            TableColumn specialization = new TableColumn("Specialization");
+            TableColumn industry = new TableColumn("Industry");
+            TableColumn classification = new TableColumn("Classification");
+            tableview_searchinrecord.getColumns().add(objectid);
+            tableview_searchinrecord.getColumns().add(representative);
+            tableview_searchinrecord.getColumns().add(position);
+            tableview_searchinrecord.getColumns().add(company);
+            tableview_searchinrecord.getColumns().add(specialization);
+            tableview_searchinrecord.getColumns().add(industry);
+            tableview_searchinrecord.getColumns().add(classification);
+            objectid.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("objectId"));
+            representative.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("representative"));
+            position.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("position"));
+            company.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("companyName"));
+            specialization.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("specialization"));
+            industry.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("Industry"));
+            classification.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("classification"));
+        }
+        else if(searchClass.equalsIgnoreCase("Consultants"))
+        {
+            TableColumn objectid = new TableColumn("ObjectID");
+            TableColumn representative = new TableColumn("Representative");
+            TableColumn position = new TableColumn("Position");
+            TableColumn company = new TableColumn("Company");
+            TableColumn specialization = new TableColumn("Specialization");
+            TableColumn industry = new TableColumn("Industry");
+            TableColumn classification = new TableColumn("Classification");
+            tableview_searchinrecord.getColumns().add(objectid);
+            tableview_searchinrecord.getColumns().add(representative);
+            tableview_searchinrecord.getColumns().add(position);
+            tableview_searchinrecord.getColumns().add(company);
+            tableview_searchinrecord.getColumns().add(specialization);
+            tableview_searchinrecord.getColumns().add(industry);
+            tableview_searchinrecord.getColumns().add(classification);
+            objectid.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("objectId"));
+            representative.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("representative"));
+            position.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("position"));
+            company.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("companyName"));
+            specialization.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("specialization"));
+            industry.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("Industry"));
+            classification.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("classification"));
+        }
+        else if(searchClass.equalsIgnoreCase("Specifications"))
+        {
+            TableColumn objectid = new TableColumn("ObjectID");
+            TableColumn title = new TableColumn("Title");
+            TableColumn division = new TableColumn("Division");
+            TableColumn section = new TableColumn("Section");
+            TableColumn type = new TableColumn("Type");
+            tableview_searchinrecord.getColumns().add(objectid);
+            tableview_searchinrecord.getColumns().add(title);
+            tableview_searchinrecord.getColumns().add(division);
+            tableview_searchinrecord.getColumns().add(section);
+            tableview_searchinrecord.getColumns().add(type);
+            objectid.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("objectId"));
+            title.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("title"));
+            division.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("division"));
+            section.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("section"));
+            type.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("type"));
+        }
+        
+    }
+    public void openNewWindow(String fileName, String title)
+    {
+        try 
+        {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/" + fileName));
+            Parent root1 = (Parent) fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initStyle(StageStyle.UTILITY);
+            stage.setTitle(title);
+            stage.setScene(new Scene(root1));            
+            stage.setOnCloseRequest(new EventHandler<WindowEvent>() 
+            {
+                @Override
+                public void handle(WindowEvent event) 
+                {
+                   
+                }
+            });
+            stage.show();
+        } 
+        catch (IOException iOException) {iOException.printStackTrace();}
+    }
+    
 }

@@ -5,20 +5,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import org.apache.commons.io.FilenameUtils;
 import org.asynchttpclient.Response;
 import org.parse4j.ParseObject;
-public class Upload
+public class TaskExecute
 {
-    Task<String> myTask;
+    Task<?> myTask;
     DatabaseOperations databaseOperations = new DatabaseOperations();
-    private Upload(){}
-    private static Upload instance = null;
-    public static  Upload getInstance()
+    private TaskExecute(){}
+    private static TaskExecute instance = null;
+    public static  TaskExecute getInstance()
     {
         if(instance == null)
-            instance = new Upload();
+            instance = new TaskExecute();
         return instance;
     }
 
@@ -105,7 +106,32 @@ public class Upload
         };
         new Thread(myTask).start();
     }
-    public Task<String> getTask()
+    public void retrieveNotes(String referenceClass, String objectId, String pointer)
+    {
+        myTask = new Task<ObservableList<NotesEntity>>() 
+        {
+            @Override
+            protected ObservableList<NotesEntity> call() throws Exception 
+            {
+                ObservableList<NotesEntity> notesList = databaseOperations.retrieveNotes(referenceClass, objectId, pointer);
+                return notesList;
+            }
+        };
+        new Thread(myTask).start();
+    }
+    public void updateNotes(String objectId, String remark, String referenceClass, String pointer)
+    {
+        myTask = new Task<Response>() 
+        {
+            @Override
+            protected Response call() throws Exception 
+            {
+                return databaseOperations.updateNote(objectId, remark);
+            }
+        };
+        new Thread(myTask).start();
+    }
+    public Task<?> getTask()
     {
         return myTask;
     }

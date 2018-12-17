@@ -1,7 +1,9 @@
 package MiscellaneousClasses;
 
+import Entities.NotesEntity;
 import java.util.HashMap;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -48,6 +50,8 @@ public class GetOtherControllerAttributesSingleton
     private HashMap<String, TextArea> specificationsTextArea = new HashMap<>();
     private HashMap<String, ListView> specificationsListView = new HashMap<>();
     private HashMap<String, TextArea> specificationsRemarks = new HashMap<>();
+
+    private NotesEntity notes = new NotesEntity();
     
     private AnchorPane clientContainer, supplierContainer, contractorsContainer,
             consultantsContainer,specificationsContainer,searchrecordsContainer, preview_container;
@@ -275,6 +279,14 @@ public class GetOtherControllerAttributesSingleton
     public void previewSetContainer(AnchorPane container)
     {
         this.preview_container = container;
+    }
+    ////////////////////////////////////////////////////////////////////////////
+    public NotesEntity getNotes() {
+        return notes;
+    }
+
+    public void setNotes(NotesEntity notes) {
+        this.notes = notes;
     }
     ////////////////////////////////////////////////////////////////////////////
 }

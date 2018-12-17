@@ -1,11 +1,12 @@
-
 package DatabaseOperations;
 
+import Entities.ComboboxDataEntity;
 import Entities.NotesEntity;
 import MiscellaneousClasses.MyUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +18,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.apache.commons.io.FilenameUtils;
 import org.asynchttpclient.AsyncCompletionHandler;
 import org.asynchttpclient.AsyncHttpClient;
@@ -25,11 +28,17 @@ import org.asynchttpclient.ListenableFuture;
 import org.asynchttpclient.Response;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parse4j.ParseException;
+import org.parse4j.ParseObject;
+import org.parse4j.ParseQuery;
+import org.parse4j.callback.FindCallback;
+import org.parse4j.callback.GetCallback;
 
 public class DatabaseOperations 
 {
     AsyncHttpClient asyncHttpClient = Dsl.asyncHttpClient();
     List<Future<Response>> responses;
+    volatile boolean finished = false;
     public ArrayList<String> uploadFile(ArrayList<File> files)
     {
         ExecutorService executor = Executors.newFixedThreadPool(5);
@@ -203,5 +212,132 @@ public class DatabaseOperations
         }
         return "Successful";
     }
-
+    public ObservableList<NotesEntity> retrieveNotes(String referenceClass, String objectId, String pointer)
+    {
+        finished = false;
+        ObservableList<NotesEntity> notesList = FXCollections.observableArrayList();
+        ParseQuery<ParseObject> query = ParseQuery.getQuery(referenceClass);
+        query.whereEqualTo("objectId", objectId);
+        query.findInBackground(new FindCallback<ParseObject>() 
+        {
+            @Override
+            public void done(List<ParseObject> list, ParseException parseException) 
+            {
+                if(parseException == null && list != null)
+                {
+                    ParseQuery<ParseObject> query2 = ParseQuery.getQuery("Notes");
+                    query2.include(pointer);
+                    query2.whereMatchesQuery(pointer, query);
+                    query2.findInBackground(new FindCallback<ParseObject>() 
+                    {
+                        @Override
+                        public void done(List<ParseObject> list, ParseException parseException) 
+                        {
+                            if(parseException == null && list != null)
+                            {
+                                for(ParseObject objects : list)
+                                {
+                                    NotesEntity notes = new NotesEntity();
+                                    notes.setObjectId(objects.getObjectId());
+                                    notes.setRemarks(objects.getString("Remark"));
+                                    notes.setCreatedAt(new SimpleDateFormat("dd/MM/yyyy").format(objects.getCreatedAt()));
+                                    notes.setUpdatedAt(new SimpleDateFormat("dd/MM/yyyy").format(objects.getUpdatedAt()));
+                                    notesList.add(notes);
+                                }
+                                finished = true;
+                            }
+                            else
+                            {
+                                finished = true;
+                            }
+                        }
+                    });
+                }
+                else
+                {
+                    finished = true;
+                }
+            }
+        });
+        while(finished == false)
+        {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return notesList;
+    }
+    public Response retrieveCombobox()
+    {
+        ArrayList<ComboboxDataEntity> result = new ArrayList<>();
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("ComboboxData");
+        query.findInBackground(new  FindCallback<ParseObject>() 
+        {
+            @Override
+            public void done(List<ParseObject> list, ParseException parseException) 
+            {
+                if(parseException == null && list != null)
+                {
+                    for(ParseObject objects : list)
+                    {
+                        ComboboxDataEntity combobox = new ComboboxDataEntity();
+                        combobox.setObjectId(objects.getObjectId());
+                        combobox.setTitle(objects.getString("Title"));
+                        combobox.setCategory(objects.getString("Category"));
+                        combobox.setField(objects.getString("Field"));
+                        result.add(combobox);
+                    }
+                }
+            }
+        });
+        ListenableFuture<Response> lf = asyncHttpClient.prepareGet(MyUtils.URL + "ComboboxData")
+                                    .addHeader("X-Parse-Application-Id", MyUtils.APP_ID)
+                                    .setHeader("X-Parse-REST-API-Key", MyUtils.REST_API_KEY)
+                                    .setHeader("Content-type", "application/json")
+                                    .execute(new AsyncCompletionHandler<Response>() 
+                                    {
+                                        @Override
+                                        public Response onCompleted(Response rspns) throws Exception 
+                                        {
+                                            return rspns;
+                                        }
+                                    });  
+        Response response = null;
+        try {
+            response = lf.get();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ExecutionException ex) {
+            Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return response;
+    }
+    public Response updateNote(String objectId, String remarks)
+    {
+        ListenableFuture<Response> lf = asyncHttpClient.preparePut(MyUtils.URL + "Notes/" + objectId)
+                            .addHeader("X-Parse-Application-Id", MyUtils.APP_ID)
+                            .setHeader("X-Parse-REST-API-Key", MyUtils.REST_API_KEY)
+                            .setHeader("Content-type", "application/json")
+                            .setBody(new JSONObject().put("Remark", remarks).toString())
+                            .execute(new AsyncCompletionHandler<Response>() 
+                            {
+                                @Override
+                                public Response onCompleted(Response rspns) throws Exception 
+                                {
+                                    return rspns;
+                                }
+                            });
+        Response response = null;
+        try {
+            response = lf.get();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ExecutionException ex) {
+            Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return response;
+    }
+    
 }

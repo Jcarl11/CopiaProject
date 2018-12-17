@@ -2,12 +2,13 @@ package Entities;
 
 public class NotesEntity 
 {
-
+    private String objectId;
     private String createdAt;
     private String updatedAt;
     private String remarks;
     
-    public NotesEntity(String createdAt, String updatedAt, String remarks) {
+    public NotesEntity(String objectId, String createdAt, String updatedAt, String remarks) {
+        this.objectId = objectId;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.remarks = remarks;
@@ -37,5 +38,11 @@ public class NotesEntity
     public void setRemarks(String remarks) {
         this.remarks = remarks;
     }
-    
+    public String getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
+    }
 }

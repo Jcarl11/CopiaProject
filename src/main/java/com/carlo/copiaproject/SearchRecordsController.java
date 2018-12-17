@@ -2,6 +2,10 @@ package com.carlo.copiaproject;
 
 import DatabaseOperations.*;
 import Entities.*;
+import MiscellaneousClasses.CustomCell;
+import MiscellaneousClasses.GetOtherControllerAttributesSingleton;
+import MiscellaneousClasses.MyUtils;
+import java.io.IOException;
 import java.net.URL;
 import java.text.Collator;
 import java.util.*;
@@ -12,8 +16,16 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.*;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import javax.swing.JOptionPane;
 
@@ -32,6 +44,9 @@ public class SearchRecordsController implements Initializable
     @FXML private ProgressIndicator searchpage_progress;
     @FXML private Button searchrecords_searchbutton,button_searchinrecord_showfiles;
     @FXML private ProgressIndicator showFile_progress;
+    @FXML private AnchorPane searchrecords_anchorpane_edit;
+    @FXML private ListView<NotesEntity> searchrecords_listview_notes;
+    @FXML private Button searchrecords_showremarks;
     
     @FXML
     void button_searchrecords_showfilesOnClick(ActionEvent event)
@@ -208,6 +223,8 @@ public class SearchRecordsController implements Initializable
     @FXML
     void button_searchrecords_search(ActionEvent event)
     {
+        listview_searchrecord_fileshowcase.getItems().clear();
+        searchrecords_listview_notes.getItems().clear();
         if(combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase().equalsIgnoreCase("client"))
         {
             String searchIn = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase();
@@ -229,14 +246,14 @@ public class SearchRecordsController implements Initializable
                     searchClass1 = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase();
                     if(tableview_searchinrecord.getColumns().isEmpty())
                     {
-                        initializeTable(searchClass1);
+                        MyUtils.getInstance().initializeTable(searchClass1, tableview_searchinrecord);
                         tableview_searchinrecord.getItems().addAll(clientEntityList);
                     }
                     else
                     {
                         tableview_searchinrecord.getItems().clear();
                         tableview_searchinrecord.getColumns().clear();
-                        initializeTable(searchClass1);
+                        MyUtils.getInstance().initializeTable(searchClass1, tableview_searchinrecord);
                         tableview_searchinrecord.getItems().addAll(clientEntityList);
                     }
                 }
@@ -273,14 +290,14 @@ public class SearchRecordsController implements Initializable
                     searchClass1 = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase();
                     if(tableview_searchinrecord.getColumns().isEmpty())
                     {
-                        initializeTable(searchClass1);
+                        MyUtils.getInstance().initializeTable(searchClass1, tableview_searchinrecord);
                         tableview_searchinrecord.getItems().addAll(suppliersEntitys);
                     }
                     else
                     {
                         tableview_searchinrecord.getItems().clear();
                         tableview_searchinrecord.getColumns().clear();
-                        initializeTable(searchClass1);
+                        MyUtils.getInstance().initializeTable(searchClass1, tableview_searchinrecord);
                         tableview_searchinrecord.getItems().addAll(suppliersEntitys);
                     }
                 }
@@ -317,14 +334,14 @@ public class SearchRecordsController implements Initializable
                     searchClass1 = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase();
                     if(tableview_searchinrecord.getColumns().isEmpty())
                     {
-                        initializeTable(searchClass1);
+                        MyUtils.getInstance().initializeTable(searchClass1, tableview_searchinrecord);
                         tableview_searchinrecord.getItems().addAll(contractorsEntitys);
                     }
                     else
                     {
                         tableview_searchinrecord.getItems().clear();
                         tableview_searchinrecord.getColumns().clear();
-                        initializeTable(searchClass1);
+                        MyUtils.getInstance().initializeTable(searchClass1, tableview_searchinrecord);
                         tableview_searchinrecord.getItems().addAll(contractorsEntitys);
                     }
                 }
@@ -361,14 +378,14 @@ public class SearchRecordsController implements Initializable
                     searchClass1 = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase();
                     if(tableview_searchinrecord.getColumns().isEmpty())
                     {
-                        initializeTable(searchClass1);
+                        MyUtils.getInstance().initializeTable(searchClass1, tableview_searchinrecord);
                         tableview_searchinrecord.getItems().addAll(consultantsEntitys);
                     }
                     else
                     {
                         tableview_searchinrecord.getItems().clear();
                         tableview_searchinrecord.getColumns().clear();
-                        initializeTable(searchClass1);
+                        MyUtils.getInstance().initializeTable(searchClass1, tableview_searchinrecord);
                         tableview_searchinrecord.getItems().addAll(consultantsEntitys);
                     }
                 }
@@ -405,14 +422,14 @@ public class SearchRecordsController implements Initializable
                     searchClass1 = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase();
                     if(tableview_searchinrecord.getColumns().isEmpty())
                     {
-                        initializeTable(searchClass1);
+                        MyUtils.getInstance().initializeTable(searchClass1, tableview_searchinrecord);
                         tableview_searchinrecord.getItems().addAll(specificationsEntitys);
                     }
                     else
                     {
                         tableview_searchinrecord.getItems().clear();
                         tableview_searchinrecord.getColumns().clear();
-                        initializeTable(searchClass1);
+                        MyUtils.getInstance().initializeTable(searchClass1, tableview_searchinrecord);
                         tableview_searchinrecord.getItems().addAll(specificationsEntitys);
                     }
                 }
@@ -428,125 +445,61 @@ public class SearchRecordsController implements Initializable
             });
         }
     }
-    
-    public void initializeTable(String searchClass)
+    @FXML
+    void button_searchrecords_showremarksOnClick(ActionEvent event) 
     {
-        if(searchClass.equalsIgnoreCase("Client"))
+        if(tableview_searchinrecord.getSelectionModel().getSelectedItem() instanceof ClientEntity)
         {
-            TableColumn objectid = new TableColumn("ObjectID");
-            TableColumn representative = new TableColumn("Representative");
-            TableColumn position = new TableColumn("Position");
-            TableColumn company = new TableColumn("Company");
-            TableColumn industry = new TableColumn("Industry");
-            TableColumn type = new TableColumn("Type");
-            tableview_searchinrecord.getColumns().add(objectid);
-            tableview_searchinrecord.getColumns().add(representative);
-            tableview_searchinrecord.getColumns().add(position);
-            tableview_searchinrecord.getColumns().add(company);
-            tableview_searchinrecord.getColumns().add(industry);
-            tableview_searchinrecord.getColumns().add(type);
-            objectid.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("ObjectID"));
-            representative.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Representative"));
-            position.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Position"));
-            company.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Company_Name"));
-            industry.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Industry"));
-            type.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Type"));
-        }
-        else if(searchClass.equalsIgnoreCase("Suppliers"))
-        {
-            TableColumn objectid = new TableColumn("ObjectID");
-            TableColumn representative = new TableColumn("Representative");
-            TableColumn position = new TableColumn("Position");
-            TableColumn company = new TableColumn("Company");
-            TableColumn brand = new TableColumn("Brand");
-            TableColumn industry = new TableColumn("Industry");
-            TableColumn type = new TableColumn("Type");
-            tableview_searchinrecord.getColumns().add(objectid);
-            tableview_searchinrecord.getColumns().add(representative);
-            tableview_searchinrecord.getColumns().add(position);
-            tableview_searchinrecord.getColumns().add(company);
-            tableview_searchinrecord.getColumns().add(brand);
-            tableview_searchinrecord.getColumns().add(industry);
-            tableview_searchinrecord.getColumns().add(type);
-            objectid.setCellValueFactory(new PropertyValueFactory<SuppliersEntity, String>("ObjectID"));
-            representative.setCellValueFactory(new PropertyValueFactory<SuppliersEntity, String>("Representative"));
-            position.setCellValueFactory(new PropertyValueFactory<SuppliersEntity, String>("Position"));
-            company.setCellValueFactory(new PropertyValueFactory<SuppliersEntity, String>("Company_Name"));
-            brand.setCellValueFactory(new PropertyValueFactory<SuppliersEntity, String>("Brand"));
-            industry.setCellValueFactory(new PropertyValueFactory<SuppliersEntity, String>("Industry"));
-            type.setCellValueFactory(new PropertyValueFactory<SuppliersEntity, String>("Type"));
-        }
-        else if(searchClass.equalsIgnoreCase("Contractors"))
-        {
-            TableColumn objectid = new TableColumn("ObjectID");
-            TableColumn representative = new TableColumn("Representative");
-            TableColumn position = new TableColumn("Position");
-            TableColumn company = new TableColumn("Company");
-            TableColumn specialization = new TableColumn("Specialization");
-            TableColumn industry = new TableColumn("Industry");
-            TableColumn classification = new TableColumn("Classification");
-            tableview_searchinrecord.getColumns().add(objectid);
-            tableview_searchinrecord.getColumns().add(representative);
-            tableview_searchinrecord.getColumns().add(position);
-            tableview_searchinrecord.getColumns().add(company);
-            tableview_searchinrecord.getColumns().add(specialization);
-            tableview_searchinrecord.getColumns().add(industry);
-            tableview_searchinrecord.getColumns().add(classification);
-            objectid.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("objectId"));
-            representative.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("representative"));
-            position.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("position"));
-            company.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("companyName"));
-            specialization.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("specialization"));
-            industry.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("Industry"));
-            classification.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("classification"));
-        }
-        else if(searchClass.equalsIgnoreCase("Consultants"))
-        {
-            TableColumn objectid = new TableColumn("ObjectID");
-            TableColumn representative = new TableColumn("Representative");
-            TableColumn position = new TableColumn("Position");
-            TableColumn company = new TableColumn("Company");
-            TableColumn specialization = new TableColumn("Specialization");
-            TableColumn industry = new TableColumn("Industry");
-            TableColumn classification = new TableColumn("Classification");
-            tableview_searchinrecord.getColumns().add(objectid);
-            tableview_searchinrecord.getColumns().add(representative);
-            tableview_searchinrecord.getColumns().add(position);
-            tableview_searchinrecord.getColumns().add(company);
-            tableview_searchinrecord.getColumns().add(specialization);
-            tableview_searchinrecord.getColumns().add(industry);
-            tableview_searchinrecord.getColumns().add(classification);
-            objectid.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("objectId"));
-            representative.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("representative"));
-            position.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("position"));
-            company.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("companyName"));
-            specialization.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("specialization"));
-            industry.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("Industry"));
-            classification.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("classification"));
-        }
-        else if(searchClass.equalsIgnoreCase("Specifications"))
-        {
-            TableColumn objectid = new TableColumn("ObjectID");
-            TableColumn title = new TableColumn("Title");
-            TableColumn division = new TableColumn("Division");
-            TableColumn section = new TableColumn("Section");
-            TableColumn type = new TableColumn("Type");
-            tableview_searchinrecord.getColumns().add(objectid);
-            tableview_searchinrecord.getColumns().add(title);
-            tableview_searchinrecord.getColumns().add(division);
-            tableview_searchinrecord.getColumns().add(section);
-            tableview_searchinrecord.getColumns().add(type);
-            objectid.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("objectId"));
-            title.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("title"));
-            division.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("division"));
-            section.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("section"));
-            type.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("type"));
+            ClientEntity clientEntity = (ClientEntity)tableview_searchinrecord.getSelectionModel().getSelectedItem();
+            TaskExecute.getInstance().retrieveNotes("Client", clientEntity.getObjectID(), "ClientPointer");
+            showFile_progress.visibleProperty().unbind();
+            searchrecords_showremarks.disableProperty().unbind();
+            showFile_progress.visibleProperty().bind(TaskExecute.getInstance().getTask().runningProperty());
+            searchrecords_showremarks.disableProperty().bind(TaskExecute.getInstance().getTask().runningProperty());
+            TaskExecute.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
+            {
+                @Override
+                public void handle(WorkerStateEvent event) 
+                {
+                    searchrecords_listview_notes.setItems((ObservableList<NotesEntity>) TaskExecute.getInstance().getTask().getValue());
+                    searchrecords_listview_notes.setCellFactory(new Callback<ListView<NotesEntity>, ListCell<NotesEntity>>() 
+                    {
+                        @Override
+                        public ListCell<NotesEntity> call(ListView<NotesEntity> param) 
+                        {
+                            return new CustomCell();
+                        }
+                    });
+                }
+            });
         }
         
     }
+    @FXML
+    void searchrecords_edit(ActionEvent event) 
+    {
+        if(searchrecords_listview_notes.getSelectionModel().getSelectedItem() != null)
+        {
+            NotesEntity note = searchrecords_listview_notes.getSelectionModel().getSelectedItem();
+            GetOtherControllerAttributesSingleton.getInstance().setNotes(note);
+            MyUtils.getInstance().openNewWindow("EditNotes.fxml", "Edit Notes");
+        }
+    }
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
+        searchrecords_listview_notes.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) 
+            {
+                if (event.getClickCount() == 2) 
+                {
+                    GetOtherControllerAttributesSingleton.getInstance().setNotes(searchrecords_listview_notes.getSelectionModel().getSelectedItem());
+                    MyUtils.getInstance().openNewWindow("NotesView.fxml", "Show");
+                }
+            }
+        });
         try
         {
             ObservableList<String> list = FXCollections.observableArrayList();
