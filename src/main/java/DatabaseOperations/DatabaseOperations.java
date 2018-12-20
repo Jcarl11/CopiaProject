@@ -1,5 +1,6 @@
 package DatabaseOperations;
 
+import Entities.ClientEntity;
 import Entities.ComboboxDataEntity;
 import Entities.NotesEntity;
 import MiscellaneousClasses.MyUtils;
@@ -32,7 +33,6 @@ import org.parse4j.ParseException;
 import org.parse4j.ParseObject;
 import org.parse4j.ParseQuery;
 import org.parse4j.callback.FindCallback;
-import org.parse4j.callback.GetCallback;
 
 public class DatabaseOperations 
 {
@@ -339,5 +339,33 @@ public class DatabaseOperations
         }
         return response;
     }
-    
+    public Response updateRecord(JSONObject entity)
+    {
+        Response response = null;
+        
+            System.out.println(entity.getString("Representative"));
+            System.out.println(entity.getString("objectId"));
+            ListenableFuture<Response> lf = asyncHttpClient.preparePut(MyUtils.URL + "Client/" + ((JSONObject)entity).getString("objectId"))
+                            .addHeader("X-Parse-Application-Id", MyUtils.APP_ID)
+                            .setHeader("X-Parse-REST-API-Key", MyUtils.REST_API_KEY)
+                            .setHeader("Content-type", "application/json")
+                            .setBody(((JSONObject) entity).toString())
+                            .execute(new AsyncCompletionHandler<Response>() 
+                            {
+                                @Override
+                                public Response onCompleted(Response rspns) throws Exception 
+                                {
+                                    return rspns;
+                                }
+                            });
+            try {
+                response = lf.get();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ExecutionException ex) {
+                Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        
+        return response;
+    }
 }

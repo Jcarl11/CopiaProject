@@ -1,17 +1,22 @@
 
 package MiscellaneousClasses;
 
+import DatabaseOperations.LocalStorage;
 import Entities.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -260,18 +265,33 @@ public class MyUtils
             TableColumn company = new TableColumn("Company");
             TableColumn industry = new TableColumn("Industry");
             TableColumn type = new TableColumn("Type");
+            
             tableview_searchinrecord.getColumns().add(objectid);
             tableview_searchinrecord.getColumns().add(representative);
             tableview_searchinrecord.getColumns().add(position);
             tableview_searchinrecord.getColumns().add(company);
             tableview_searchinrecord.getColumns().add(industry);
             tableview_searchinrecord.getColumns().add(type);
+            
             objectid.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("ObjectID"));
             representative.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Representative"));
             position.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Position"));
             company.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Company_Name"));
             industry.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Industry"));
             type.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Type"));
+            
+            representative.setCellFactory(TextFieldTableCell.forTableColumn());
+            position.setCellFactory(TextFieldTableCell.forTableColumn());
+            company.setCellFactory(TextFieldTableCell.forTableColumn());
+            industry.setCellFactory(ComboBoxTableCell.forTableColumn(LocalStorage.getInstance().retrieve_combobox("CLIENT", "INDUSTRY")));
+            type.setCellFactory(ComboBoxTableCell.forTableColumn(LocalStorage.getInstance().retrieve_combobox("CLIENT", "TYPE")));
+            
+            representative.setOnEditCommit(EventHandlers.getInstance().clientTableHandler());
+            position.setOnEditCommit(EventHandlers.getInstance().clientTableHandler());
+            company.setOnEditCommit(EventHandlers.getInstance().clientTableHandler());
+            industry.setOnEditCommit(EventHandlers.getInstance().clientTableHandler());
+            type.setOnEditCommit(EventHandlers.getInstance().clientTableHandler());
+            
         }
         else if(searchClass.equalsIgnoreCase("Suppliers"))
         {

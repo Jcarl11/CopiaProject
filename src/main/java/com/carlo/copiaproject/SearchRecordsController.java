@@ -3,9 +3,9 @@ package com.carlo.copiaproject;
 import DatabaseOperations.*;
 import Entities.*;
 import MiscellaneousClasses.CustomCell;
+import MiscellaneousClasses.EventHandlers;
 import MiscellaneousClasses.GetOtherControllerAttributesSingleton;
 import MiscellaneousClasses.MyUtils;
-import java.io.IOException;
 import java.net.URL;
 import java.text.Collator;
 import java.util.*;
@@ -16,18 +16,13 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.*;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import javax.swing.JOptionPane;
+import org.asynchttpclient.Response;
 
 /**
  * FXML Controller class
@@ -42,12 +37,11 @@ public class SearchRecordsController implements Initializable
     @FXML private ComboBox<String> combobox_searchrecords_searchin;
     @FXML private TextField textfield_searchrecords_keyword;
     @FXML private ProgressIndicator searchpage_progress;
-    @FXML private Button searchrecords_searchbutton,button_searchinrecord_showfiles;
+    @FXML private Button searchrecords_searchbutton,button_searchinrecord_showfiles,searchrecords_button_save;
     @FXML private ProgressIndicator showFile_progress;
     @FXML private AnchorPane searchrecords_anchorpane_edit;
     @FXML private ListView<NotesEntity> searchrecords_listview_notes;
     @FXML private Button searchrecords_showremarks;
-    
     @FXML
     void button_searchrecords_showfilesOnClick(ActionEvent event)
     {
@@ -485,11 +479,38 @@ public class SearchRecordsController implements Initializable
             MyUtils.getInstance().openNewWindow("EditNotes.fxml", "Edit Notes");
         }
     }
-    
+    @FXML
+    void button_saveOnClick(ActionEvent event) 
+    {
+        ClientEntity client = (ClientEntity) tableview_searchinrecord.getSelectionModel().getSelectedItem();
+        EventHandlers.getInstance().getClient().put("objectId", client.getObjectID());
+        System.out.println(EventHandlers.getInstance().getClient().getString("objectId"));
+        System.out.println(EventHandlers.getInstance().getClient().getString("Representative"));
+        System.out.println(EventHandlers.getInstance().getClient().getString("Position"));
+        System.out.println(EventHandlers.getInstance().getClient().getString("Company_Name"));
+        System.out.println(EventHandlers.getInstance().getClient().getString("Industry"));
+        System.out.println(EventHandlers.getInstance().getClient().getString("Type"));
+        TaskExecute.getInstance().updateRecord(EventHandlers.getInstance().getClient());
+        showFile_progress.visibleProperty().unbind();
+        searchrecords_button_save.disableProperty().unbind();
+        showFile_progress.visibleProperty().bind(TaskExecute.getInstance().getTask().runningProperty());
+        searchrecords_button_save.disableProperty().bind(TaskExecute.getInstance().getTask().runningProperty());
+        TaskExecute.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
+        {
+            @Override
+            public void handle(WorkerStateEvent event) 
+            {
+                System.out.println(((Response)TaskExecute.getInstance().getTask().getValue()).getStatusCode());
+            }
+        });
+        
+    }
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
-        searchrecords_listview_notes.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        EventHandlers.getInstance().setSaveBtn(searchrecords_button_save);
+        searchrecords_listview_notes.setOnMouseClicked(new EventHandler<MouseEvent>() 
+        {
             @Override
             public void handle(MouseEvent event) 
             {
@@ -512,7 +533,6 @@ public class SearchRecordsController implements Initializable
         {
             ex.printStackTrace();
         }
-         
     }    
     
 }

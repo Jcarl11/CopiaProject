@@ -50,7 +50,8 @@ public class GetOtherControllerAttributesSingleton
     private HashMap<String, TextArea> specificationsTextArea = new HashMap<>();
     private HashMap<String, ListView> specificationsListView = new HashMap<>();
     private HashMap<String, TextArea> specificationsRemarks = new HashMap<>();
-
+    private HashMap<String, Object> newEntity = new HashMap<>();
+    private HashMap<String, Object> oldEntity = new HashMap<>();
     private NotesEntity notes = new NotesEntity();
     
     private AnchorPane clientContainer, supplierContainer, contractorsContainer,
@@ -289,4 +290,19 @@ public class GetOtherControllerAttributesSingleton
         this.notes = notes;
     }
     ////////////////////////////////////////////////////////////////////////////
+    public HashMap<String, Object> getNewEntity() {
+        return newEntity;
+    }
+
+    public void setNewEntity(HashMap<String, Object> entity) {
+        this.newEntity = entity;
+    }
+    ////////////////////////////////////////////////////////////////////////////
+    public HashMap<String, Object> getOldEntity() {
+        return oldEntity;
+    }
+
+    public void setOldEntity(HashMap<String, Object> oldEntity) {
+        this.oldEntity = oldEntity;
+    }
 }

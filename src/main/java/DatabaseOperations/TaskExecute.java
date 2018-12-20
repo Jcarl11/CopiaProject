@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import org.apache.commons.io.FilenameUtils;
 import org.asynchttpclient.Response;
+import org.json.JSONObject;
 import org.parse4j.ParseObject;
 public class TaskExecute
 {
@@ -131,23 +132,20 @@ public class TaskExecute
         };
         new Thread(myTask).start();
     }
+    public void updateRecord(JSONObject entity)
+    {
+        myTask = new Task<Response>() 
+        {
+            @Override
+            protected Response call() throws Exception 
+            {
+                return databaseOperations.updateRecord(entity);
+            }
+        };
+        new Thread(myTask).start();
+    }
     public Task<?> getTask()
     {
         return myTask;
     }
-    private String getFileType(String filePath)
-    {
-        String type = "";
-        String extension = FilenameUtils.getExtension(filePath).toLowerCase();
-        if(extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("gif") || extension.equalsIgnoreCase("jpeg"))
-        {
-            type = "Image";
-        }
-        else if(extension.equalsIgnoreCase("pdf"))
-        {
-            type = "pdf";
-        }
-        return type;
-    }
-    
 }
