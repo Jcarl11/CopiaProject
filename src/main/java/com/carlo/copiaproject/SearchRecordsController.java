@@ -482,33 +482,28 @@ public class SearchRecordsController implements Initializable
     @FXML
     void button_saveOnClick(ActionEvent event) 
     {
-        ClientEntity client = (ClientEntity) tableview_searchinrecord.getSelectionModel().getSelectedItem();
-        EventHandlers.getInstance().getClient().put("objectId", client.getObjectID());
-        System.out.println(EventHandlers.getInstance().getClient().getString("objectId"));
-        System.out.println(EventHandlers.getInstance().getClient().getString("Representative"));
-        System.out.println(EventHandlers.getInstance().getClient().getString("Position"));
-        System.out.println(EventHandlers.getInstance().getClient().getString("Company_Name"));
-        System.out.println(EventHandlers.getInstance().getClient().getString("Industry"));
-        System.out.println(EventHandlers.getInstance().getClient().getString("Type"));
-        TaskExecute.getInstance().updateRecord(EventHandlers.getInstance().getClient());
-        showFile_progress.visibleProperty().unbind();
-        searchrecords_button_save.disableProperty().unbind();
-        showFile_progress.visibleProperty().bind(TaskExecute.getInstance().getTask().runningProperty());
-        searchrecords_button_save.disableProperty().bind(TaskExecute.getInstance().getTask().runningProperty());
-        TaskExecute.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
+        int result = JOptionPane.showConfirmDialog(null, "This record will be updated", "Confirm Change", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if(result == JOptionPane.OK_OPTION)
         {
-            @Override
-            public void handle(WorkerStateEvent event) 
+            TaskExecute.getInstance().updateRecord(EventHandlers.getInstance().getClient());
+            showFile_progress.visibleProperty().unbind();
+            searchrecords_button_save.disableProperty().unbind();
+            showFile_progress.visibleProperty().bind(TaskExecute.getInstance().getTask().runningProperty());
+            searchrecords_button_save.disableProperty().bind(TaskExecute.getInstance().getTask().runningProperty());
+            TaskExecute.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
             {
-                System.out.println(((Response)TaskExecute.getInstance().getTask().getValue()).getStatusCode());
-            }
-        });
+                @Override
+                public void handle(WorkerStateEvent event) 
+                {
+                    System.out.println(((Response)TaskExecute.getInstance().getTask().getValue()).getStatusCode());
+                }
+            });
+        }
         
     }
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
-        EventHandlers.getInstance().setSaveBtn(searchrecords_button_save);
         searchrecords_listview_notes.setOnMouseClicked(new EventHandler<MouseEvent>() 
         {
             @Override

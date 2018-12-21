@@ -342,14 +342,12 @@ public class DatabaseOperations
     public Response updateRecord(JSONObject entity)
     {
         Response response = null;
-        
-            System.out.println(entity.getString("Representative"));
-            System.out.println(entity.getString("objectId"));
-            ListenableFuture<Response> lf = asyncHttpClient.preparePut(MyUtils.URL + "Client/" + ((JSONObject)entity).getString("objectId"))
+        System.out.println(entity.toString());
+            ListenableFuture<Response> lf = asyncHttpClient.preparePut(MyUtils.URL + "Client/" + entity.getString("objectId"))
                             .addHeader("X-Parse-Application-Id", MyUtils.APP_ID)
                             .setHeader("X-Parse-REST-API-Key", MyUtils.REST_API_KEY)
                             .setHeader("Content-type", "application/json")
-                            .setBody(((JSONObject) entity).toString())
+                            .setBody(entity.toString())
                             .execute(new AsyncCompletionHandler<Response>() 
                             {
                                 @Override
