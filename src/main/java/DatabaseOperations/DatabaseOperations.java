@@ -36,6 +36,7 @@ import org.parse4j.callback.GetCallback;
 
 public class DatabaseOperations 
 {
+    HashMap<String, String> statuses;
     AsyncHttpClient asyncHttpClient = Dsl.asyncHttpClient();
     List<Future<Response>> responses;
     volatile boolean finished = false;
@@ -369,6 +370,7 @@ public class DatabaseOperations
     public HashMap<String, ParseQuery<ParseObject>> findRecord(String objectId, String searchClass)
     {
         setFinished(false);
+        statuses = new HashMap<>();
         HashMap<String, ParseQuery<ParseObject>> data = new HashMap<>();
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Client");
         query.getInBackground(objectId, new GetCallback<ParseObject>() 
@@ -376,14 +378,22 @@ public class DatabaseOperations
             @Override
             public void done(ParseObject t, ParseException parseException) 
             {
-                if(parseException == null)
+                if(t != null && parseException == null)
                 {
-                    System.out.println("DeleteRecord Done");
+                    statuses.put("findRecord", "Successful");
                     data.put("ParseQuery", query);
                     setFinished(true);
                 }
-                else
+                else if(parseException != null)
+                {
+                    statuses.put("findRecord", "Exception");
                     setFinished(true);
+                }
+                else if(t == null)   
+                {
+                    statuses.put("findRecord", "empty");
+                    setFinished(true);
+                }
             }
         });
         while(isFinished() == false)
@@ -411,19 +421,23 @@ public class DatabaseOperations
             {
                 if(list != null && parseException == null)
                 {
-                    System.out.println("DeleteImages Done");
+                    statuses.put("deleteImages", "Successful");
                     for(ParseObject records : list)
                     {
                         try {
                             records.delete();
-                        } catch (ParseException ex) {
-                            Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                        } catch (ParseException ex) {Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);}
                     }
                     setFinished(true);
                 }
-                else
+                else if(parseException != null)
                 {
+                    statuses.put("deleteImages", "Exception");
+                    setFinished(true);
+                }
+                else if(list == null)   
+                {
+                    statuses.put("deleteImages", "empty");
                     setFinished(true);
                 }
             }
@@ -452,7 +466,7 @@ public class DatabaseOperations
             {
                 if(list != null && parseException == null)
                 {
-                    System.out.println("DeleteNotes Done");
+                    statuses.put("deleteNotes", "Successful");
                     for(ParseObject records : list)
                     {
                         try {
@@ -463,8 +477,14 @@ public class DatabaseOperations
                     }
                     setFinished(true);
                 }
-                else
+                else if(parseException != null)
                 {
+                    statuses.put("deleteNotes", "Exception");
+                    setFinished(true);
+                }
+                else if(list == null)   
+                {
+                    statuses.put("deleteNotes", "empty");
                     setFinished(true);
                 }
             }
@@ -493,7 +513,7 @@ public class DatabaseOperations
             {
                 if(list != null && parseException == null)
                 {
-                    System.out.println("DeletePDF Done");
+                    statuses.put("deletePdf", "Successful");
                     for(ParseObject records : list)
                     {
                         try {
@@ -504,8 +524,14 @@ public class DatabaseOperations
                     }
                     setFinished(true);
                 }
-                else
+                else if(parseException != null)
                 {
+                    statuses.put("deletePdf", "Exception");
+                    setFinished(true);
+                }
+                else if(list == null)   
+                {
+                    statuses.put("deletePdf", "empty");
                     setFinished(true);
                 }
             }
@@ -520,7 +546,7 @@ public class DatabaseOperations
         }
         return pdfResponse;
     }
-    public String deleteRecord(HashMap<String, ParseQuery<ParseObject>> data, String objectId)
+    public HashMap<String, String> deleteRecord(HashMap<String, ParseQuery<ParseObject>> data, String objectId)
     {
         setFinished(false);
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Client");
@@ -531,7 +557,7 @@ public class DatabaseOperations
             {
                 if(parseException == null && t != null)
                 {
-                    System.out.println("DeleteRecordFinished");
+                    statuses.put("deleteRecord", "Successful");
                     try {
                         t.delete();
                     } catch (ParseException ex) {
@@ -539,8 +565,16 @@ public class DatabaseOperations
                     }
                     setFinished(true);
                 }
-                else
+                else if(parseException != null)
+                {
+                    statuses.put("deleteRecord", "Exception");
                     setFinished(true);
+                }
+                else if(t == null)   
+                {
+                    statuses.put("deleteRecord", "empty");
+                    setFinished(true);
+                }
             }
         });
         while(isFinished() == false)
@@ -551,8 +585,7 @@ public class DatabaseOperations
                 Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        String resp = "Successful";
-        return resp;
+        return statuses;
     }
     public boolean isFinished() {
         return finished;

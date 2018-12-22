@@ -26,8 +26,6 @@ public class GetOtherControllerAttributesSingleton
         }
         return instance;
     }
-
-    private HashMap<String, Button> searchRecordsSaveNDeleteButton = new HashMap<>();
     
     private HashMap<String, TextField> clientTextFieldList = new HashMap<>();
     private HashMap<String, ComboBox> clientComboboxList = new HashMap<>();
@@ -55,7 +53,10 @@ public class GetOtherControllerAttributesSingleton
     private HashMap<String, TextArea> specificationsRemarks = new HashMap<>();
     private HashMap<String, Object> newEntity = new HashMap<>();
     private HashMap<String, Object> oldEntity = new HashMap<>();
+    private HashMap<String, ListView<NotesEntity>> listviewNotes = new HashMap<>(); 
+
     
+    private String selectedNotesIndex = new String();
     
     private NotesEntity notes = new NotesEntity();
     
@@ -311,13 +312,19 @@ public class GetOtherControllerAttributesSingleton
         this.oldEntity = oldEntity;
     }
     ////////////////////////////////////////////////////////////////////////////
-    public HashMap<String, Button> getSearchRecordsSaveNDeleteButton() {
-        return searchRecordsSaveNDeleteButton;
+    public HashMap<String, ListView<NotesEntity>> getListviewNotes() {
+        return listviewNotes;
     }
 
-    public void setSearchRecordsSaveNDeleteButton(HashMap<String, Button> searchRecordsSaveButton) {
-        this.searchRecordsSaveNDeleteButton = searchRecordsSaveButton;
+    public void setListviewNotes(HashMap<String, ListView<NotesEntity>> listviewNotes) {
+        this.listviewNotes = listviewNotes;
     }
     ////////////////////////////////////////////////////////////////////////////
-    
+    public String getSelectedNotesIndex() {
+        return selectedNotesIndex;
+    }
+
+    public void setSelectedNotesIndex(String selectedNotesIndex) {
+        this.selectedNotesIndex = selectedNotesIndex;
+    }
 }

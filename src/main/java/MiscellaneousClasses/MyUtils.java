@@ -7,11 +7,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
@@ -293,15 +297,6 @@ public class MyUtils
             company.setOnEditCommit(EventHandlers.getInstance().clientTableHandler());
             industry.setOnEditCommit(EventHandlers.getInstance().clientTableHandler());
             type.setOnEditCommit(EventHandlers.getInstance().clientTableHandler());
-            
-            tableview_searchinrecord.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection)->{
-                if(newSelection != null)
-                {
-                    GetOtherControllerAttributesSingleton.getInstance().getSearchRecordsSaveNDeleteButton().get("saveBtn").setDisable(false);
-                    GetOtherControllerAttributesSingleton.getInstance().getSearchRecordsSaveNDeleteButton().get("deleteBtn").setDisable(false);
-                }
-            } );
-            
         }
         else if(searchClass.equalsIgnoreCase("Suppliers"))
         {
@@ -418,6 +413,23 @@ public class MyUtils
         } 
         catch (IOException iOException) {iOException.printStackTrace();}
     }
-    
+    public void bindBtn(Button update, Button delete,Button showremarks,Button showfiles, ReadOnlyObjectProperty property)
+    {
+        update.disableProperty().unbind();
+        delete.disableProperty().unbind();
+        showremarks.disableProperty().unbind();
+        showfiles.disableProperty().unbind();
+        update.disableProperty().bind(property.isNull());
+        delete.disableProperty().bind(property.isNull());
+        showremarks.disableProperty().bind(property.isNull());
+        showfiles.disableProperty().bind(property.isNull());
+    }
+    public void bindSearchNProgress(Button search, ProgressIndicator progressIndicator,ReadOnlyBooleanProperty property)
+    {
+        search.disableProperty().unbind();
+        progressIndicator.visibleProperty().unbind();
+        search.disableProperty().bind(property);
+        progressIndicator.visibleProperty().bind(property);
+    }
     
 }

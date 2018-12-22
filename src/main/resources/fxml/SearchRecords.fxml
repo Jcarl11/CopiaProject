@@ -83,7 +83,7 @@
                   </AnchorPane>
                   <AnchorPane GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="9" GridPane.vgrow="ALWAYS">
                      <children>
-                        <Button fx:id="button_searchinrecord_showfiles" mnemonicParsing="false" onAction="#button_searchrecords_showfilesOnClick" prefHeight="51.0" prefWidth="341.0" styleClass="orange-buton" text="Show associated files" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        <Button fx:id="button_searchinrecord_showfiles" disable="true" mnemonicParsing="false" onAction="#button_searchrecords_showfilesOnClick" prefHeight="51.0" prefWidth="341.0" styleClass="orange-buton" text="Show associated files" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>
                      <GridPane.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -131,7 +131,7 @@
          </AnchorPane>
          <AnchorPane GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="9">
             <children>
-               <Button fx:id="searchrecords_showremarks" mnemonicParsing="false" onAction="#button_searchrecords_showremarksOnClick" prefHeight="60.0" prefWidth="109.0" styleClass="orange-buton" text="Show remarks" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               <Button fx:id="searchrecords_showremarks" disable="true" mnemonicParsing="false" onAction="#button_searchrecords_showremarksOnClick" prefHeight="60.0" prefWidth="109.0" styleClass="orange-buton" text="Show remarks" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             </children>
             <GridPane.margin>
                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

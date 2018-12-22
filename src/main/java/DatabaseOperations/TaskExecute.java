@@ -2,6 +2,7 @@ package DatabaseOperations;
 
 import Entities.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
@@ -146,13 +147,13 @@ public class TaskExecute
     }
     public void deleteRecord(String objectId)
     {
-        myTask = new Task<String>() 
+        myTask = new Task<HashMap<String, String>>() 
         {
             @Override
-            protected String call() throws Exception 
+            protected HashMap<String, String> call() throws Exception 
             {
                 System.out.println(objectId);
-                CompletableFuture<String> completableFuture = CompletableFuture.supplyAsync(()->databaseOperations.findRecord(objectId, "Client"))
+                CompletableFuture<HashMap<String, String>> completableFuture = CompletableFuture.supplyAsync(()->databaseOperations.findRecord(objectId, "Client"))
                         .thenApply(response -> databaseOperations.deleteImages(response))
                         .thenApply(response -> databaseOperations.deleteNotes(response))
                         .thenApply(response -> databaseOperations.deletePdf(response))

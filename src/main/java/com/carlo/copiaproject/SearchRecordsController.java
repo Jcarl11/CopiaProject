@@ -222,10 +222,7 @@ public class SearchRecordsController implements Initializable
             String output = searchIn.substring(0, 1).toUpperCase() + searchIn.substring(1);
             String search = textfield_searchrecords_keyword.getText().trim();
             SearchRecords.getInstance().Search(search, output);
-            searchpage_progress.visibleProperty().unbind();
-            searchrecords_searchbutton.disableProperty().unbind();
-            searchpage_progress.visibleProperty().bind(SearchRecords.getInstance().getTask().runningProperty());
-            searchrecords_searchbutton.disableProperty().bind(SearchRecords.getInstance().getTask().runningProperty());
+            MyUtils.getInstance().bindSearchNProgress(searchrecords_searchbutton, searchpage_progress, SearchRecords.getInstance().getTask().runningProperty());
             SearchRecords.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
             {
                 String searchClass1 = new String();
@@ -233,6 +230,7 @@ public class SearchRecordsController implements Initializable
                 @Override
                 public void handle(WorkerStateEvent event) 
                 {
+                    MyUtils.getInstance().bindBtn(searchrecords_button_update, searchrecords_button_delete,searchrecords_showremarks,button_searchinrecord_showfiles, tableview_searchinrecord.getSelectionModel().selectedItemProperty());
                     clientEntityList = (ArrayList<ClientEntity>) SearchRecords.getInstance().getTask().getValue();
                     searchClass1 = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase();
                     if(tableview_searchinrecord.getColumns().isEmpty())
@@ -443,34 +441,18 @@ public class SearchRecordsController implements Initializable
         {
             ClientEntity clientEntity = (ClientEntity)tableview_searchinrecord.getSelectionModel().getSelectedItem();
             TaskExecute.getInstance().retrieveNotes("Client", clientEntity.getObjectID(), "ClientPointer");
-            showFile_progress.visibleProperty().unbind();
-            searchrecords_showremarks.disableProperty().unbind();
-            showFile_progress.visibleProperty().bind(TaskExecute.getInstance().getTask().runningProperty());
-            searchrecords_showremarks.disableProperty().bind(TaskExecute.getInstance().getTask().runningProperty());
-            TaskExecute.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
-            {
-                @Override
-                public void handle(WorkerStateEvent event) 
-                {
-                    searchrecords_listview_notes.setItems((ObservableList<NotesEntity>) TaskExecute.getInstance().getTask().getValue());
-                    searchrecords_listview_notes.setCellFactory(new Callback<ListView<NotesEntity>, ListCell<NotesEntity>>() 
-                    {
-                        @Override
-                        public ListCell<NotesEntity> call(ListView<NotesEntity> param) 
-                        {
-                            return new CustomCell();
-                        }
-                    });
-                }
-            });
-        }
-        
+            MyUtils.getInstance().bindSearchNProgress(searchrecords_showremarks, showFile_progress, TaskExecute.getInstance().getTask().runningProperty());
+            TaskExecute.getInstance().getTask().setOnSucceeded(EventHandlers.getInstance().taskSetOnSucceededEvent(searchrecords_listview_notes, TaskExecute.getInstance().getTask()));
+        } 
     }
     @FXML
     void searchrecords_edit(ActionEvent event) 
     {
         if(searchrecords_listview_notes.getSelectionModel().getSelectedItem() != null)
         {
+            HashMap<String, ListView<NotesEntity>> listview = new HashMap<>();
+            listview.put("ListViewNotes", searchrecords_listview_notes);
+            GetOtherControllerAttributesSingleton.getInstance().setListviewNotes(listview);
             NotesEntity note = searchrecords_listview_notes.getSelectionModel().getSelectedItem();
             GetOtherControllerAttributesSingleton.getInstance().setNotes(note);
             MyUtils.getInstance().openNewWindow("EditNotes.fxml", "Edit Notes");
@@ -504,6 +486,7 @@ public class SearchRecordsController implements Initializable
         int result = JOptionPane.showConfirmDialog(null, "This selected record will be deleted", "Confirm Delete", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
         if(result == JOptionPane.OK_OPTION)
         {
+            int selectedIndex = tableview_searchinrecord.getSelectionModel().getSelectedIndex();
             TaskExecute.getInstance().deleteRecord(((ClientEntity)tableview_searchinrecord.getSelectionModel().getSelectedItem()).getObjectID());
             showFile_progress.visibleProperty().unbind();
             searchrecords_button_delete.disableProperty().unbind();
@@ -514,7 +497,14 @@ public class SearchRecordsController implements Initializable
                 @Override
                 public void handle(WorkerStateEvent event) 
                 {
-                    JOptionPane.showMessageDialog(null, "1 RECORD DELETED");
+                    HashMap<String, String> result = (HashMap<String, String>)TaskExecute.getInstance().getTask().getValue();
+                    if(result.get("deleteRecord").equalsIgnoreCase("Successful"))
+                    {
+                        tableview_searchinrecord.getItems().remove(selectedIndex);
+                        listview_searchrecord_fileshowcase.getItems().clear();
+                        searchrecords_listview_notes.getItems().clear();
+                        JOptionPane.showMessageDialog(null, "Record deleted successfully");
+                    }
                 }
             });
         }
@@ -522,22 +512,7 @@ public class SearchRecordsController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
-        HashMap<String, Button> saveNDeleteButton = new HashMap<>();
-        saveNDeleteButton.put("saveBtn", searchrecords_button_update);
-        saveNDeleteButton.put("deleteBtn", searchrecords_button_delete);
-        GetOtherControllerAttributesSingleton.getInstance().setSearchRecordsSaveNDeleteButton(saveNDeleteButton);
-        searchrecords_listview_notes.setOnMouseClicked(new EventHandler<MouseEvent>() 
-        {
-            @Override
-            public void handle(MouseEvent event) 
-            {
-                if (event.getClickCount() == 2) 
-                {
-                    GetOtherControllerAttributesSingleton.getInstance().setNotes(searchrecords_listview_notes.getSelectionModel().getSelectedItem());
-                    MyUtils.getInstance().openNewWindow("NotesView.fxml", "Show");
-                }
-            }
-        });
+        
         try
         {
             ObservableList<String> list = FXCollections.observableArrayList();
