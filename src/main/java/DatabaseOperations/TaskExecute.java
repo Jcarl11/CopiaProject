@@ -144,6 +144,24 @@ public class TaskExecute
         };
         new Thread(myTask).start();
     }
+    public void deleteRecord(String objectId)
+    {
+        myTask = new Task<String>() 
+        {
+            @Override
+            protected String call() throws Exception 
+            {
+                System.out.println(objectId);
+                CompletableFuture<String> completableFuture = CompletableFuture.supplyAsync(()->databaseOperations.deleteRecord(objectId, "Client"))
+                        .thenApply(response -> databaseOperations.deleteImages(response))
+                        .thenApply(response -> databaseOperations.deleteNotes(response))
+                        .thenApply(response -> databaseOperations.deletePdf(response));
+                return completableFuture.get();
+            }
+        };
+        new Thread(myTask).start();
+    }
+    
     public Task<?> getTask()
     {
         return myTask;

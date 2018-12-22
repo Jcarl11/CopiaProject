@@ -1,6 +1,7 @@
 package MiscellaneousClasses;
 
 import Entities.ClientEntity;
+import java.util.ArrayList;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn.CellEditEvent;
@@ -9,8 +10,6 @@ import org.json.JSONObject;
 public class EventHandlers 
 {
     JSONObject client;
-    volatile boolean hasChange = false;
-    Button savebtn;
     private EventHandlers(){}
     private static EventHandlers instance = null;
     public static EventHandlers getInstance()
@@ -20,7 +19,6 @@ public class EventHandlers
         return instance;
     }
     
-   
     public EventHandler clientTableHandler()
     {
         client = new JSONObject();
@@ -58,6 +56,7 @@ public class EventHandlers
         };
         return event;
     }
+    
     public void setClient(JSONObject client){this.client = client;}
     public JSONObject getClient(){return client;}
 }

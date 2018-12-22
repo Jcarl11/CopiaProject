@@ -6,6 +6,7 @@ import Entities.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -22,6 +23,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import org.apache.commons.io.FilenameUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class MyUtils 
@@ -292,6 +294,19 @@ public class MyUtils
             industry.setOnEditCommit(EventHandlers.getInstance().clientTableHandler());
             type.setOnEditCommit(EventHandlers.getInstance().clientTableHandler());
             
+            tableview_searchinrecord.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection)->{
+                if(newSelection != null)
+                {
+                    GetOtherControllerAttributesSingleton.getInstance().getSearchRecordsSaveNDeleteButton().get("saveBtn").setDisable(false);
+                    GetOtherControllerAttributesSingleton.getInstance().getSearchRecordsSaveNDeleteButton().get("deleteBtn").setDisable(false);
+                }
+                else
+                {
+                    GetOtherControllerAttributesSingleton.getInstance().getSearchRecordsSaveNDeleteButton().get("saveBtn").setDisable(true);
+                    GetOtherControllerAttributesSingleton.getInstance().getSearchRecordsSaveNDeleteButton().get("deleteBtn").setDisable(true);
+                }
+            } );
+            
         }
         else if(searchClass.equalsIgnoreCase("Suppliers"))
         {
@@ -408,5 +423,6 @@ public class MyUtils
         } 
         catch (IOException iOException) {iOException.printStackTrace();}
     }
+    
     
 }

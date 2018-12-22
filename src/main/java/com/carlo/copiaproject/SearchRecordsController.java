@@ -17,12 +17,10 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.*;
 import javafx.scene.control.*;
-import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
 import javax.swing.JOptionPane;
-import org.asynchttpclient.Response;
 
 /**
  * FXML Controller class
@@ -37,7 +35,7 @@ public class SearchRecordsController implements Initializable
     @FXML private ComboBox<String> combobox_searchrecords_searchin;
     @FXML private TextField textfield_searchrecords_keyword;
     @FXML private ProgressIndicator searchpage_progress;
-    @FXML private Button searchrecords_searchbutton,button_searchinrecord_showfiles,searchrecords_button_save;
+    @FXML private Button searchrecords_searchbutton,button_searchinrecord_showfiles,searchrecords_button_update,searchrecords_button_delete;
     @FXML private ProgressIndicator showFile_progress;
     @FXML private AnchorPane searchrecords_anchorpane_edit;
     @FXML private ListView<NotesEntity> searchrecords_listview_notes;
@@ -480,30 +478,55 @@ public class SearchRecordsController implements Initializable
         }
     }
     @FXML
-    void button_saveOnClick(ActionEvent event) 
+    void button_updateOnClick(ActionEvent event) 
     {
         int result = JOptionPane.showConfirmDialog(null, "This record will be updated", "Confirm Change", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
         if(result == JOptionPane.OK_OPTION)
         {
             TaskExecute.getInstance().updateRecord(EventHandlers.getInstance().getClient());
             showFile_progress.visibleProperty().unbind();
-            searchrecords_button_save.disableProperty().unbind();
+            searchrecords_button_update.disableProperty().unbind();
             showFile_progress.visibleProperty().bind(TaskExecute.getInstance().getTask().runningProperty());
-            searchrecords_button_save.disableProperty().bind(TaskExecute.getInstance().getTask().runningProperty());
+            searchrecords_button_update.disableProperty().bind(TaskExecute.getInstance().getTask().runningProperty());
             TaskExecute.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
             {
                 @Override
                 public void handle(WorkerStateEvent event) 
                 {
-                    System.out.println(((Response)TaskExecute.getInstance().getTask().getValue()).getStatusCode());
+                    JOptionPane.showMessageDialog(null, "1 RECORD UPDATED");
                 }
             });
         }
         
     }
+    @FXML
+    void searchrecords_deleteOnClick(ActionEvent event) 
+    {
+        int result = JOptionPane.showConfirmDialog(null, "This record will be deleted", "Confirm Delete", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if(result == JOptionPane.OK_OPTION)
+        {
+            TaskExecute.getInstance().deleteRecord(((ClientEntity)tableview_searchinrecord.getSelectionModel().getSelectedItem()).getObjectID());
+            showFile_progress.visibleProperty().unbind();
+            searchrecords_button_delete.disableProperty().unbind();
+            showFile_progress.visibleProperty().bind(TaskExecute.getInstance().getTask().runningProperty());
+            searchrecords_button_delete.disableProperty().bind(TaskExecute.getInstance().getTask().runningProperty());
+            TaskExecute.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
+            {
+                @Override
+                public void handle(WorkerStateEvent event) 
+                {
+                    JOptionPane.showMessageDialog(null, "1 RECORD DELETED");
+                }
+            });
+        }
+    }
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
+        HashMap<String, Button> saveNDeleteButton = new HashMap<>();
+        saveNDeleteButton.put("saveBtn", searchrecords_button_update);
+        saveNDeleteButton.put("deleteBtn", searchrecords_button_delete);
+        GetOtherControllerAttributesSingleton.getInstance().setSearchRecordsSaveNDeleteButton(saveNDeleteButton);
         searchrecords_listview_notes.setOnMouseClicked(new EventHandler<MouseEvent>() 
         {
             @Override

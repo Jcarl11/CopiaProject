@@ -121,7 +121,7 @@
                <Insets bottom="10.0" right="20.0" top="10.0" />
             </GridPane.margin>
          </AnchorPane>
-         <AnchorPane GridPane.columnIndex="6" GridPane.rowIndex="9">
+         <AnchorPane GridPane.columnIndex="8" GridPane.rowIndex="9">
             <children>
                <ProgressIndicator fx:id="showFile_progress" layoutX="5.00128173828125" layoutY="4.293212890625" prefHeight="60.0" prefWidth="101.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             </children>
@@ -155,7 +155,15 @@
          </AnchorPane>
          <AnchorPane GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="9">
             <children>
-               <Button fx:id="searchrecords_button_save" mnemonicParsing="false" onAction="#button_saveOnClick" prefHeight="60.0" prefWidth="102.0" styleClass="orange-buton" text="Update Record" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               <Button fx:id="searchrecords_button_update" disable="true" mnemonicParsing="false" onAction="#button_updateOnClick" prefHeight="60.0" prefWidth="102.0" styleClass="orange-buton" text="Update Record" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            </children>
+            <GridPane.margin>
+               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </GridPane.margin>
+         </AnchorPane>
+         <AnchorPane GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="9">
+            <children>
+               <Button fx:id="searchrecords_button_delete" disable="true" mnemonicParsing="false" onAction="#searchrecords_deleteOnClick" prefHeight="60.0" prefWidth="101.0" styleClass="orange-buton" text="Delete this" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             </children>
             <GridPane.margin>
                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

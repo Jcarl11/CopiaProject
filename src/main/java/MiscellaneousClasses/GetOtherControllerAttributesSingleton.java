@@ -2,6 +2,7 @@ package MiscellaneousClasses;
 
 import Entities.NotesEntity;
 import java.util.HashMap;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -25,6 +26,8 @@ public class GetOtherControllerAttributesSingleton
         }
         return instance;
     }
+
+    private HashMap<String, Button> searchRecordsSaveNDeleteButton = new HashMap<>();
     
     private HashMap<String, TextField> clientTextFieldList = new HashMap<>();
     private HashMap<String, ComboBox> clientComboboxList = new HashMap<>();
@@ -52,6 +55,8 @@ public class GetOtherControllerAttributesSingleton
     private HashMap<String, TextArea> specificationsRemarks = new HashMap<>();
     private HashMap<String, Object> newEntity = new HashMap<>();
     private HashMap<String, Object> oldEntity = new HashMap<>();
+    
+    
     private NotesEntity notes = new NotesEntity();
     
     private AnchorPane clientContainer, supplierContainer, contractorsContainer,
@@ -305,4 +310,14 @@ public class GetOtherControllerAttributesSingleton
     public void setOldEntity(HashMap<String, Object> oldEntity) {
         this.oldEntity = oldEntity;
     }
+    ////////////////////////////////////////////////////////////////////////////
+    public HashMap<String, Button> getSearchRecordsSaveNDeleteButton() {
+        return searchRecordsSaveNDeleteButton;
+    }
+
+    public void setSearchRecordsSaveNDeleteButton(HashMap<String, Button> searchRecordsSaveButton) {
+        this.searchRecordsSaveNDeleteButton = searchRecordsSaveButton;
+    }
+    ////////////////////////////////////////////////////////////////////////////
+    
 }
