@@ -1,6 +1,5 @@
 package DatabaseOperations;
 
-import Entities.ClientEntity;
 import Entities.ComboboxDataEntity;
 import Entities.NotesEntity;
 import MiscellaneousClasses.MyUtils;
@@ -367,8 +366,9 @@ public class DatabaseOperations
         
         return response;
     }
-    public HashMap<String, ParseQuery<ParseObject>> deleteRecord(String objectId, String searchClass)
+    public HashMap<String, ParseQuery<ParseObject>> findRecord(String objectId, String searchClass)
     {
+        setFinished(false);
         HashMap<String, ParseQuery<ParseObject>> data = new HashMap<>();
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Client");
         query.getInBackground(objectId, new GetCallback<ParseObject>() 
@@ -380,32 +380,20 @@ public class DatabaseOperations
                 {
                     System.out.println("DeleteRecord Done");
                     data.put("ParseQuery", query);
-                    
+                    setFinished(true);
                 }
+                else
+                    setFinished(true);
             }
         });
-        
-        /*String responseCode = null;
-            ListenableFuture<Response> lf = asyncHttpClient.prepareDelete(MyUtils.URL + "searchClass/" + objectId)
-                            .addHeader("X-Parse-Application-Id", MyUtils.APP_ID)
-                            .setHeader("X-Parse-REST-API-Key", MyUtils.REST_API_KEY)
-                            .setHeader("Content-type", "application/json")
-                            .execute(new AsyncCompletionHandler<Response>() 
-                            {
-                                @Override
-                                public Response onCompleted(Response rspns) throws Exception 
-                                {
-                                    return rspns;
-                                }
-                            });
+        while(isFinished() == false)
+        {
             try {
-                responseCode = String.valueOf(lf.get().getStatusCode());
+                Thread.sleep(1000);
             } catch (InterruptedException ex) {
                 Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ExecutionException ex) {
-                Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
             }
-        data.put("ResponseCode", responseCode);*/
+        }
         return data;
     }
     
@@ -421,7 +409,7 @@ public class DatabaseOperations
             @Override
             public void done(List<ParseObject> list, ParseException parseException) 
             {
-                if(list!=null && parseException == null)
+                if(list != null && parseException == null)
                 {
                     System.out.println("DeleteImages Done");
                     for(ParseObject records : list)
@@ -462,7 +450,7 @@ public class DatabaseOperations
             @Override
             public void done(List<ParseObject> list, ParseException parseException) 
             {
-                if(list!=null && parseException == null)
+                if(list != null && parseException == null)
                 {
                     System.out.println("DeleteNotes Done");
                     for(ParseObject records : list)
@@ -491,9 +479,10 @@ public class DatabaseOperations
         }
         return notesResponse;
     }
-    public String deletePdf(HashMap<String, ParseQuery<ParseObject>> data)
+    public HashMap<String, ParseQuery<ParseObject>> deletePdf(HashMap<String, ParseQuery<ParseObject>> data)
     {
         setFinished(false);
+        HashMap<String, ParseQuery<ParseObject>> pdfResponse = data;
         ParseQuery<ParseObject> query = ParseQuery.getQuery("PDFFiles");
         query.include("ClientPointer");
         query.whereMatchesQuery("ClientPointer", data.get("ParseQuery"));
@@ -502,7 +491,7 @@ public class DatabaseOperations
             @Override
             public void done(List<ParseObject> list, ParseException parseException) 
             {
-                if(list!=null && parseException == null)
+                if(list != null && parseException == null)
                 {
                     System.out.println("DeletePDF Done");
                     for(ParseObject records : list)
@@ -513,26 +502,45 @@ public class DatabaseOperations
                             Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
-                    data.get("ParseQuery").getInBackground("rTV4UKYNoT", new GetCallback<ParseObject>() {
-                        @Override
-                        public void done(ParseObject t, ParseException parseException) {
-                            if(parseException == null)
-                            {
-                                try {
-                                    t.delete();
-                                } catch (ParseException ex) {
-                                    Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
-                                }
-                            }
-                            setFinished(true);
-                        }
-                    });
-                    
+                    setFinished(true);
                 }
                 else
                 {
                     setFinished(true);
                 }
+            }
+        });
+        while(isFinished() == false)
+        {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return pdfResponse;
+    }
+    public String deleteRecord(HashMap<String, ParseQuery<ParseObject>> data, String objectId)
+    {
+        setFinished(false);
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Client");
+        query.getInBackground(objectId, new GetCallback<ParseObject>() 
+        {
+            @Override
+            public void done(ParseObject t, ParseException parseException) 
+            {
+                if(parseException == null && t != null)
+                {
+                    System.out.println("DeleteRecordFinished");
+                    try {
+                        t.delete();
+                    } catch (ParseException ex) {
+                        Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    setFinished(true);
+                }
+                else
+                    setFinished(true);
             }
         });
         while(isFinished() == false)

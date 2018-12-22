@@ -152,10 +152,11 @@ public class TaskExecute
             protected String call() throws Exception 
             {
                 System.out.println(objectId);
-                CompletableFuture<String> completableFuture = CompletableFuture.supplyAsync(()->databaseOperations.deleteRecord(objectId, "Client"))
+                CompletableFuture<String> completableFuture = CompletableFuture.supplyAsync(()->databaseOperations.findRecord(objectId, "Client"))
                         .thenApply(response -> databaseOperations.deleteImages(response))
                         .thenApply(response -> databaseOperations.deleteNotes(response))
-                        .thenApply(response -> databaseOperations.deletePdf(response));
+                        .thenApply(response -> databaseOperations.deletePdf(response))
+                        .thenApply(response -> databaseOperations.deleteRecord(response,objectId));
                 return completableFuture.get();
             }
         };

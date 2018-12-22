@@ -37,7 +37,6 @@ public class SearchRecordsController implements Initializable
     @FXML private ProgressIndicator searchpage_progress;
     @FXML private Button searchrecords_searchbutton,button_searchinrecord_showfiles,searchrecords_button_update,searchrecords_button_delete;
     @FXML private ProgressIndicator showFile_progress;
-    @FXML private AnchorPane searchrecords_anchorpane_edit;
     @FXML private ListView<NotesEntity> searchrecords_listview_notes;
     @FXML private Button searchrecords_showremarks;
     @FXML
@@ -502,7 +501,7 @@ public class SearchRecordsController implements Initializable
     @FXML
     void searchrecords_deleteOnClick(ActionEvent event) 
     {
-        int result = JOptionPane.showConfirmDialog(null, "This record will be deleted", "Confirm Delete", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+        int result = JOptionPane.showConfirmDialog(null, "This selected record will be deleted", "Confirm Delete", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
         if(result == JOptionPane.OK_OPTION)
         {
             TaskExecute.getInstance().deleteRecord(((ClientEntity)tableview_searchinrecord.getSelectionModel().getSelectedItem()).getObjectID());

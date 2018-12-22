@@ -300,11 +300,6 @@ public class MyUtils
                     GetOtherControllerAttributesSingleton.getInstance().getSearchRecordsSaveNDeleteButton().get("saveBtn").setDisable(false);
                     GetOtherControllerAttributesSingleton.getInstance().getSearchRecordsSaveNDeleteButton().get("deleteBtn").setDisable(false);
                 }
-                else
-                {
-                    GetOtherControllerAttributesSingleton.getInstance().getSearchRecordsSaveNDeleteButton().get("saveBtn").setDisable(true);
-                    GetOtherControllerAttributesSingleton.getInstance().getSearchRecordsSaveNDeleteButton().get("deleteBtn").setDisable(true);
-                }
             } );
             
         }
