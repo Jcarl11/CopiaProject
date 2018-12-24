@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -170,7 +171,7 @@ public class DatabaseOperations
         result.put("Pointer", pointer);
         return result;
     }
-    public String associateNotes(HashMap<String, String> data, ArrayList<NotesEntity> notesList)
+    public List<Future<Response>> associateNotes(HashMap<String, String> data, ArrayList<NotesEntity> notesList)
     {
         ExecutorService executor = Executors.newFixedThreadPool(5);
         List<Callable<Response>> callables = new ArrayList<>();
@@ -211,7 +212,7 @@ public class DatabaseOperations
                 if (!executor.awaitTermination(800, TimeUnit.MILLISECONDS)) {executor.shutdownNow();}
             } catch (InterruptedException interruptedException) {interruptedException.printStackTrace();}
         }
-        return "Successful";
+        return responses;
     }
     public ObservableList<NotesEntity> retrieveNotes(String referenceClass, String objectId, String pointer)
     {
@@ -340,11 +341,11 @@ public class DatabaseOperations
         }
         return response;
     }
-    public Response updateRecord(JSONObject entity)
+    public Response updateRecord(JSONObject entity,String targetClass)
     {
         Response response = null;
         System.out.println(entity.toString());
-            ListenableFuture<Response> lf = asyncHttpClient.preparePut(MyUtils.URL + "Client/" + entity.getString("objectId"))
+            ListenableFuture<Response> lf = asyncHttpClient.preparePut(MyUtils.URL + targetClass + "/"  + entity.getString("objectId"))
                             .addHeader("X-Parse-Application-Id", MyUtils.APP_ID)
                             .setHeader("X-Parse-REST-API-Key", MyUtils.REST_API_KEY)
                             .setHeader("Content-type", "application/json")
@@ -367,12 +368,13 @@ public class DatabaseOperations
         
         return response;
     }
-    public HashMap<String, ParseQuery<ParseObject>> findRecord(String objectId, String searchClass)
+    public HashMap<String, Object> findRecord(String objectId, String searchClass, String pointer)
     {
         setFinished(false);
         statuses = new HashMap<>();
-        HashMap<String, ParseQuery<ParseObject>> data = new HashMap<>();
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Client");
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("Pointer", pointer);
+        ParseQuery<ParseObject> query = ParseQuery.getQuery(searchClass);
         query.getInBackground(objectId, new GetCallback<ParseObject>() 
         {
             @Override
@@ -407,13 +409,13 @@ public class DatabaseOperations
         return data;
     }
     
-    public HashMap<String, ParseQuery<ParseObject>> deleteImages(HashMap<String, ParseQuery<ParseObject>> data)
+    public HashMap<String, Object> deleteImages(HashMap<String, Object> data)
     {
         setFinished(false);
-        HashMap<String, ParseQuery<ParseObject>> imagesResponse = data;
+        HashMap<String, Object> imagesResponse = data;
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Images");
-        query.include("ClientPointer");
-        query.whereMatchesQuery("ClientPointer", data.get("ParseQuery"));
+        query.include(String.valueOf(data.get("Pointer")));
+        query.whereMatchesQuery(String.valueOf(data.get("Pointer")), (ParseQuery<ParseObject>)data.get("ParseQuery"));
         query.findInBackground(new FindCallback<ParseObject>() 
         {
             @Override
@@ -452,13 +454,13 @@ public class DatabaseOperations
         }
         return imagesResponse;
     }
-    public HashMap<String, ParseQuery<ParseObject>>deleteNotes(HashMap<String, ParseQuery<ParseObject>> data)
+    public HashMap<String, Object>deleteNotes(HashMap<String, Object> data)
     {
         setFinished(false);
-        HashMap<String, ParseQuery<ParseObject>> notesResponse = data;
+        HashMap<String, Object> notesResponse = data;
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Notes");
-        query.include("ClientPointer");
-        query.whereMatchesQuery("ClientPointer", data.get("ParseQuery"));
+        query.include((String) data.get("Pointer"));
+        query.whereMatchesQuery((String) data.get("Pointer"), (ParseQuery<ParseObject>) data.get("ParseQuery"));
         query.findInBackground(new FindCallback<ParseObject>() 
         {
             @Override
@@ -499,13 +501,13 @@ public class DatabaseOperations
         }
         return notesResponse;
     }
-    public HashMap<String, ParseQuery<ParseObject>> deletePdf(HashMap<String, ParseQuery<ParseObject>> data)
+    public HashMap<String, Object> deletePdf(HashMap<String, Object> data)
     {
         setFinished(false);
-        HashMap<String, ParseQuery<ParseObject>> pdfResponse = data;
+        HashMap<String, Object> pdfResponse = data;
         ParseQuery<ParseObject> query = ParseQuery.getQuery("PDFFiles");
-        query.include("ClientPointer");
-        query.whereMatchesQuery("ClientPointer", data.get("ParseQuery"));
+        query.include((String) data.get("Pointer"));
+        query.whereMatchesQuery((String) data.get("Pointer"), (ParseQuery<?>) data.get("ParseQuery"));
         query.findInBackground(new FindCallback<ParseObject>() 
         {
             @Override
@@ -546,10 +548,10 @@ public class DatabaseOperations
         }
         return pdfResponse;
     }
-    public HashMap<String, String> deleteRecord(HashMap<String, ParseQuery<ParseObject>> data, String objectId)
+    public HashMap<String, String> deleteRecord(HashMap<String, Object> data, String objectId, String searchClass)
     {
         setFinished(false);
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Client");
+        ParseQuery<ParseObject> query = ParseQuery.getQuery(searchClass);
         query.getInBackground(objectId, new GetCallback<ParseObject>() 
         {
             @Override

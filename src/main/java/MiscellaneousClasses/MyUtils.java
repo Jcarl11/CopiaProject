@@ -184,10 +184,17 @@ public class MyUtils
         String[] divisionSplit = specificationsEntity.getDivision().split("\\s+");
         String[] sectionSplit = specificationsEntity.getSection().split("\\s+");
         String[] typeSplit = specificationsEntity.getType().split("\\s+");
-        String[] keywordSplit = specificationsEntity.getKeywords().split(",");
-        for(String values : titleSplit)
+        if(specificationsEntity.getKeywords() != null)
         {
-            tags.add(values.toUpperCase());
+            String[] keywordSplit = specificationsEntity.getKeywords().split(",");
+            for(String values : titleSplit)
+            {
+                tags.add(values.toUpperCase());
+            }
+            for(String values : keywordSplit)
+            {
+                tags.add(values.toUpperCase());
+            }
         }
         for(String values : divisionSplit)
         {
@@ -201,10 +208,7 @@ public class MyUtils
         {
             tags.add(values.toUpperCase());
         }
-        for(String values : keywordSplit)
-        {
-            tags.add(values.toUpperCase());
-        }
+        
         return tags;
     }
     public String getFileType(String filePath)
@@ -321,6 +325,20 @@ public class MyUtils
             brand.setCellValueFactory(new PropertyValueFactory<SuppliersEntity, String>("Brand"));
             industry.setCellValueFactory(new PropertyValueFactory<SuppliersEntity, String>("Industry"));
             type.setCellValueFactory(new PropertyValueFactory<SuppliersEntity, String>("Type"));
+            
+            representative.setCellFactory(TextFieldTableCell.forTableColumn());
+            position.setCellFactory(TextFieldTableCell.forTableColumn());
+            company.setCellFactory(TextFieldTableCell.forTableColumn());
+            brand.setCellFactory(TextFieldTableCell.forTableColumn());
+            industry.setCellFactory(ComboBoxTableCell.forTableColumn(LocalStorage.getInstance().retrieve_combobox("SUPPLIERS", "INDUSTRY")));
+            type.setCellFactory(ComboBoxTableCell.forTableColumn(LocalStorage.getInstance().retrieve_combobox("SUPPLIERS", "TYPE")));
+            
+            representative.setOnEditCommit(EventHandlers.getInstance().suppliersTableHandler());
+            position.setOnEditCommit(EventHandlers.getInstance().suppliersTableHandler());
+            company.setOnEditCommit(EventHandlers.getInstance().suppliersTableHandler());
+            brand.setOnEditCommit(EventHandlers.getInstance().suppliersTableHandler());
+            industry.setOnEditCommit(EventHandlers.getInstance().suppliersTableHandler());
+            type.setOnEditCommit(EventHandlers.getInstance().suppliersTableHandler());
         }
         else if(searchClass.equalsIgnoreCase("Contractors"))
         {
@@ -345,6 +363,20 @@ public class MyUtils
             specialization.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("specialization"));
             industry.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("Industry"));
             classification.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("classification"));
+            
+            representative.setCellFactory(TextFieldTableCell.forTableColumn());
+            position.setCellFactory(TextFieldTableCell.forTableColumn());
+            company.setCellFactory(TextFieldTableCell.forTableColumn());
+            specialization.setCellFactory(TextFieldTableCell.forTableColumn());
+            industry.setCellFactory(ComboBoxTableCell.forTableColumn(LocalStorage.getInstance().retrieve_combobox("CONTRACTORS", "INDUSTRY")));
+            classification.setCellFactory(ComboBoxTableCell.forTableColumn(LocalStorage.getInstance().retrieve_combobox("CONTRACTORS", "CLASSIFICATION")));
+            
+            representative.setOnEditCommit(EventHandlers.getInstance().contractorsTableHandler());
+            position.setOnEditCommit(EventHandlers.getInstance().contractorsTableHandler());
+            company.setOnEditCommit(EventHandlers.getInstance().contractorsTableHandler());
+            specialization.setOnEditCommit(EventHandlers.getInstance().contractorsTableHandler());
+            industry.setOnEditCommit(EventHandlers.getInstance().contractorsTableHandler());
+            classification.setOnEditCommit(EventHandlers.getInstance().contractorsTableHandler());
         }
         else if(searchClass.equalsIgnoreCase("Consultants"))
         {
@@ -369,6 +401,20 @@ public class MyUtils
             specialization.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("specialization"));
             industry.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("Industry"));
             classification.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("classification"));
+            
+            representative.setCellFactory(TextFieldTableCell.forTableColumn());
+            position.setCellFactory(TextFieldTableCell.forTableColumn());
+            company.setCellFactory(TextFieldTableCell.forTableColumn());
+            specialization.setCellFactory(TextFieldTableCell.forTableColumn());
+            industry.setCellFactory(ComboBoxTableCell.forTableColumn(LocalStorage.getInstance().retrieve_combobox("CONSULTANTS", "INDUSTRY")));
+            classification.setCellFactory(ComboBoxTableCell.forTableColumn(LocalStorage.getInstance().retrieve_combobox("CONSULTANTS", "CLASSIFICATION")));
+            
+            representative.setOnEditCommit(EventHandlers.getInstance().consultantsTableHandler());
+            position.setOnEditCommit(EventHandlers.getInstance().consultantsTableHandler());
+            company.setOnEditCommit(EventHandlers.getInstance().consultantsTableHandler());
+            specialization.setOnEditCommit(EventHandlers.getInstance().consultantsTableHandler());
+            industry.setOnEditCommit(EventHandlers.getInstance().consultantsTableHandler());
+            classification.setOnEditCommit(EventHandlers.getInstance().consultantsTableHandler());
         }
         else if(searchClass.equalsIgnoreCase("Specifications"))
         {
@@ -387,6 +433,16 @@ public class MyUtils
             division.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("division"));
             section.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("section"));
             type.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("type"));
+            
+            title.setCellFactory(TextFieldTableCell.forTableColumn());
+            division.setCellFactory(TextFieldTableCell.forTableColumn());
+            section.setCellFactory(TextFieldTableCell.forTableColumn());
+            type.setCellFactory(TextFieldTableCell.forTableColumn());
+            
+            title.setOnEditCommit(EventHandlers.getInstance().specificationsTableHandler());
+            division.setOnEditCommit(EventHandlers.getInstance().specificationsTableHandler());
+            section.setOnEditCommit(EventHandlers.getInstance().specificationsTableHandler());
+            type.setOnEditCommit(EventHandlers.getInstance().specificationsTableHandler());
         }
         
     }

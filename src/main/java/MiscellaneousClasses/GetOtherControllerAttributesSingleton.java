@@ -55,7 +55,8 @@ public class GetOtherControllerAttributesSingleton
     private HashMap<String, Object> oldEntity = new HashMap<>();
     private HashMap<String, ListView<NotesEntity>> listviewNotes = new HashMap<>(); 
 
-    
+    private String searchClass = new String();
+    private String selectedObjectId = new String();
     private String selectedNotesIndex = new String();
     
     private NotesEntity notes = new NotesEntity();
@@ -326,5 +327,21 @@ public class GetOtherControllerAttributesSingleton
 
     public void setSelectedNotesIndex(String selectedNotesIndex) {
         this.selectedNotesIndex = selectedNotesIndex;
+    }
+    ////////////////////////////////////////////////////////////////////////////
+    public String getSearchClass() {
+        return searchClass;
+    }
+
+    public void setSearchClass(String searchClass) {
+        this.searchClass = searchClass;
+    }
+    ////////////////////////////////////////////////////////////////////////////
+    public String getSelectedObjectId() {
+        return selectedObjectId;
+    }
+
+    public void setSelectedObjectId(String selectedObjectId) {
+        this.selectedObjectId = selectedObjectId;
     }
 }

@@ -1,12 +1,17 @@
 package com.carlo.copiaproject;
 
 import DatabaseOperations.DatabaseQuery;
+import DatabaseOperations.LocalStorage;
+import DatabaseOperations.RetrieveCombobox;
+import Entities.ComboboxDataEntity;
 import MiscellaneousClasses.GetOtherControllerAttributesSingleton;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.*;
 import javafx.scene.control.*;
@@ -86,8 +91,27 @@ public class SpecificationsController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
+        ArrayList<ComboboxDataEntity> result = new ArrayList<>();
+        ObservableList<String> industryList = FXCollections.observableArrayList();
+        ObservableList<String> typeList = FXCollections.observableArrayList();
         try
         {
+            result = LocalStorage.getInstance().retrieve_local_ComboboxData("Specifications");
+            if(result.size() > 0){}
+            else
+            {
+                RetrieveCombobox retrieve = new RetrieveCombobox("Specifications");
+                Thread retrieveThread = new Thread(retrieve);
+                retrieveThread.start();
+                try{retrieveThread.join();}catch(Exception ex){ex.printStackTrace();}
+                
+                for(ComboboxDataEntity comboboxData : retrieve.getResult())
+                {
+                    LocalStorage.getInstance().insert_local_ComboboxData(comboboxData);
+                }
+            }
+            
+            
             HashMap<String, TextField> fields = new HashMap<>();
             HashMap<String, TextArea> textArea = new HashMap<>();
             HashMap<String, ListView> listView = new HashMap<>();

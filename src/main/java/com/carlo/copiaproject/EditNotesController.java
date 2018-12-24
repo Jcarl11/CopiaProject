@@ -39,7 +39,8 @@ public class EditNotesController implements Initializable
     {
         if(editnotes_textarea_remarks.getText().isEmpty() == false)
         {
-            TaskExecute.getInstance().updateNotes(editnotes_label_objectid.getText(), editnotes_textarea_remarks.getText(), "Client", "ClientPointer");
+            String searchClass = GetOtherControllerAttributesSingleton.getInstance().getSearchClass();
+            TaskExecute.getInstance().updateNotes(editnotes_label_objectid.getText(), editnotes_textarea_remarks.getText(), searchClass, searchClass + "Pointer");
             MyUtils.getInstance().bindSearchNProgress(editnotes_buton_save, editnotes_progressindicator, TaskExecute.getInstance().getTask().runningProperty());
             TaskExecute.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
             {

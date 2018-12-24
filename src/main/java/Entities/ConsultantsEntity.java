@@ -105,6 +105,7 @@ public class ConsultantsEntity
     public JSONObject buildJSON()
     {
         JSONObject json = new JSONObject();
+        json.put("objectId", getObjectId());
         json.put("Representative", getRepresentative());
         json.put("Position", getPosition());
         json.put("Company", getCompanyName());

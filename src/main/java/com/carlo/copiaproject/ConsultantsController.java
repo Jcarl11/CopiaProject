@@ -112,7 +112,7 @@ public class ConsultantsController implements Initializable
             }
             else
             {
-                RetrieveCombobox retrieve = new RetrieveCombobox("Contractors");
+                RetrieveCombobox retrieve = new RetrieveCombobox("Consultants");
                 Thread retrieveThread = new Thread(retrieve);
                 retrieveThread.start();
                 try{retrieveThread.join();}catch(Exception ex){ex.printStackTrace();}

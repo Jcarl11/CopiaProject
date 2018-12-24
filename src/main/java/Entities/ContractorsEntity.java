@@ -8,8 +8,6 @@ import org.json.JSONObject;
 
 public class ContractorsEntity 
 {
-
-    
     private String objectId;
     private String representative;
     private String position;
@@ -105,6 +103,7 @@ public class ContractorsEntity
     public JSONObject buildJSON()
     {
         JSONObject json = new JSONObject();
+        json.put("objectId", getObjectId());
         json.put("Representative", getRepresentative());
         json.put("Position", getPosition());
         json.put("Company", getCompanyName());

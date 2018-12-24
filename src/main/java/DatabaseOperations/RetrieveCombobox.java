@@ -40,7 +40,7 @@ public class RetrieveCombobox extends Thread
         {
             ParseQuery<ParseObject> query = ParseQuery.getQuery("ComboboxData");
             query.whereEqualTo("Category", category);
-            String[] data = {"Industry","Type","Classification"};
+            String[] data = {"Industry","Type","Classification"," "};
             query.whereContainedIn("Field", Arrays.asList(data));
             if(iterations <= 0)
             {

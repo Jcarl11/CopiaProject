@@ -35,7 +35,8 @@ public class SearchRecordsController implements Initializable
     @FXML private ComboBox<String> combobox_searchrecords_searchin;
     @FXML private TextField textfield_searchrecords_keyword;
     @FXML private ProgressIndicator searchpage_progress;
-    @FXML private Button searchrecords_searchbutton,button_searchinrecord_showfiles,searchrecords_button_update,searchrecords_button_delete;
+    @FXML private Button searchrecords_searchbutton,button_searchinrecord_showfiles,searchrecords_button_update,searchrecords_button_delete
+            ,searchrecords_button_addnotes;
     @FXML private ProgressIndicator showFile_progress;
     @FXML private ListView<NotesEntity> searchrecords_listview_notes;
     @FXML private Button searchrecords_showremarks;
@@ -216,10 +217,11 @@ public class SearchRecordsController implements Initializable
     {
         listview_searchrecord_fileshowcase.getItems().clear();
         searchrecords_listview_notes.getItems().clear();
+        String searchIn = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase();
+        String output = searchIn.substring(0, 1).toUpperCase() + searchIn.substring(1);
+        GetOtherControllerAttributesSingleton.getInstance().setSearchClass(output);
         if(combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase().equalsIgnoreCase("client"))
         {
-            String searchIn = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase();
-            String output = searchIn.substring(0, 1).toUpperCase() + searchIn.substring(1);
             String search = textfield_searchrecords_keyword.getText().trim();
             SearchRecords.getInstance().Search(search, output);
             MyUtils.getInstance().bindSearchNProgress(searchrecords_searchbutton, searchpage_progress, SearchRecords.getInstance().getTask().runningProperty());
@@ -259,8 +261,6 @@ public class SearchRecordsController implements Initializable
         }
         else if(combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase().equalsIgnoreCase("suppliers"))
         {
-            String searchIn = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase();
-            String output = searchIn.substring(0, 1).toUpperCase() + searchIn.substring(1);
             String search = textfield_searchrecords_keyword.getText().trim();
             SearchRecords.getInstance().Search(search, output);
             searchpage_progress.visibleProperty().unbind();
@@ -274,7 +274,7 @@ public class SearchRecordsController implements Initializable
                 @Override
                 public void handle(WorkerStateEvent event) 
                 {
-                    System.out.println("Succeded");
+                    MyUtils.getInstance().bindBtn(searchrecords_button_update, searchrecords_button_delete,searchrecords_showremarks,button_searchinrecord_showfiles, tableview_searchinrecord.getSelectionModel().selectedItemProperty());
                     suppliersEntitys = (ArrayList<SuppliersEntity>) SearchRecords.getInstance().getTask().getValue();
                     searchClass1 = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase();
                     if(tableview_searchinrecord.getColumns().isEmpty())
@@ -303,8 +303,6 @@ public class SearchRecordsController implements Initializable
         }
         else if(combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase().equalsIgnoreCase("contractors"))
         {
-            String searchIn = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase();
-            String output = searchIn.substring(0, 1).toUpperCase() + searchIn.substring(1);
             String search = textfield_searchrecords_keyword.getText().trim();
             SearchRecords.getInstance().Search(search, output);
             searchpage_progress.visibleProperty().unbind();
@@ -318,7 +316,7 @@ public class SearchRecordsController implements Initializable
                 @Override
                 public void handle(WorkerStateEvent event) 
                 {
-                    System.out.println("Succeded");
+                    MyUtils.getInstance().bindBtn(searchrecords_button_update, searchrecords_button_delete,searchrecords_showremarks,button_searchinrecord_showfiles, tableview_searchinrecord.getSelectionModel().selectedItemProperty());
                     contractorsEntitys = (ArrayList<ContractorsEntity>) SearchRecords.getInstance().getTask().getValue();
                     searchClass1 = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase();
                     if(tableview_searchinrecord.getColumns().isEmpty())
@@ -347,8 +345,6 @@ public class SearchRecordsController implements Initializable
         }
         else if(combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase().equalsIgnoreCase("consultants"))
         {
-            String searchIn = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase();
-            String output = searchIn.substring(0, 1).toUpperCase() + searchIn.substring(1);
             String search = textfield_searchrecords_keyword.getText().trim();
             SearchRecords.getInstance().Search(search, output);
             searchpage_progress.visibleProperty().unbind();
@@ -362,7 +358,7 @@ public class SearchRecordsController implements Initializable
                 @Override
                 public void handle(WorkerStateEvent event) 
                 {
-                    System.out.println("Succeded");
+                    MyUtils.getInstance().bindBtn(searchrecords_button_update, searchrecords_button_delete,searchrecords_showremarks,button_searchinrecord_showfiles, tableview_searchinrecord.getSelectionModel().selectedItemProperty());
                     consultantsEntitys = (ArrayList<ConsultantsEntity>) SearchRecords.getInstance().getTask().getValue();
                     searchClass1 = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase();
                     if(tableview_searchinrecord.getColumns().isEmpty())
@@ -391,8 +387,6 @@ public class SearchRecordsController implements Initializable
         }
         else if(combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase().equalsIgnoreCase("specifications"))
         {
-            String searchIn = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase();
-            String output = searchIn.substring(0, 1).toUpperCase() + searchIn.substring(1);
             String search = textfield_searchrecords_keyword.getText().trim();
             SearchRecords.getInstance().Search(search, output);
             searchpage_progress.visibleProperty().unbind();
@@ -406,7 +400,7 @@ public class SearchRecordsController implements Initializable
                 @Override
                 public void handle(WorkerStateEvent event) 
                 {
-                    System.out.println("Succeded");
+                    MyUtils.getInstance().bindBtn(searchrecords_button_update, searchrecords_button_delete,searchrecords_showremarks,button_searchinrecord_showfiles, tableview_searchinrecord.getSelectionModel().selectedItemProperty());
                     specificationsEntitys = (ArrayList<SpecificationsEntity>) SearchRecords.getInstance().getTask().getValue();
                     searchClass1 = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase();
                     if(tableview_searchinrecord.getColumns().isEmpty())
@@ -437,13 +431,44 @@ public class SearchRecordsController implements Initializable
     @FXML
     void button_searchrecords_showremarksOnClick(ActionEvent event) 
     {
+        HashMap<String, ListView<NotesEntity>> listview = new HashMap<>();
+        listview.put("ListViewNotes", searchrecords_listview_notes);
+        GetOtherControllerAttributesSingleton.getInstance().setListviewNotes(listview);
         if(tableview_searchinrecord.getSelectionModel().getSelectedItem() instanceof ClientEntity)
         {
             ClientEntity clientEntity = (ClientEntity)tableview_searchinrecord.getSelectionModel().getSelectedItem();
             TaskExecute.getInstance().retrieveNotes("Client", clientEntity.getObjectID(), "ClientPointer");
             MyUtils.getInstance().bindSearchNProgress(searchrecords_showremarks, showFile_progress, TaskExecute.getInstance().getTask().runningProperty());
             TaskExecute.getInstance().getTask().setOnSucceeded(EventHandlers.getInstance().taskSetOnSucceededEvent(searchrecords_listview_notes, TaskExecute.getInstance().getTask()));
-        } 
+        }
+        else if(tableview_searchinrecord.getSelectionModel().getSelectedItem() instanceof SuppliersEntity)
+        {
+            SuppliersEntity suppliersEntity = (SuppliersEntity) tableview_searchinrecord.getSelectionModel().getSelectedItem();
+            TaskExecute.getInstance().retrieveNotes("Suppliers", suppliersEntity.getObjectID(), "SuppliersPointer");
+            MyUtils.getInstance().bindSearchNProgress(searchrecords_showremarks, showFile_progress, TaskExecute.getInstance().getTask().runningProperty());
+            TaskExecute.getInstance().getTask().setOnSucceeded(EventHandlers.getInstance().taskSetOnSucceededEvent(searchrecords_listview_notes, TaskExecute.getInstance().getTask()));
+        }
+        else if(tableview_searchinrecord.getSelectionModel().getSelectedItem() instanceof ContractorsEntity)
+        {
+            ContractorsEntity contractorsEntity = (ContractorsEntity) tableview_searchinrecord.getSelectionModel().getSelectedItem();
+            TaskExecute.getInstance().retrieveNotes("Contractors", contractorsEntity.getObjectId(), "ContractorsPointer");
+            MyUtils.getInstance().bindSearchNProgress(searchrecords_showremarks, showFile_progress, TaskExecute.getInstance().getTask().runningProperty());
+            TaskExecute.getInstance().getTask().setOnSucceeded(EventHandlers.getInstance().taskSetOnSucceededEvent(searchrecords_listview_notes, TaskExecute.getInstance().getTask()));
+        }
+        else if(tableview_searchinrecord.getSelectionModel().getSelectedItem() instanceof ConsultantsEntity)
+        {
+            ConsultantsEntity consultantsEntity = (ConsultantsEntity) tableview_searchinrecord.getSelectionModel().getSelectedItem();
+            TaskExecute.getInstance().retrieveNotes("Consultants", consultantsEntity.getObjectId(), "ConsultantsPointer");
+            MyUtils.getInstance().bindSearchNProgress(searchrecords_showremarks, showFile_progress, TaskExecute.getInstance().getTask().runningProperty());
+            TaskExecute.getInstance().getTask().setOnSucceeded(EventHandlers.getInstance().taskSetOnSucceededEvent(searchrecords_listview_notes, TaskExecute.getInstance().getTask()));
+        }
+        else if(tableview_searchinrecord.getSelectionModel().getSelectedItem() instanceof SpecificationsEntity)
+        {
+            SpecificationsEntity specificationsEntity = (SpecificationsEntity) tableview_searchinrecord.getSelectionModel().getSelectedItem();
+            TaskExecute.getInstance().retrieveNotes("Specifications", specificationsEntity.getObjectId(), "SpecificationsPointer");
+            MyUtils.getInstance().bindSearchNProgress(searchrecords_showremarks, showFile_progress, TaskExecute.getInstance().getTask().runningProperty());
+            TaskExecute.getInstance().getTask().setOnSucceeded(EventHandlers.getInstance().taskSetOnSucceededEvent(searchrecords_listview_notes, TaskExecute.getInstance().getTask()));
+        }
     }
     @FXML
     void searchrecords_edit(ActionEvent event) 
@@ -455,6 +480,9 @@ public class SearchRecordsController implements Initializable
             GetOtherControllerAttributesSingleton.getInstance().setListviewNotes(listview);
             NotesEntity note = searchrecords_listview_notes.getSelectionModel().getSelectedItem();
             GetOtherControllerAttributesSingleton.getInstance().setNotes(note);
+            String comboboxVal = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase();
+            String output = comboboxVal.substring(0, 1).toUpperCase() + comboboxVal.substring(1);
+            GetOtherControllerAttributesSingleton.getInstance().setSearchClass(output);
             MyUtils.getInstance().openNewWindow("EditNotes.fxml", "Edit Notes");
         }
     }
@@ -464,19 +492,11 @@ public class SearchRecordsController implements Initializable
         int result = JOptionPane.showConfirmDialog(null, "This record will be updated", "Confirm Change", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
         if(result == JOptionPane.OK_OPTION)
         {
-            TaskExecute.getInstance().updateRecord(EventHandlers.getInstance().getClient());
-            showFile_progress.visibleProperty().unbind();
-            searchrecords_button_update.disableProperty().unbind();
-            showFile_progress.visibleProperty().bind(TaskExecute.getInstance().getTask().runningProperty());
-            searchrecords_button_update.disableProperty().bind(TaskExecute.getInstance().getTask().runningProperty());
-            TaskExecute.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
-            {
-                @Override
-                public void handle(WorkerStateEvent event) 
-                {
-                    JOptionPane.showMessageDialog(null, "1 RECORD UPDATED");
-                }
-            });
+            String comboboxVal = combobox_searchrecords_searchin.getSelectionModel().getSelectedItem().toLowerCase();
+            String output = comboboxVal.substring(0, 1).toUpperCase() + comboboxVal.substring(1);
+            TaskExecute.getInstance().updateRecord(EventHandlers.getInstance().getJsonData(),output);
+            MyUtils.getInstance().bindSearchNProgress(searchrecords_button_update, showFile_progress, TaskExecute.getInstance().getTask().runningProperty());
+            TaskExecute.getInstance().getTask().setOnSucceeded(EventHandlers.getInstance().updateTaskEventHandler());
         }
         
     }
@@ -486,33 +506,67 @@ public class SearchRecordsController implements Initializable
         int result = JOptionPane.showConfirmDialog(null, "This selected record will be deleted", "Confirm Delete", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
         if(result == JOptionPane.OK_OPTION)
         {
-            int selectedIndex = tableview_searchinrecord.getSelectionModel().getSelectedIndex();
-            TaskExecute.getInstance().deleteRecord(((ClientEntity)tableview_searchinrecord.getSelectionModel().getSelectedItem()).getObjectID());
-            showFile_progress.visibleProperty().unbind();
-            searchrecords_button_delete.disableProperty().unbind();
-            showFile_progress.visibleProperty().bind(TaskExecute.getInstance().getTask().runningProperty());
-            searchrecords_button_delete.disableProperty().bind(TaskExecute.getInstance().getTask().runningProperty());
-            TaskExecute.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
+            String searchClass = null;
+            String objectId = null;
+            String pointer = null;
+            if(tableview_searchinrecord.getSelectionModel().getSelectedItem() instanceof ClientEntity)
             {
-                @Override
-                public void handle(WorkerStateEvent event) 
-                {
-                    HashMap<String, String> result = (HashMap<String, String>)TaskExecute.getInstance().getTask().getValue();
-                    if(result.get("deleteRecord").equalsIgnoreCase("Successful"))
-                    {
-                        tableview_searchinrecord.getItems().remove(selectedIndex);
-                        listview_searchrecord_fileshowcase.getItems().clear();
-                        searchrecords_listview_notes.getItems().clear();
-                        JOptionPane.showMessageDialog(null, "Record deleted successfully");
-                    }
-                }
-            });
+                searchClass = "Client";
+                pointer = "ClientPointer";
+                objectId = ((ClientEntity)tableview_searchinrecord.getSelectionModel().getSelectedItem()).getObjectID();
+            }
+            else if(tableview_searchinrecord.getSelectionModel().getSelectedItem() instanceof SuppliersEntity)
+            {
+                searchClass = "Suppliers";
+                pointer = "SuppliersPointer";
+                objectId = ((SuppliersEntity)tableview_searchinrecord.getSelectionModel().getSelectedItem()).getObjectID();
+            }
+            else if(tableview_searchinrecord.getSelectionModel().getSelectedItem() instanceof ContractorsEntity)
+            {
+                searchClass = "Contractors";
+                pointer = "ContractorsPointer";
+                objectId = ((ContractorsEntity)tableview_searchinrecord.getSelectionModel().getSelectedItem()).getObjectId();
+            }
+            else if(tableview_searchinrecord.getSelectionModel().getSelectedItem() instanceof ConsultantsEntity)
+            {
+                searchClass = "Consultants";
+                pointer = "ConsultantsPointer";
+                objectId = ((ConsultantsEntity)tableview_searchinrecord.getSelectionModel().getSelectedItem()).getObjectId();
+            }
+            else if(tableview_searchinrecord.getSelectionModel().getSelectedItem() instanceof SpecificationsEntity)
+            {
+                searchClass = "Specifications";
+                pointer = "SpecificationsPointer";
+                objectId = ((SpecificationsEntity)tableview_searchinrecord.getSelectionModel().getSelectedItem()).getObjectId();
+            }
+            System.out.println(searchClass);
+            System.out.println(objectId);
+            int selectedIndex = tableview_searchinrecord.getSelectionModel().getSelectedIndex();
+            TaskExecute.getInstance().deleteRecord(objectId, searchClass,pointer);
+            MyUtils.getInstance().bindSearchNProgress(searchrecords_button_delete, showFile_progress, TaskExecute.getInstance().getTask().runningProperty());
+            TaskExecute.getInstance().getTask().setOnSucceeded(EventHandlers.getInstance().deleteTaskEventHandler(tableview_searchinrecord, listview_searchrecord_fileshowcase, searchrecords_listview_notes, selectedIndex));
         }
+    }
+    @FXML
+    void searchrecords_addnotesOnClick(ActionEvent event)
+    {
+        if(tableview_searchinrecord.getSelectionModel().getSelectedItem() instanceof ClientEntity)
+            GetOtherControllerAttributesSingleton.getInstance().setSelectedObjectId(((ClientEntity)tableview_searchinrecord.getSelectionModel().getSelectedItem()).getObjectID());
+        else if(tableview_searchinrecord.getSelectionModel().getSelectedItem() instanceof SuppliersEntity)
+            GetOtherControllerAttributesSingleton.getInstance().setSelectedObjectId(((SuppliersEntity)tableview_searchinrecord.getSelectionModel().getSelectedItem()).getObjectID());
+        else if(tableview_searchinrecord.getSelectionModel().getSelectedItem() instanceof ContractorsEntity)
+            GetOtherControllerAttributesSingleton.getInstance().setSelectedObjectId(((ContractorsEntity)tableview_searchinrecord.getSelectionModel().getSelectedItem()).getObjectId());  
+        else if(tableview_searchinrecord.getSelectionModel().getSelectedItem() instanceof ConsultantsEntity)
+            GetOtherControllerAttributesSingleton.getInstance().setSelectedObjectId(((ConsultantsEntity)tableview_searchinrecord.getSelectionModel().getSelectedItem()).getObjectId());
+        else if(tableview_searchinrecord.getSelectionModel().getSelectedItem() instanceof SpecificationsEntity)
+            GetOtherControllerAttributesSingleton.getInstance().setSelectedObjectId(((SpecificationsEntity)tableview_searchinrecord.getSelectionModel().getSelectedItem()).getObjectId());
+        
+        MyUtils.getInstance().openNewWindow("AddNotesView.fxml", "Add new note");
     }
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
-        
+        System.out.println("Called");
         try
         {
             ObservableList<String> list = FXCollections.observableArrayList();
