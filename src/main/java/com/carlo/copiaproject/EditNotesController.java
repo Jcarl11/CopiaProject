@@ -26,7 +26,7 @@ public class EditNotesController implements Initializable
     @FXML private TextField editnotes_textfield_createdat,editnotes_textfield_updatedat;
     @FXML private TextArea editnotes_textarea_remarks;
     @FXML private Label editnotes_label_objectid;
-    @FXML private Button editnotes_button_cancel,editnotes_buton_save;
+    @FXML private Button editnotes_button_cancel,editnotes_buton_save,editnotes_button_delete;
     @FXML private ProgressIndicator editnotes_progressindicator;
     @FXML
     void cancelOnClicked(ActionEvent event) 
@@ -65,6 +65,26 @@ public class EditNotesController implements Initializable
         else
         {
             JOptionPane.showMessageDialog(null, "Cannot be empty");
+        }
+    }
+    @FXML
+    void deleteOnClicked(ActionEvent event) 
+    {
+        int result = JOptionPane.showConfirmDialog(null, "This selected record will be deleted", "Confirm Delete", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if(result == JOptionPane.OK_OPTION)
+        {
+            TaskExecute.getInstance().deleteSingleNote(editnotes_label_objectid.getText());
+            MyUtils.getInstance().bindSearchNProgress(editnotes_button_delete, editnotes_progressindicator, TaskExecute.getInstance().getTask().runningProperty());
+            TaskExecute.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
+            {
+                @Override
+                public void handle(WorkerStateEvent event) 
+                {
+                    int selectedIndex = GetOtherControllerAttributesSingleton.getInstance().getListviewNotes().get("ListViewNotes").getSelectionModel().getSelectedIndex();
+                    GetOtherControllerAttributesSingleton.getInstance().getListviewNotes().get("ListViewNotes").getItems().remove(selectedIndex);
+                    ((Stage)editnotes_button_cancel.getScene().getWindow()).close();
+                }
+            });
         }
     }
     @Override

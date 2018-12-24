@@ -589,6 +589,31 @@ public class DatabaseOperations
         }
         return statuses;
     }
+    public String deleteSingleNote(String objectId)
+    {
+        setFinished(false);
+        int statusCode = 0;
+        ListenableFuture<Response> lf = asyncHttpClient.prepareDelete(MyUtils.URL + "Notes/" + objectId)
+                    .addHeader("X-Parse-Application-Id", MyUtils.APP_ID)
+                    .setHeader("X-Parse-REST-API-Key", MyUtils.REST_API_KEY)
+                    .execute(new AsyncCompletionHandler<Response>() 
+                    {
+                        @Override
+                        public Response onCompleted(Response rspns) throws Exception 
+                        {
+                            return rspns;
+                        }
+                    });
+        try {
+            Thread.sleep(2000);
+            statusCode = lf.get().getStatusCode();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ExecutionException ex) {
+            Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return String.valueOf(statusCode);
+    }
     public boolean isFinished() {
         return finished;
     }

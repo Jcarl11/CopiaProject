@@ -179,6 +179,18 @@ public class TaskExecute
         };
         new Thread(myTask).start();
     }
+    public void deleteSingleNote(String objectId)
+    {
+        myTask = new Task<String>() 
+        {
+            @Override
+            protected String call() throws Exception 
+            {
+                return databaseOperations.deleteSingleNote(objectId);
+            }
+        };
+        new Thread(myTask).start();
+    }
     public Task<?> getTask()
     {
         return myTask;
