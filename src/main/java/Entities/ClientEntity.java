@@ -97,6 +97,7 @@ public class ClientEntity
     public JSONObject buildJSON()
     {
         JSONObject json = new JSONObject();
+        json.put("objectId", getObjectID());
         json.put("Representative", getRepresentative());
         json.put("Position", getPosition());
         json.put("Company", getCompany_Name());
@@ -105,4 +106,5 @@ public class ClientEntity
         json.put("Tags", new JSONArray(MyUtils.getInstance().client_extractStringsToTags(this)));
         return json;
     }
+    
 }

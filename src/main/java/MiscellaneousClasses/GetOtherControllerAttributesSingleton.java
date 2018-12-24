@@ -2,6 +2,7 @@ package MiscellaneousClasses;
 
 import Entities.NotesEntity;
 import java.util.HashMap;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -50,7 +51,14 @@ public class GetOtherControllerAttributesSingleton
     private HashMap<String, TextArea> specificationsTextArea = new HashMap<>();
     private HashMap<String, ListView> specificationsListView = new HashMap<>();
     private HashMap<String, TextArea> specificationsRemarks = new HashMap<>();
+    private HashMap<String, Object> newEntity = new HashMap<>();
+    private HashMap<String, Object> oldEntity = new HashMap<>();
+    private HashMap<String, ListView<NotesEntity>> listviewNotes = new HashMap<>(); 
 
+    private String searchClass = new String();
+    private String selectedObjectId = new String();
+    private String selectedNotesIndex = new String();
+    
     private NotesEntity notes = new NotesEntity();
     
     private AnchorPane clientContainer, supplierContainer, contractorsContainer,
@@ -289,4 +297,51 @@ public class GetOtherControllerAttributesSingleton
         this.notes = notes;
     }
     ////////////////////////////////////////////////////////////////////////////
+    public HashMap<String, Object> getNewEntity() {
+        return newEntity;
+    }
+
+    public void setNewEntity(HashMap<String, Object> entity) {
+        this.newEntity = entity;
+    }
+    ////////////////////////////////////////////////////////////////////////////
+    public HashMap<String, Object> getOldEntity() {
+        return oldEntity;
+    }
+
+    public void setOldEntity(HashMap<String, Object> oldEntity) {
+        this.oldEntity = oldEntity;
+    }
+    ////////////////////////////////////////////////////////////////////////////
+    public HashMap<String, ListView<NotesEntity>> getListviewNotes() {
+        return listviewNotes;
+    }
+
+    public void setListviewNotes(HashMap<String, ListView<NotesEntity>> listviewNotes) {
+        this.listviewNotes = listviewNotes;
+    }
+    ////////////////////////////////////////////////////////////////////////////
+    public String getSelectedNotesIndex() {
+        return selectedNotesIndex;
+    }
+
+    public void setSelectedNotesIndex(String selectedNotesIndex) {
+        this.selectedNotesIndex = selectedNotesIndex;
+    }
+    ////////////////////////////////////////////////////////////////////////////
+    public String getSearchClass() {
+        return searchClass;
+    }
+
+    public void setSearchClass(String searchClass) {
+        this.searchClass = searchClass;
+    }
+    ////////////////////////////////////////////////////////////////////////////
+    public String getSelectedObjectId() {
+        return selectedObjectId;
+    }
+
+    public void setSelectedObjectId(String selectedObjectId) {
+        this.selectedObjectId = selectedObjectId;
+    }
 }

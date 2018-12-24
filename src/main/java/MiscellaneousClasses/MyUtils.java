@@ -1,22 +1,33 @@
 
 package MiscellaneousClasses;
 
+import DatabaseOperations.LocalStorage;
 import Entities.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import org.apache.commons.io.FilenameUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class MyUtils 
@@ -173,10 +184,17 @@ public class MyUtils
         String[] divisionSplit = specificationsEntity.getDivision().split("\\s+");
         String[] sectionSplit = specificationsEntity.getSection().split("\\s+");
         String[] typeSplit = specificationsEntity.getType().split("\\s+");
-        String[] keywordSplit = specificationsEntity.getKeywords().split(",");
-        for(String values : titleSplit)
+        if(specificationsEntity.getKeywords() != null)
         {
-            tags.add(values.toUpperCase());
+            String[] keywordSplit = specificationsEntity.getKeywords().split(",");
+            for(String values : titleSplit)
+            {
+                tags.add(values.toUpperCase());
+            }
+            for(String values : keywordSplit)
+            {
+                tags.add(values.toUpperCase());
+            }
         }
         for(String values : divisionSplit)
         {
@@ -190,10 +208,7 @@ public class MyUtils
         {
             tags.add(values.toUpperCase());
         }
-        for(String values : keywordSplit)
-        {
-            tags.add(values.toUpperCase());
-        }
+        
         return tags;
     }
     public String getFileType(String filePath)
@@ -260,18 +275,32 @@ public class MyUtils
             TableColumn company = new TableColumn("Company");
             TableColumn industry = new TableColumn("Industry");
             TableColumn type = new TableColumn("Type");
+            
             tableview_searchinrecord.getColumns().add(objectid);
             tableview_searchinrecord.getColumns().add(representative);
             tableview_searchinrecord.getColumns().add(position);
             tableview_searchinrecord.getColumns().add(company);
             tableview_searchinrecord.getColumns().add(industry);
             tableview_searchinrecord.getColumns().add(type);
+            
             objectid.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("ObjectID"));
             representative.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Representative"));
             position.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Position"));
             company.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Company_Name"));
             industry.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Industry"));
             type.setCellValueFactory(new PropertyValueFactory<ClientEntity, String>("Type"));
+            
+            representative.setCellFactory(TextFieldTableCell.forTableColumn());
+            position.setCellFactory(TextFieldTableCell.forTableColumn());
+            company.setCellFactory(TextFieldTableCell.forTableColumn());
+            industry.setCellFactory(ComboBoxTableCell.forTableColumn(LocalStorage.getInstance().retrieve_combobox("CLIENT", "INDUSTRY")));
+            type.setCellFactory(ComboBoxTableCell.forTableColumn(LocalStorage.getInstance().retrieve_combobox("CLIENT", "TYPE")));
+            
+            representative.setOnEditCommit(EventHandlers.getInstance().clientTableHandler());
+            position.setOnEditCommit(EventHandlers.getInstance().clientTableHandler());
+            company.setOnEditCommit(EventHandlers.getInstance().clientTableHandler());
+            industry.setOnEditCommit(EventHandlers.getInstance().clientTableHandler());
+            type.setOnEditCommit(EventHandlers.getInstance().clientTableHandler());
         }
         else if(searchClass.equalsIgnoreCase("Suppliers"))
         {
@@ -296,6 +325,20 @@ public class MyUtils
             brand.setCellValueFactory(new PropertyValueFactory<SuppliersEntity, String>("Brand"));
             industry.setCellValueFactory(new PropertyValueFactory<SuppliersEntity, String>("Industry"));
             type.setCellValueFactory(new PropertyValueFactory<SuppliersEntity, String>("Type"));
+            
+            representative.setCellFactory(TextFieldTableCell.forTableColumn());
+            position.setCellFactory(TextFieldTableCell.forTableColumn());
+            company.setCellFactory(TextFieldTableCell.forTableColumn());
+            brand.setCellFactory(TextFieldTableCell.forTableColumn());
+            industry.setCellFactory(ComboBoxTableCell.forTableColumn(LocalStorage.getInstance().retrieve_combobox("SUPPLIERS", "INDUSTRY")));
+            type.setCellFactory(ComboBoxTableCell.forTableColumn(LocalStorage.getInstance().retrieve_combobox("SUPPLIERS", "TYPE")));
+            
+            representative.setOnEditCommit(EventHandlers.getInstance().suppliersTableHandler());
+            position.setOnEditCommit(EventHandlers.getInstance().suppliersTableHandler());
+            company.setOnEditCommit(EventHandlers.getInstance().suppliersTableHandler());
+            brand.setOnEditCommit(EventHandlers.getInstance().suppliersTableHandler());
+            industry.setOnEditCommit(EventHandlers.getInstance().suppliersTableHandler());
+            type.setOnEditCommit(EventHandlers.getInstance().suppliersTableHandler());
         }
         else if(searchClass.equalsIgnoreCase("Contractors"))
         {
@@ -320,6 +363,20 @@ public class MyUtils
             specialization.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("specialization"));
             industry.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("Industry"));
             classification.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("classification"));
+            
+            representative.setCellFactory(TextFieldTableCell.forTableColumn());
+            position.setCellFactory(TextFieldTableCell.forTableColumn());
+            company.setCellFactory(TextFieldTableCell.forTableColumn());
+            specialization.setCellFactory(TextFieldTableCell.forTableColumn());
+            industry.setCellFactory(ComboBoxTableCell.forTableColumn(LocalStorage.getInstance().retrieve_combobox("CONTRACTORS", "INDUSTRY")));
+            classification.setCellFactory(ComboBoxTableCell.forTableColumn(LocalStorage.getInstance().retrieve_combobox("CONTRACTORS", "CLASSIFICATION")));
+            
+            representative.setOnEditCommit(EventHandlers.getInstance().contractorsTableHandler());
+            position.setOnEditCommit(EventHandlers.getInstance().contractorsTableHandler());
+            company.setOnEditCommit(EventHandlers.getInstance().contractorsTableHandler());
+            specialization.setOnEditCommit(EventHandlers.getInstance().contractorsTableHandler());
+            industry.setOnEditCommit(EventHandlers.getInstance().contractorsTableHandler());
+            classification.setOnEditCommit(EventHandlers.getInstance().contractorsTableHandler());
         }
         else if(searchClass.equalsIgnoreCase("Consultants"))
         {
@@ -344,6 +401,20 @@ public class MyUtils
             specialization.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("specialization"));
             industry.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("Industry"));
             classification.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("classification"));
+            
+            representative.setCellFactory(TextFieldTableCell.forTableColumn());
+            position.setCellFactory(TextFieldTableCell.forTableColumn());
+            company.setCellFactory(TextFieldTableCell.forTableColumn());
+            specialization.setCellFactory(TextFieldTableCell.forTableColumn());
+            industry.setCellFactory(ComboBoxTableCell.forTableColumn(LocalStorage.getInstance().retrieve_combobox("CONSULTANTS", "INDUSTRY")));
+            classification.setCellFactory(ComboBoxTableCell.forTableColumn(LocalStorage.getInstance().retrieve_combobox("CONSULTANTS", "CLASSIFICATION")));
+            
+            representative.setOnEditCommit(EventHandlers.getInstance().consultantsTableHandler());
+            position.setOnEditCommit(EventHandlers.getInstance().consultantsTableHandler());
+            company.setOnEditCommit(EventHandlers.getInstance().consultantsTableHandler());
+            specialization.setOnEditCommit(EventHandlers.getInstance().consultantsTableHandler());
+            industry.setOnEditCommit(EventHandlers.getInstance().consultantsTableHandler());
+            classification.setOnEditCommit(EventHandlers.getInstance().consultantsTableHandler());
         }
         else if(searchClass.equalsIgnoreCase("Specifications"))
         {
@@ -362,6 +433,16 @@ public class MyUtils
             division.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("division"));
             section.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("section"));
             type.setCellValueFactory(new PropertyValueFactory<ContractorsEntity, String>("type"));
+            
+            title.setCellFactory(TextFieldTableCell.forTableColumn());
+            division.setCellFactory(TextFieldTableCell.forTableColumn());
+            section.setCellFactory(TextFieldTableCell.forTableColumn());
+            type.setCellFactory(TextFieldTableCell.forTableColumn());
+            
+            title.setOnEditCommit(EventHandlers.getInstance().specificationsTableHandler());
+            division.setOnEditCommit(EventHandlers.getInstance().specificationsTableHandler());
+            section.setOnEditCommit(EventHandlers.getInstance().specificationsTableHandler());
+            type.setOnEditCommit(EventHandlers.getInstance().specificationsTableHandler());
         }
         
     }
@@ -387,6 +468,24 @@ public class MyUtils
             stage.show();
         } 
         catch (IOException iOException) {iOException.printStackTrace();}
+    }
+    public void bindBtn(Button update, Button delete,Button showremarks,Button showfiles, ReadOnlyObjectProperty property)
+    {
+        update.disableProperty().unbind();
+        delete.disableProperty().unbind();
+        showremarks.disableProperty().unbind();
+        showfiles.disableProperty().unbind();
+        update.disableProperty().bind(property.isNull());
+        delete.disableProperty().bind(property.isNull());
+        showremarks.disableProperty().bind(property.isNull());
+        showfiles.disableProperty().bind(property.isNull());
+    }
+    public void bindSearchNProgress(Button search, ProgressIndicator progressIndicator,ReadOnlyBooleanProperty property)
+    {
+        search.disableProperty().unbind();
+        progressIndicator.visibleProperty().unbind();
+        search.disableProperty().bind(property);
+        progressIndicator.visibleProperty().bind(property);
     }
     
 }

@@ -108,6 +108,7 @@ public class SuppliersEntity
     public JSONObject buildJSON()
     {
         JSONObject json = new JSONObject();
+        json.put("objectId", getObjectID());
         json.put("Representative", getRepresentative());
         json.put("Position", getPosition());
         json.put("Company_Name", getCompany_Name());

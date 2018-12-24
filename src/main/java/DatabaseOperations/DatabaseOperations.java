@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -36,6 +37,7 @@ import org.parse4j.callback.GetCallback;
 
 public class DatabaseOperations 
 {
+    HashMap<String, String> statuses;
     AsyncHttpClient asyncHttpClient = Dsl.asyncHttpClient();
     List<Future<Response>> responses;
     volatile boolean finished = false;
@@ -169,7 +171,7 @@ public class DatabaseOperations
         result.put("Pointer", pointer);
         return result;
     }
-    public String associateNotes(HashMap<String, String> data, ArrayList<NotesEntity> notesList)
+    public List<Future<Response>> associateNotes(HashMap<String, String> data, ArrayList<NotesEntity> notesList)
     {
         ExecutorService executor = Executors.newFixedThreadPool(5);
         List<Callable<Response>> callables = new ArrayList<>();
@@ -210,7 +212,7 @@ public class DatabaseOperations
                 if (!executor.awaitTermination(800, TimeUnit.MILLISECONDS)) {executor.shutdownNow();}
             } catch (InterruptedException interruptedException) {interruptedException.printStackTrace();}
         }
-        return "Successful";
+        return responses;
     }
     public ObservableList<NotesEntity> retrieveNotes(String referenceClass, String objectId, String pointer)
     {
@@ -339,5 +341,284 @@ public class DatabaseOperations
         }
         return response;
     }
+    public Response updateRecord(JSONObject entity,String targetClass)
+    {
+        Response response = null;
+        System.out.println(entity.toString());
+            ListenableFuture<Response> lf = asyncHttpClient.preparePut(MyUtils.URL + targetClass + "/"  + entity.getString("objectId"))
+                            .addHeader("X-Parse-Application-Id", MyUtils.APP_ID)
+                            .setHeader("X-Parse-REST-API-Key", MyUtils.REST_API_KEY)
+                            .setHeader("Content-type", "application/json")
+                            .setBody(entity.toString())
+                            .execute(new AsyncCompletionHandler<Response>() 
+                            {
+                                @Override
+                                public Response onCompleted(Response rspns) throws Exception 
+                                {
+                                    return rspns;
+                                }
+                            });
+            try {
+                response = lf.get();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ExecutionException ex) {
+                Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        
+        return response;
+    }
+    public HashMap<String, Object> findRecord(String objectId, String searchClass, String pointer)
+    {
+        setFinished(false);
+        statuses = new HashMap<>();
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("Pointer", pointer);
+        ParseQuery<ParseObject> query = ParseQuery.getQuery(searchClass);
+        query.getInBackground(objectId, new GetCallback<ParseObject>() 
+        {
+            @Override
+            public void done(ParseObject t, ParseException parseException) 
+            {
+                if(t != null && parseException == null)
+                {
+                    statuses.put("findRecord", "Successful");
+                    data.put("ParseQuery", query);
+                    setFinished(true);
+                }
+                else if(parseException != null)
+                {
+                    statuses.put("findRecord", "Exception");
+                    setFinished(true);
+                }
+                else if(t == null)   
+                {
+                    statuses.put("findRecord", "empty");
+                    setFinished(true);
+                }
+            }
+        });
+        while(isFinished() == false)
+        {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return data;
+    }
     
+    public HashMap<String, Object> deleteImages(HashMap<String, Object> data)
+    {
+        setFinished(false);
+        HashMap<String, Object> imagesResponse = data;
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Images");
+        query.include(String.valueOf(data.get("Pointer")));
+        query.whereMatchesQuery(String.valueOf(data.get("Pointer")), (ParseQuery<ParseObject>)data.get("ParseQuery"));
+        query.findInBackground(new FindCallback<ParseObject>() 
+        {
+            @Override
+            public void done(List<ParseObject> list, ParseException parseException) 
+            {
+                if(list != null && parseException == null)
+                {
+                    statuses.put("deleteImages", "Successful");
+                    for(ParseObject records : list)
+                    {
+                        try {
+                            records.delete();
+                        } catch (ParseException ex) {Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);}
+                    }
+                    setFinished(true);
+                }
+                else if(parseException != null)
+                {
+                    statuses.put("deleteImages", "Exception");
+                    setFinished(true);
+                }
+                else if(list == null)   
+                {
+                    statuses.put("deleteImages", "empty");
+                    setFinished(true);
+                }
+            }
+        });
+        while(isFinished() == false)
+        {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return imagesResponse;
+    }
+    public HashMap<String, Object>deleteNotes(HashMap<String, Object> data)
+    {
+        setFinished(false);
+        HashMap<String, Object> notesResponse = data;
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Notes");
+        query.include((String) data.get("Pointer"));
+        query.whereMatchesQuery((String) data.get("Pointer"), (ParseQuery<ParseObject>) data.get("ParseQuery"));
+        query.findInBackground(new FindCallback<ParseObject>() 
+        {
+            @Override
+            public void done(List<ParseObject> list, ParseException parseException) 
+            {
+                if(list != null && parseException == null)
+                {
+                    statuses.put("deleteNotes", "Successful");
+                    for(ParseObject records : list)
+                    {
+                        try {
+                            records.delete();
+                        } catch (ParseException ex) {
+                            Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    setFinished(true);
+                }
+                else if(parseException != null)
+                {
+                    statuses.put("deleteNotes", "Exception");
+                    setFinished(true);
+                }
+                else if(list == null)   
+                {
+                    statuses.put("deleteNotes", "empty");
+                    setFinished(true);
+                }
+            }
+        });
+        while(isFinished() == false)
+        {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return notesResponse;
+    }
+    public HashMap<String, Object> deletePdf(HashMap<String, Object> data)
+    {
+        setFinished(false);
+        HashMap<String, Object> pdfResponse = data;
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("PDFFiles");
+        query.include((String) data.get("Pointer"));
+        query.whereMatchesQuery((String) data.get("Pointer"), (ParseQuery<?>) data.get("ParseQuery"));
+        query.findInBackground(new FindCallback<ParseObject>() 
+        {
+            @Override
+            public void done(List<ParseObject> list, ParseException parseException) 
+            {
+                if(list != null && parseException == null)
+                {
+                    statuses.put("deletePdf", "Successful");
+                    for(ParseObject records : list)
+                    {
+                        try {
+                            records.delete();
+                        } catch (ParseException ex) {
+                            Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    setFinished(true);
+                }
+                else if(parseException != null)
+                {
+                    statuses.put("deletePdf", "Exception");
+                    setFinished(true);
+                }
+                else if(list == null)   
+                {
+                    statuses.put("deletePdf", "empty");
+                    setFinished(true);
+                }
+            }
+        });
+        while(isFinished() == false)
+        {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return pdfResponse;
+    }
+    public HashMap<String, String> deleteRecord(HashMap<String, Object> data, String objectId, String searchClass)
+    {
+        setFinished(false);
+        ParseQuery<ParseObject> query = ParseQuery.getQuery(searchClass);
+        query.getInBackground(objectId, new GetCallback<ParseObject>() 
+        {
+            @Override
+            public void done(ParseObject t, ParseException parseException) 
+            {
+                if(parseException == null && t != null)
+                {
+                    statuses.put("deleteRecord", "Successful");
+                    try {
+                        t.delete();
+                    } catch (ParseException ex) {
+                        Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    setFinished(true);
+                }
+                else if(parseException != null)
+                {
+                    statuses.put("deleteRecord", "Exception");
+                    setFinished(true);
+                }
+                else if(t == null)   
+                {
+                    statuses.put("deleteRecord", "empty");
+                    setFinished(true);
+                }
+            }
+        });
+        while(isFinished() == false)
+        {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return statuses;
+    }
+    public String deleteSingleNote(String objectId)
+    {
+        setFinished(false);
+        int statusCode = 0;
+        ListenableFuture<Response> lf = asyncHttpClient.prepareDelete(MyUtils.URL + "Notes/" + objectId)
+                    .addHeader("X-Parse-Application-Id", MyUtils.APP_ID)
+                    .setHeader("X-Parse-REST-API-Key", MyUtils.REST_API_KEY)
+                    .execute(new AsyncCompletionHandler<Response>() 
+                    {
+                        @Override
+                        public Response onCompleted(Response rspns) throws Exception 
+                        {
+                            return rspns;
+                        }
+                    });
+        try {
+            Thread.sleep(2000);
+            statusCode = lf.get().getStatusCode();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ExecutionException ex) {
+            Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return String.valueOf(statusCode);
+    }
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public void setFinished(boolean finished) {
+        this.finished = finished;
+    }
 }

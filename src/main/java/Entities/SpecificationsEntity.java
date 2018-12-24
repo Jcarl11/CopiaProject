@@ -94,6 +94,7 @@ public class SpecificationsEntity
     public JSONObject buildJSON()
     {
         JSONObject json = new JSONObject();
+        json.put("objectId", getObjectId());
         json.put("Title", getTitle());
         json.put("Division", getDivision());
         json.put("Section", getSection());

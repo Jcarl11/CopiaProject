@@ -6,7 +6,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class LocalStorage 
 {
@@ -231,6 +234,24 @@ public class LocalStorage
         finally{closeConnections();}
         
         return data;
+    }
+    public ObservableList<String> retrieve_combobox(String category, String field)
+    {
+        ObservableList<String> strings = FXCollections.observableArrayList();
+        initializeDB();
+        try {
+            String sql = "SELECT TITLE FROM COMBOBOXDATA WHERE CATEGORY = ? AND FIELD = ?";
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, category);
+            statement.setString(2, field);
+            resultSet = statement.executeQuery();
+            while(resultSet.next())
+            {
+                strings.add(resultSet.getString("Title"));
+            }
+        } catch (SQLException sQLException) {sQLException.printStackTrace();}
+        finally{closeConnections();}
+        return strings;
     }
     
     public boolean insert_constants()
