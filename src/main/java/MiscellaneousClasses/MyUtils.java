@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.event.Event;
@@ -42,8 +43,11 @@ public class MyUtils
     }
     public static String APP_ID = "4GCD5XK7GucFbTKnJa0fonFEBlAh3azBS3Gh0NNd";
     public static String REST_API_KEY = "RYznH1yrJ3DVly2f02aEMkZJNwmPVdDBUQyqRT6H";
+    public static String IRREVOCABLE_SESSION = "1";
     public static String URL_FILE = "https://concipiotektura.back4app.io/files/";
     public static String URL = "https://concipiotektura.back4app.io/classes/";
+    public static String URL_BASE = "https://concipiotektura.back4app.io/";
+    public static boolean REMEMBER_PASSWORD = false;
     public ArrayList<String> client_extractStringsToTags(ClientEntity clientEntity)
     {
         ArrayList<String> tags = new ArrayList<>();
@@ -454,7 +458,7 @@ public class MyUtils
             Parent root1 = (Parent) fxmlLoader.load();
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
-            stage.initStyle(StageStyle.UTILITY);
+            stage.initStyle(StageStyle.DECORATED);
             stage.setTitle(title);
             stage.setScene(new Scene(root1));            
             stage.setOnCloseRequest(new EventHandler<WindowEvent>() 
@@ -462,7 +466,11 @@ public class MyUtils
                 @Override
                 public void handle(WindowEvent event) 
                 {
-                   
+                    if(fileName == "LoginRegister.fxml")
+                    {
+                       Platform.exit();
+                        System.exit(0); 
+                    }
                 }
             });
             stage.show();

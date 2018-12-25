@@ -1,8 +1,12 @@
 package com.carlo.copiaproject;
 
+import DatabaseOperations.TaskExecute;
+import MiscellaneousClasses.MyUtils;
+import MiscellaneousClasses.UserPreferences;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.application.Platform;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,12 +14,16 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.parse4j.Parse;
+import org.parse4j.ParseUser;
 
 
-public class MainApp extends Application {
+public class MainApp extends Application 
+{
 
+    public static Stage stage;
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) throws Exception 
+    {
         Parse.initialize("4GCD5XK7GucFbTKnJa0fonFEBlAh3azBS3Gh0NNd", "RYznH1yrJ3DVly2f02aEMkZJNwmPVdDBUQyqRT6H","https://concipiotektura.back4app.io");
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/Scene.fxml"));
         Scene scene = new Scene(root);
@@ -27,11 +35,41 @@ public class MainApp extends Application {
             @Override
             public void handle(WindowEvent event) 
             {
-                Platform.exit();
-                System.exit(0);
+                
+                if(MyUtils.REMEMBER_PASSWORD == false)
+                {
+                    event.consume();
+                    System.out.println("Start");
+                    TaskExecute.getInstance().logout(UserPreferences.getInstance().getPreference().get("sessionToken", null));
+                    TaskExecute.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
+                    {
+                        @Override
+                        public void handle(WorkerStateEvent event) 
+                        {
+                            UserPreferences.getInstance().clearPreference();
+                            Platform.exit();
+                            System.exit(0);
+                        }
+                    });
+                }
+                else
+                {
+                    Platform.exit();
+                    System.exit(0);
+                }
+                
             }
         });
-        stage.show();
+        this.stage = stage;
+        if(UserPreferences.getInstance().getPreference().get("sessionToken", null) != null)
+        {
+            
+            stage.show();
+        }
+        else
+        {
+            MyUtils.getInstance().openNewWindow("LoginRegister.fxml", "Login");
+        }
     }
 
     /**

@@ -32,8 +32,10 @@ import org.json.JSONObject;
 import org.parse4j.ParseException;
 import org.parse4j.ParseObject;
 import org.parse4j.ParseQuery;
+import org.parse4j.ParseUser;
 import org.parse4j.callback.FindCallback;
 import org.parse4j.callback.GetCallback;
+import org.parse4j.callback.LoginCallback;
 
 public class DatabaseOperations 
 {
@@ -613,6 +615,83 @@ public class DatabaseOperations
             Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
         }
         return String.valueOf(statusCode);
+    }
+    
+    public Response retrieveUser(String username, String password)
+    {
+        System.out.println("Initalized");
+        ListenableFuture<Response> lf = asyncHttpClient.prepareGet(MyUtils.URL_BASE + "login")
+                        .addHeader("X-Parse-Application-Id", MyUtils.APP_ID)
+                        .setHeader("X-Parse-REST-API-Key", MyUtils.REST_API_KEY)
+                        .setHeader("X-Parse-Revocable-Session", MyUtils.IRREVOCABLE_SESSION)
+                        .addQueryParam("username", username)
+                        .addQueryParam("password", password)
+                        .execute(new AsyncCompletionHandler<Response>() 
+                        {
+                            @Override
+                            public Response onCompleted(Response rspns) throws Exception 
+                            {
+                                return rspns;
+                            }
+                        });
+        Response response = null;
+        try {
+            response = lf.get();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ExecutionException ex) {
+            Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return response;
+    }
+    
+    public Response checkLoggedIn(String session)
+    {
+        ListenableFuture<Response> lf = asyncHttpClient.prepareGet(MyUtils.URL + "users/me")
+                .addHeader("X-Parse-Application-Id", MyUtils.APP_ID)
+                .addHeader("X-Parse-REST-API-Key", MyUtils.REST_API_KEY)
+                .addHeader("X-Parse-Session-Token", session)
+                .execute(new AsyncCompletionHandler<Response>() 
+                {
+                    @Override
+                    public Response onCompleted(Response rspns) throws Exception 
+                    {
+                        return rspns;
+                    }
+                });
+        Response response = null;
+        try {
+            response = lf.get();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ExecutionException ex) {
+            Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return response;
+    }
+    public Response logoutUser(String session)
+    {
+        ListenableFuture<Response> lf = asyncHttpClient.preparePost(MyUtils.URL_BASE + "logout")
+                .addHeader("X-Parse-Application-Id", MyUtils.APP_ID)
+                .addHeader("X-Parse-REST-API-Key", MyUtils.REST_API_KEY)
+                .addHeader("X-Parse-Session-Token", session)
+                .execute(new AsyncCompletionHandler<Response>() 
+                {
+                    @Override
+                    public Response onCompleted(Response rspns) throws Exception 
+                    {
+                        return rspns;
+                    }
+                });
+        Response response = null;
+        try {
+            response = lf.get();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ExecutionException ex) {
+            Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return response;
     }
     public boolean isFinished() {
         return finished;

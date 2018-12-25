@@ -12,6 +12,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.asynchttpclient.Response;
 import org.json.JSONObject;
 import org.parse4j.ParseObject;
+import org.parse4j.ParseUser;
 public class TaskExecute
 {
     Task<?> myTask;
@@ -187,6 +188,43 @@ public class TaskExecute
             protected String call() throws Exception 
             {
                 return databaseOperations.deleteSingleNote(objectId);
+            }
+        };
+        new Thread(myTask).start();
+    }
+    public void loginUser(String username, String password)
+    {
+        myTask = new Task<Response>() 
+        {
+            @Override
+            protected Response call() throws Exception 
+            {
+                return databaseOperations.retrieveUser(username, password);
+            }
+        };
+        new Thread(myTask).start();
+    }
+    
+    public void checkLoggedInUsers(String sessionToken)
+    {
+        myTask = new Task<Response>() 
+        {
+            @Override
+            protected Response call() throws Exception 
+            {
+                return databaseOperations.checkLoggedIn(sessionToken);
+            }
+        };
+        new Thread(myTask).start();
+    }
+    public void logout(String sessionToken)
+    {
+        myTask = new Task<Response>() 
+        {
+            @Override
+            protected Response call() throws Exception 
+            {
+                return databaseOperations.logoutUser(sessionToken);
             }
         };
         new Thread(myTask).start();

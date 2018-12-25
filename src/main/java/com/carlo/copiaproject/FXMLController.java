@@ -6,6 +6,10 @@ import MiscellaneousClasses.*;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.prefs.BackingStoreException;
+import javafx.application.Application;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -14,7 +18,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import javax.swing.JOptionPane;
+import org.asynchttpclient.Response;
 
 public class FXMLController implements Initializable 
 {
@@ -25,7 +31,7 @@ public class FXMLController implements Initializable
     ContractorsEntity contractorsEntity = new ContractorsEntity();
     ConsultantsEntity consultantsEntity = new ConsultantsEntity();
     SpecificationsEntity specificationsEntity = new SpecificationsEntity();
-  
+    @FXML private Hyperlink hyperlink_signout;
     @FXML private Button button_search, button_upload_id;
     @FXML private AnchorPane anchorpane_main,anchorpane_viewdocument;
     @FXML private Parent client_file,suppliers_file,contractors_file,specifications_file,searchrecord_file, consultants_file;
@@ -265,10 +271,38 @@ public class FXMLController implements Initializable
     {
         //previewpdf.clear();
     }
+    @FXML void hyperlink_signoutOnClick(ActionEvent event) 
+    {
+        System.out.println(UserPreferences.getInstance().getPreference().get("sessionToken", null));
+        TaskExecute.getInstance().logout(UserPreferences.getInstance().getPreference().get("sessionToken", null));
+        hyperlink_signout.disableProperty().unbind();
+        progress_indicator.visibleProperty().unbind();
+        hyperlink_signout.disableProperty().bind(TaskExecute.getInstance().getTask().runningProperty());
+        progress_indicator.visibleProperty().bind(TaskExecute.getInstance().getTask().runningProperty());
+        TaskExecute.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>()
+        {
+            @Override
+            public void handle(WorkerStateEvent event) 
+            {
+                Response response = (Response)TaskExecute.getInstance().getTask().getValue();
+                System.out.println(response.getStatusCode());
+                if(response.getStatusCode() == 200)
+                {
+                    UserPreferences.getInstance().clearPreference();
+                    MyUtils.getInstance().openNewWindow("LoginRegister.fxml", "Login");
+                    ((Stage)hyperlink_signout.getScene().getWindow()).close();
+                }
+                else
+                    JOptionPane.showMessageDialog(null, "Failed");
+            }
+        });
+        
+    }
     
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
+        
         anchorpane_main.getChildren().clear();
         LocalStorage.getInstance().initialize_local_ComboboxData();
         ArrayList<String> constants = LocalStorage.getInstance().retrieve_local_Categories_CONSTANTS();

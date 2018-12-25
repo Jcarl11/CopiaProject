@@ -124,7 +124,7 @@
          <children>
             <AnchorPane prefHeight="62.0" prefWidth="160.0">
                <children>
-                  <Hyperlink alignment="CENTER" prefHeight="55.0" prefWidth="161.0" text="SIGNOUT" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <Hyperlink fx:id="hyperlink_signout" alignment="CENTER" onAction="#hyperlink_signoutOnClick" prefHeight="55.0" prefWidth="161.0" text="SIGNOUT" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <font>
                         <Font name="Calibri Bold" size="15.0" />
                      </font>
