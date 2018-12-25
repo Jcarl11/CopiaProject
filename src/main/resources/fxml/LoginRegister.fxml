@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane id="AnchorPane" prefHeight="537.0" prefWidth="998.0" styleClass="anchor-pane" stylesheets="@../styles/Styles.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/10.0.1" fx:controller="com.carlo.copiaproject.LoginRegisterController">
+<AnchorPane id="AnchorPane" prefHeight="537.0" prefWidth="998.0" styleClass="anchor-pane" stylesheets="@../styles/Styles.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.carlo.copiaproject.LoginRegisterController">
    <children>
       <GridPane prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
@@ -96,27 +96,148 @@
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                            </GridPane.margin>
                         </AnchorPane>
-                        <AnchorPane GridPane.columnIndex="2" GridPane.columnSpan="6" GridPane.rowIndex="8">
+                        <AnchorPane GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.rowIndex="8">
                            <children>
                               <Button fx:id="button_login" mnemonicParsing="false" onAction="#button_loginOnClick" prefHeight="53.0" prefWidth="250.0" styleClass="glass-grey" text="Login" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                            </children>
                            <GridPane.margin>
-                              <Insets />
+                              <Insets left="10.0" top="10.0" />
                            </GridPane.margin>
                         </AnchorPane>
-                        <AnchorPane GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="7">
+                        <AnchorPane GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="8">
                            <children>
-                              <ProgressIndicator fx:id="progress_indicator" layoutX="6.73028564453125" layoutY="5.392822265625" prefHeight="59.0" prefWidth="59.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                              <ProgressIndicator fx:id="progress_indicator" layoutX="6.73028564453125" layoutY="5.392822265625" prefHeight="59.0" prefWidth="59.0" style="-fx-progress-color: white;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                            </children>
                            <GridPane.margin>
-                              <Insets bottom="20.0" left="10.0" right="10.0" />
+                              <Insets left="10.0" right="10.0" top="10.0" />
                            </GridPane.margin>
                         </AnchorPane>
                      </children>
                   </GridPane>
                </children>
             </AnchorPane>
-            <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #f27920;" />
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #f27920;">
+               <children>
+                  <GridPane layoutX="73.0" layoutY="98.0" prefHeight="537.0" prefWidth="499.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="100.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="100.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="100.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="100.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="100.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="100.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="100.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="100.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="100.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="100.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" percentHeight="100.0" prefHeight="30.0" vgrow="ALWAYS" />
+                      <RowConstraints minHeight="10.0" percentHeight="100.0" prefHeight="30.0" vgrow="ALWAYS" />
+                      <RowConstraints minHeight="10.0" percentHeight="100.0" prefHeight="30.0" vgrow="ALWAYS" />
+                        <RowConstraints minHeight="10.0" percentHeight="100.0" prefHeight="30.0" vgrow="ALWAYS" />
+                        <RowConstraints minHeight="10.0" percentHeight="100.0" prefHeight="30.0" vgrow="ALWAYS" />
+                        <RowConstraints minHeight="10.0" percentHeight="100.0" prefHeight="30.0" vgrow="ALWAYS" />
+                        <RowConstraints minHeight="10.0" percentHeight="100.0" prefHeight="30.0" vgrow="ALWAYS" />
+                        <RowConstraints minHeight="10.0" percentHeight="100.0" prefHeight="30.0" vgrow="ALWAYS" />
+                        <RowConstraints minHeight="10.0" percentHeight="100.0" prefHeight="30.0" vgrow="ALWAYS" />
+                        <RowConstraints minHeight="10.0" percentHeight="100.0" prefHeight="30.0" vgrow="ALWAYS" />
+                        <RowConstraints minHeight="10.0" percentHeight="100.0" prefHeight="30.0" vgrow="ALWAYS" />
+                        <RowConstraints minHeight="10.0" percentHeight="100.0" prefHeight="30.0" vgrow="ALWAYS" />
+                        <RowConstraints minHeight="10.0" percentHeight="100.0" prefHeight="30.0" vgrow="ALWAYS" />
+                    </rowConstraints>
+                     <children>
+                        <AnchorPane GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="1">
+                           <children>
+                              <Label prefHeight="53.0" prefWidth="50.0" styleClass="textheaders" text="Register" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                           <GridPane.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </GridPane.margin>
+                        </AnchorPane>
+                        <AnchorPane styleClass="textNormal" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2">
+                           <children>
+                              <Label alignment="BOTTOM_LEFT" prefHeight="54.0" prefWidth="63.0" styleClass="textNormal" text="Username" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                           <GridPane.margin>
+                              <Insets left="10.0" right="10.0" top="10.0" />
+                           </GridPane.margin>
+                        </AnchorPane>
+                        <AnchorPane GridPane.columnIndex="1" GridPane.columnSpan="8" GridPane.rowIndex="3">
+                           <children>
+                              <TextField fx:id="register_username" prefHeight="54.0" prefWidth="179.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                           <GridPane.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </GridPane.margin>
+                        </AnchorPane>
+                        <AnchorPane GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="4">
+                           <children>
+                              <Label alignment="BOTTOM_LEFT" prefHeight="54.0" prefWidth="200.0" styleClass="textNormal" text="Valid Email" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                           <GridPane.margin>
+                              <Insets left="10.0" right="10.0" top="10.0" />
+                           </GridPane.margin>
+                        </AnchorPane>
+                        <AnchorPane GridPane.columnIndex="1" GridPane.columnSpan="8" GridPane.rowIndex="5">
+                           <children>
+                              <TextField fx:id="register_email" prefHeight="53.0" prefWidth="179.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                           <GridPane.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </GridPane.margin>
+                        </AnchorPane>
+                        <AnchorPane GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="6">
+                           <children>
+                              <Label alignment="BOTTOM_LEFT" prefHeight="44.0" prefWidth="130.0" styleClass="textNormal" text="Password" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                           <GridPane.margin>
+                              <Insets left="10.0" right="10.0" top="10.0" />
+                           </GridPane.margin>
+                        </AnchorPane>
+                        <AnchorPane GridPane.columnIndex="1" GridPane.columnSpan="8" GridPane.rowIndex="7">
+                           <children>
+                              <PasswordField fx:id="register_password" prefHeight="54.0" prefWidth="179.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                           <GridPane.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </GridPane.margin>
+                        </AnchorPane>
+                        <AnchorPane GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="8">
+                           <children>
+                              <Label alignment="BOTTOM_LEFT" prefHeight="45.0" prefWidth="150.0" styleClass="textNormal" text="Confirm Password" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                           <GridPane.margin>
+                              <Insets left="10.0" right="10.0" top="10.0" />
+                           </GridPane.margin>
+                        </AnchorPane>
+                        <AnchorPane GridPane.columnIndex="1" GridPane.columnSpan="8" GridPane.rowIndex="9">
+                           <children>
+                              <PasswordField fx:id="register_confirmpassword" prefHeight="44.0" prefWidth="179.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                           <GridPane.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </GridPane.margin>
+                        </AnchorPane>
+                        <AnchorPane GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.rowIndex="11">
+                           <children>
+                              <Button fx:id="register_submit" mnemonicParsing="false" onAction="#register_submitOnClick" prefHeight="41.0" prefWidth="62.0" styleClass="glass-grey" text="Submit" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                           <GridPane.margin>
+                              <Insets left="10.0" />
+                           </GridPane.margin>
+                        </AnchorPane>
+                        <AnchorPane GridPane.columnIndex="6" GridPane.rowIndex="11">
+                           <children>
+                              <ProgressIndicator fx:id="register_progress" layoutX="4.15118408203125" layoutY="8.199127197265625" prefHeight="62.0" prefWidth="57.0" style="-fx-progress-color: white;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                           <GridPane.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </GridPane.margin>
+                        </AnchorPane>
+                     </children>
+                  </GridPane>
+               </children></AnchorPane>
          </children>
       </GridPane>
    </children>

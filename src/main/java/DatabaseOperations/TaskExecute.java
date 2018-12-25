@@ -229,6 +229,20 @@ public class TaskExecute
         };
         new Thread(myTask).start();
     }
+    public void registerUser(String username, String password, String email)
+    {
+        myTask = new Task<Response>() 
+        {
+            @Override
+            protected Response call() throws Exception 
+            {
+                CompletableFuture<Response> completableFuture = CompletableFuture.supplyAsync(() -> databaseOperations.registerUser(username, password, email))
+                        .thenApply(data -> databaseOperations.logoutUser(data));
+                return completableFuture.get();
+            }
+        };
+        new Thread(myTask).start();
+    }
     public Task<?> getTask()
     {
         return myTask;

@@ -18,6 +18,7 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javax.swing.JOptionPane;
+import jdk.nashorn.internal.scripts.JO;
 import org.asynchttpclient.Response;
 import org.json.JSONObject;
 import org.parse4j.ParseException;
@@ -26,11 +27,11 @@ import org.parse4j.callback.LoginCallback;
 
 public class LoginRegisterController implements Initializable 
 {
-    @FXML private TextField login_textfield_username;
-    @FXML private PasswordField login_textfield_password;
+    @FXML private TextField login_textfield_username,register_username,register_email;
+    @FXML private PasswordField login_textfield_password,register_password,register_confirmpassword;
     @FXML private CheckBox login_checkbox;
-    @FXML private Button button_login;
-    @FXML private ProgressIndicator progress_indicator;
+    @FXML private Button button_login,register_submit;
+    @FXML private ProgressIndicator progress_indicator,register_progress;
 
     @FXML
     void button_loginOnClick(ActionEvent event)
@@ -46,11 +47,38 @@ public class LoginRegisterController implements Initializable
                 JSONObject jsonResponse = new JSONObject(user.getResponseBody());
                 if(user.getStatusCode() == 200)
                 {
-                    if(login_checkbox.isSelected())
-                        MyUtils.REMEMBER_PASSWORD = true;
-                    UserPreferences.getInstance().userData(jsonResponse);
-                    MainApp.stage.show();
-                    ((Stage)button_login.getScene().getWindow()).close();
+                    if(jsonResponse.getBoolean("emailVerified") == true)
+                    {
+                        if(login_checkbox.isSelected())
+                            jsonResponse.put("rememberpassword", true);
+                        else
+                            jsonResponse.put("rememberpassword", false);
+                        UserPreferences.getInstance().userData(jsonResponse);
+                        MainApp.stage.show();
+                        ((Stage)button_login.getScene().getWindow()).close();
+                    }
+                    else
+                    {
+                        TaskExecute.getInstance().logout(jsonResponse.getString("sessionToken"));
+                        TaskExecute.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>()
+                        {
+                            @Override
+                            public void handle(WorkerStateEvent event) 
+                            {
+                                Response response = (Response)TaskExecute.getInstance().getTask().getValue();
+                                System.out.println(response.getStatusCode());
+                                if(response.getStatusCode() == 200)
+                                {
+                                    JOptionPane.showMessageDialog(null, "Please verify your email to continue");
+                                }
+                                else
+                                    JOptionPane.showMessageDialog(null, "Failed");
+                            }
+                        });
+                        
+                    }
+                        
+                    
                 }
                 else
                 {
@@ -61,7 +89,36 @@ public class LoginRegisterController implements Initializable
         });
         
     }
-    
+    @FXML
+    void register_submitOnClick(ActionEvent event) 
+    {
+        if(!register_username.getText().trim().isEmpty() && !register_email.getText().trim().isEmpty() && !register_password.getText().trim().isEmpty() && !register_confirmpassword.getText().trim().isEmpty())
+        {
+            if(register_password.getText().trim().equals(register_confirmpassword.getText().trim()))
+            {
+                TaskExecute.getInstance().registerUser(register_username.getText().trim(), register_password.getText().trim(), register_email.getText().trim());
+                MyUtils.getInstance().bindSearchNProgress(register_submit, register_progress, TaskExecute.getInstance().getTask().runningProperty());
+                TaskExecute.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
+                {
+                    @Override
+                    public void handle(WorkerStateEvent event) 
+                    {
+                        
+                        if(((Response)TaskExecute.getInstance().getTask().getValue()).getStatusCode() == 200)
+                        {
+                            JOptionPane.showConfirmDialog(null, "A confirmation email was sent to your email address.\n Please confirm to complete your registration", "Your registration is almost complete", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                        }
+                        else
+                            System.out.println(((Response)TaskExecute.getInstance().getTask().getValue()).getStatusCode());
+                    }
+                });
+            }
+            else
+                JOptionPane.showMessageDialog(null, "Passwords does not match");
+        }
+        else
+            JOptionPane.showMessageDialog(null, "Don't leave blank fields");
+    }
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {

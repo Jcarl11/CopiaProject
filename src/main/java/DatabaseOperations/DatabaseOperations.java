@@ -693,6 +693,38 @@ public class DatabaseOperations
         }
         return response;
     }
+    public String registerUser(String username, String password, String email)
+    {
+        String sessionToken = null;
+        ListenableFuture<Response> lf = asyncHttpClient.preparePost(MyUtils.URL_BASE + "users")
+                .addHeader("X-Parse-Application-Id", MyUtils.APP_ID)
+                .addHeader("X-Parse-REST-API-Key", MyUtils.REST_API_KEY)
+                .addHeader("X-Parse-Revocable-Session", MyUtils.IRREVOCABLE_SESSION)
+                .addHeader("Content-Type", "application/json")
+                .setBody(MyUtils.getInstance().buildSignUpUser(username, password, email).toString())
+                .execute(new AsyncCompletionHandler<Response>() 
+                {
+                    @Override
+                    public Response onCompleted(Response rspns) throws Exception 
+                    {
+                        return rspns;
+                    }
+                });
+        Response response = null;
+        try {
+            response = lf.get();
+            if(response.getStatusCode() == 201)
+            {
+                JSONObject session = new JSONObject(response.getResponseBody());
+                sessionToken = session.getString("sessionToken");
+            }
+        } catch (InterruptedException ex) {
+            Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ExecutionException ex) {
+            Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return sessionToken;        
+    }
     public boolean isFinished() {
         return finished;
     }

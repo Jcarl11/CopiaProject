@@ -20,6 +20,7 @@ public class UserPreferences
         preference.put("objectId", data.getString("objectId"));
         preference.put("sessionToken", data.getString("sessionToken"));
         preference.put("username", data.getString("username"));
+        preference.putBoolean("rememberpassword", data.getBoolean("rememberpassword"));
     }
     public void clearPreference()
     {

@@ -47,7 +47,6 @@ public class MyUtils
     public static String URL_FILE = "https://concipiotektura.back4app.io/files/";
     public static String URL = "https://concipiotektura.back4app.io/classes/";
     public static String URL_BASE = "https://concipiotektura.back4app.io/";
-    public static boolean REMEMBER_PASSWORD = false;
     public ArrayList<String> client_extractStringsToTags(ClientEntity clientEntity)
     {
         ArrayList<String> tags = new ArrayList<>();
@@ -449,6 +448,14 @@ public class MyUtils
             type.setOnEditCommit(EventHandlers.getInstance().specificationsTableHandler());
         }
         
+    }
+    public JSONObject buildSignUpUser(String username, String password, String email)
+    {
+        JSONObject json = new JSONObject();
+        json.put("username", username);
+        json.put("password", password);
+        json.put("email", email);
+        return json;
     }
     public void openNewWindow(String fileName, String title)
     {

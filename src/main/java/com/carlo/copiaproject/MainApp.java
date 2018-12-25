@@ -36,10 +36,9 @@ public class MainApp extends Application
             public void handle(WindowEvent event) 
             {
                 
-                if(MyUtils.REMEMBER_PASSWORD == false)
+                if(UserPreferences.getInstance().getPreference().getBoolean("rememberpassword", false) == false)
                 {
                     event.consume();
-                    System.out.println("Start");
                     TaskExecute.getInstance().logout(UserPreferences.getInstance().getPreference().get("sessionToken", null));
                     TaskExecute.getInstance().getTask().setOnSucceeded(new EventHandler<WorkerStateEvent>() 
                     {
