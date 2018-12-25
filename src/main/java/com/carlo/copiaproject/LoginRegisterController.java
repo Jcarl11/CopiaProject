@@ -5,6 +5,8 @@ import MiscellaneousClasses.MyUtils;
 import MiscellaneousClasses.UserPreferences;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
@@ -13,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
@@ -54,7 +57,11 @@ public class LoginRegisterController implements Initializable
                         else
                             jsonResponse.put("rememberpassword", false);
                         UserPreferences.getInstance().userData(jsonResponse);
-                        MainApp.stage.show();
+                        try {
+                            new MainApp().start(new Stage());
+                        } catch (Exception ex) {
+                            Logger.getLogger(LoginRegisterController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                         ((Stage)button_login.getScene().getWindow()).close();
                     }
                     else
@@ -118,6 +125,11 @@ public class LoginRegisterController implements Initializable
         }
         else
             JOptionPane.showMessageDialog(null, "Don't leave blank fields");
+    }
+    @FXML
+    void signin_hyperlink_forgotpassword(ActionEvent event) 
+    {
+        MyUtils.getInstance().openNewWindow("ChangePassword.fxml", "Enter your email");
     }
     @Override
     public void initialize(URL url, ResourceBundle rb) 

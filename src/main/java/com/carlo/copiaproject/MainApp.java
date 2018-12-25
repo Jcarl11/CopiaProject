@@ -59,7 +59,6 @@ public class MainApp extends Application
                 
             }
         });
-        this.stage = stage;
         if(UserPreferences.getInstance().getPreference().get("sessionToken", null) != null)
         {
             

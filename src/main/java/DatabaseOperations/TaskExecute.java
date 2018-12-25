@@ -243,6 +243,19 @@ public class TaskExecute
         };
         new Thread(myTask).start();
     }
+    public void changePass(String email)
+    {
+        myTask = new Task<Response>() 
+        {
+            @Override
+            protected Response call() throws Exception 
+            {
+                
+                return databaseOperations.findEmail(email);
+            }
+        };
+        new Thread(myTask).start();
+    }
     public Task<?> getTask()
     {
         return myTask;

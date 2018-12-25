@@ -27,6 +27,7 @@ import org.asynchttpclient.AsyncHttpClient;
 import org.asynchttpclient.Dsl;
 import org.asynchttpclient.ListenableFuture;
 import org.asynchttpclient.Response;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.parse4j.ParseException;
@@ -724,6 +725,56 @@ public class DatabaseOperations
             Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
         }
         return sessionToken;        
+    }
+    public Response findEmail(String email)
+    {
+        String param = "where={\"email\":\"franciscojoeycarlo@yahoo.com\"}";
+        ListenableFuture<Response> lf = asyncHttpClient.prepareGet(MyUtils.URL + "_User/")
+                .addHeader("X-Parse-Application-Id", MyUtils.APP_ID)
+                .addHeader("X-Parse-REST-API-Key", MyUtils.REST_API_KEY)
+                .addQueryParam("where", new JSONObject().put("email", email).toString())
+                .execute(new AsyncCompletionHandler<Response>() 
+                {
+                    @Override
+                    public Response onCompleted(Response rspns) throws Exception 
+                    {
+                        return rspns;
+                    }
+                });
+        Response response = null;
+        try {
+            response = lf.get();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ExecutionException ex) {
+            Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return response;
+    }
+    public int requestPasswordReset(String email)
+    {
+        ListenableFuture<Response> lf = asyncHttpClient.preparePost(MyUtils.URL_BASE + "requestPasswordReset")
+                .addHeader("X-Parse-Application-Id", MyUtils.APP_ID)
+                .addHeader("X-Parse-REST-API-Key", MyUtils.REST_API_KEY)
+                .addHeader("Content-Type", "application/json")
+                .setBody(new JSONObject().put("email", email).toString())
+                .execute(new AsyncCompletionHandler<Response>() 
+                {
+                    @Override
+                    public Response onCompleted(Response rspns) throws Exception 
+                    {
+                        return rspns;
+                    }
+                });
+        Response response = null;
+        try {
+            response = lf.get();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ExecutionException ex) {
+            Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return response.getStatusCode();
     }
     public boolean isFinished() {
         return finished;
