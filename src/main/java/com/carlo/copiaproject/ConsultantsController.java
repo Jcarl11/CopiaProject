@@ -5,6 +5,7 @@ import DatabaseOperations.LocalStorage;
 import DatabaseOperations.RetrieveCombobox;
 import Entities.ComboboxDataEntity;
 import MiscellaneousClasses.GetOtherControllerAttributesSingleton;
+import MiscellaneousClasses.PreviewImage;
 import java.io.File;
 import java.net.URL;
 import java.text.Collator;
@@ -25,6 +26,7 @@ import javafx.scene.layout.AnchorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  * FXML Controller class
@@ -33,6 +35,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class ConsultantsController implements Initializable 
 {
+    PreviewImage previewimage = new PreviewImage();
     DatabaseQuery dbQuery = new DatabaseQuery();
     @FXML AnchorPane anchorpane_consultants;
     @FXML private ListView<String> listview_consultants_FiletoUpload;
@@ -50,7 +53,29 @@ public class ConsultantsController implements Initializable
     @FXML 
     void button_consultants_previewOnClick(ActionEvent event)
     {
-        
+        if(listview_consultants_FiletoUpload.getSelectionModel().getSelectedItem() != null)
+        {
+            GetOtherControllerAttributesSingleton.getInstance().previewGetContainer().getChildren().clear();
+            String extension = FilenameUtils.getExtension(listview_consultants_FiletoUpload.getSelectionModel().getSelectedItem());
+            if(extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("gif"))
+            {
+                GetOtherControllerAttributesSingleton.getInstance().previewGetContainer().getChildren().add(previewimage.showImage(listview_consultants_FiletoUpload.getSelectionModel().getSelectedItem()));
+            }
+            /*else if(extension.equalsIgnoreCase("pdf"))
+            {
+                try
+                {
+                    //anchorpane_viewdocument.getChildren().add(previewpdf.showPDF(listview_contractors_FiletoUpload.getSelectionModel().getSelectedItem()));
+                }catch(Exception ex)
+                {
+                    ex.printStackTrace();
+                }
+            }*/
+            else
+            {
+                JOptionPane.showMessageDialog(null, "File type not supported for preview");
+            }
+        }
     }
     
     @FXML 

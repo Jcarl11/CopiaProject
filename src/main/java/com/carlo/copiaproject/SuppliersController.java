@@ -5,6 +5,7 @@ import DatabaseOperations.LocalStorage;
 import DatabaseOperations.RetrieveCombobox;
 import Entities.ComboboxDataEntity;
 import MiscellaneousClasses.GetOtherControllerAttributesSingleton;
+import MiscellaneousClasses.PreviewImage;
 import java.io.File;
 import java.net.URL;
 import java.text.Collator;
@@ -22,9 +23,11 @@ import javafx.scene.layout.AnchorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.apache.commons.io.FilenameUtils;
 
 public class SuppliersController implements Initializable 
 {
+    PreviewImage previewimage = new PreviewImage();
     DatabaseQuery dbQuery = new DatabaseQuery();
     @FXML TextField textfield_suppliers_representative,textfield_suppliers_position,textfield_suppliers_companyname,textfield_suppliers_brand;
     @FXML ListView<String> listview_suppliers_FiletoUpload; 
@@ -40,15 +43,15 @@ public class SuppliersController implements Initializable
     @FXML
     void button_suppliers_previewOnClick(ActionEvent event) 
     {
-        /*if(listview_suppliers_FiletoUpload.getSelectionModel().getSelectedItem() != null)
+        if(listview_suppliers_FiletoUpload.getSelectionModel().getSelectedItem() != null)
         {
-            anchorpane_viewdocument.getChildren().clear();
+            GetOtherControllerAttributesSingleton.getInstance().previewGetContainer().getChildren().clear();
             String extension = FilenameUtils.getExtension(listview_suppliers_FiletoUpload.getSelectionModel().getSelectedItem());
             if(extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("gif"))
             {
-                anchorpane_viewdocument.getChildren().add(previewimage.showImage(listview_suppliers_FiletoUpload.getSelectionModel().getSelectedItem()));
+                GetOtherControllerAttributesSingleton.getInstance().previewGetContainer().getChildren().add(previewimage.showImage(listview_suppliers_FiletoUpload.getSelectionModel().getSelectedItem()));
             }
-            else if(extension.equalsIgnoreCase("pdf"))
+            /*else if(extension.equalsIgnoreCase("pdf"))
             {
                 try
                 {
@@ -57,12 +60,12 @@ public class SuppliersController implements Initializable
                 {
                     ex.printStackTrace();
                 }
-            }
+            }*/
             else
             {
                 JOptionPane.showMessageDialog(null, "File type not supported for preview");
             }
-        }*/
+        }
     }
 
     @FXML

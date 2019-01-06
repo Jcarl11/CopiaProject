@@ -45,7 +45,7 @@ public class ClientController implements Initializable
     
     @FXML void button_client_previewOnClick(ActionEvent event) 
     {
-        /*if(listview_client_FiletoUpload.getSelectionModel().getSelectedItem() != null)
+        if(listview_client_FiletoUpload.getSelectionModel().getSelectedItem() != null)
         {
             GetOtherControllerAttributesSingleton.getInstance().previewGetContainer().getChildren().clear();
             String extension = FilenameUtils.getExtension(listview_client_FiletoUpload.getSelectionModel().getSelectedItem());
@@ -53,7 +53,7 @@ public class ClientController implements Initializable
             {
                 GetOtherControllerAttributesSingleton.getInstance().previewGetContainer().getChildren().add(previewimage.showImage(listview_client_FiletoUpload.getSelectionModel().getSelectedItem()));
             }
-            else if(extension.equalsIgnoreCase("pdf"))
+            /*else if(extension.equalsIgnoreCase("pdf"))
             {
                 try
                 {
@@ -62,12 +62,12 @@ public class ClientController implements Initializable
                 {
                     ex.printStackTrace();
                 }
-            }
+            }*/
             else
             {
                 JOptionPane.showMessageDialog(null, "File type not supported for preview");
             }
-        }*/
+        }
         System.out.println("Width: " + anchorpane_client.getWidth());
         System.out.println("Height: " + anchorpane_client.getHeight());
     }

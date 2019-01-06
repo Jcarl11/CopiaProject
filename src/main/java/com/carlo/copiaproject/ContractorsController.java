@@ -5,6 +5,7 @@ import DatabaseOperations.LocalStorage;
 import DatabaseOperations.RetrieveCombobox;
 import Entities.ComboboxDataEntity;
 import MiscellaneousClasses.GetOtherControllerAttributesSingleton;
+import MiscellaneousClasses.PreviewImage;
 import java.io.File;
 import java.net.URL;
 import java.text.Collator;
@@ -25,9 +26,11 @@ import javafx.scene.layout.AnchorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.apache.commons.io.FilenameUtils;
 
 public class ContractorsController implements Initializable 
 {
+    PreviewImage previewimage = new PreviewImage();
     DatabaseQuery dbQuery = new DatabaseQuery();
     @FXML AnchorPane anchorpane_contractors;
     @FXML ListView<String> listview_contractors_FiletoUpload;
@@ -45,15 +48,15 @@ public class ContractorsController implements Initializable
     @FXML
     void button_contractors_previewOnClick(ActionEvent event) 
     {
-        /*if(listview_contractors_FiletoUpload.getSelectionModel().getSelectedItem() != null)
+        if(listview_contractors_FiletoUpload.getSelectionModel().getSelectedItem() != null)
         {
-            anchorpane_viewdocument.getChildren().clear();
+            GetOtherControllerAttributesSingleton.getInstance().previewGetContainer().getChildren().clear();
             String extension = FilenameUtils.getExtension(listview_contractors_FiletoUpload.getSelectionModel().getSelectedItem());
             if(extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("gif"))
             {
-                anchorpane_viewdocument.getChildren().add(previewimage.showImage(listview_contractors_FiletoUpload.getSelectionModel().getSelectedItem()));
+                GetOtherControllerAttributesSingleton.getInstance().previewGetContainer().getChildren().add(previewimage.showImage(listview_contractors_FiletoUpload.getSelectionModel().getSelectedItem()));
             }
-            else if(extension.equalsIgnoreCase("pdf"))
+            /*else if(extension.equalsIgnoreCase("pdf"))
             {
                 try
                 {
@@ -62,12 +65,12 @@ public class ContractorsController implements Initializable
                 {
                     ex.printStackTrace();
                 }
-            }
+            }*/
             else
             {
                 JOptionPane.showMessageDialog(null, "File type not supported for preview");
             }
-        }*/
+        }
     }
     @FXML
     void button_contractors_removeOnClick(ActionEvent event) 

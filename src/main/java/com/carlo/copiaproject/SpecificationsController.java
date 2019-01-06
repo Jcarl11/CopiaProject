@@ -36,24 +36,6 @@ public class SpecificationsController implements Initializable
         listview_specifications_FiletoUpload.getItems().addAll(showChooserDialog("pdf"));
     }
     
-    @FXML
-    void button_specifications_previewOnClick(ActionEvent event)
-    {
-        /*if(listview_specifications_FiletoUpload.getSelectionModel().getSelectedItem() != null)
-        {
-           anchorpane_viewdocument.getChildren().clear();
-            try{
-                //anchorpane_viewdocument.getChildren().add(previewpdf.showPDF(listview_specifications_FiletoUpload.getSelectionModel().getSelectedItem()));
-            }catch(Exception ex)
-            {
-                ex.printStackTrace();
-            }
-        }
-        else
-        {
-            System.out.println("Error");
-        }*/
-    }
     
     @FXML
     void button_specifications_removeOnClick(ActionEvent event) 
