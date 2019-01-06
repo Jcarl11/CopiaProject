@@ -42,7 +42,7 @@ public class SpecificationsController implements Initializable
     {
          if(listview_specifications_FiletoUpload.getSelectionModel().getSelectedItem() != null)
         {
-            int selection = JOptionPane.showConfirmDialog(null, "Delete selected fie?", "Confirm", 
+            int selection = JOptionPane.showConfirmDialog(null, "Delete selected file?", "Confirm", 
                             JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
             if(selection == JOptionPane.YES_OPTION)
             {
