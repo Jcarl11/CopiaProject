@@ -11,6 +11,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.parse4j.Parse;
@@ -28,7 +29,8 @@ public class MainApp extends Application
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/Scene.fxml"));
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/styles/Styles.css");
-        stage.setTitle("JavaFX and Maven");
+        stage.setTitle("Copia");
+        stage.getIcons().add(new Image("/Images/Icon.png"));
         stage.setScene(scene);
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() 
         {
