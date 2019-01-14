@@ -10,6 +10,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class LocalStorage 
 {
@@ -254,42 +256,35 @@ public class LocalStorage
         return strings;
     }
     
-    public boolean insert_constants()
+    public int countLocalDBRows()
     {
-        boolean isSuccessful = false;
-        try
-        {
+        int result = 0;
+        try {
             initializeDB();
-            String sql = "INSERT INTO COMBOBOXDATA(objectId, Title, Category, Field) VALUES(?,?,?,?),(?,?,?,?)";
+            String sql = "SELECT COUNT(*) AS 'RESULT' FROM COMBOBOXDATA";
             statement = connection.prepareStatement(sql);
-            statement.setString(1, "yjX2CWfxZz");
-            statement.setString(2, null);
-            statement.setString(3, "CONSULTANTS");
-            statement.setString(4, null);
-            statement.setString(5, "FACbGp156f");
-            statement.setString(6, null);
-            statement.setString(7, "SPECIFICATIONS");
-            statement.setString(8, null);
-            int result = statement.executeUpdate();
-            if(result>0)
-            {
-                isSuccessful= true;
-            }
-            else
-            {
-                System.out.println("result: " + result);
-            }
-        }catch(Exception ex)
-        {
-            ex.printStackTrace();
-        }
-        finally
-        {
-            closeConnections();
-        }
-        return isSuccessful;
+            resultSet = statement.executeQuery();
+            if(resultSet.next())
+                result = Integer.valueOf(resultSet.getString("RESULT"));
+        } catch (SQLException sQLException) {sQLException.printStackTrace();}
+        finally{closeConnections();}
+        return result;
     }
-    
+    public void populateCombobox(String data)
+    {
+        initializeDB();
+        JSONObject json = new JSONObject(data);
+        JSONArray results = json.getJSONArray("results");
+        for(int iterator = 0; iterator < results.length(); iterator++)
+        {
+            JSONObject jsonObject = results.getJSONObject(iterator);
+            String objectId = jsonObject.getString("objectId");
+            String title = jsonObject.getString("Title");
+            String category = jsonObject.getString("Category");
+            String field = jsonObject.getString("Field");
+            insert_local_ComboboxData(new ComboboxDataEntity(objectId, title, category, field));
+        }
+    }
     private void closeConnections()
     {
         try

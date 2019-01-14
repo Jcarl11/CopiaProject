@@ -2,7 +2,6 @@ package com.carlo.copiaproject;
 
 import DatabaseOperations.*;
 import Entities.*;
-import MiscellaneousClasses.CustomCell;
 import MiscellaneousClasses.EventHandlers;
 import MiscellaneousClasses.GetOtherControllerAttributesSingleton;
 import MiscellaneousClasses.MyUtils;
@@ -17,9 +16,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.*;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.util.Callback;
 import javax.swing.JOptionPane;
 
 /**

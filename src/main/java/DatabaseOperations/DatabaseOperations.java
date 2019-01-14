@@ -277,26 +277,6 @@ public class DatabaseOperations
     public Response retrieveCombobox()
     {
         ArrayList<ComboboxDataEntity> result = new ArrayList<>();
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("ComboboxData");
-        query.findInBackground(new  FindCallback<ParseObject>() 
-        {
-            @Override
-            public void done(List<ParseObject> list, ParseException parseException) 
-            {
-                if(parseException == null && list != null)
-                {
-                    for(ParseObject objects : list)
-                    {
-                        ComboboxDataEntity combobox = new ComboboxDataEntity();
-                        combobox.setObjectId(objects.getObjectId());
-                        combobox.setTitle(objects.getString("Title"));
-                        combobox.setCategory(objects.getString("Category"));
-                        combobox.setField(objects.getString("Field"));
-                        result.add(combobox);
-                    }
-                }
-            }
-        });
         ListenableFuture<Response> lf = asyncHttpClient.prepareGet(MyUtils.URL + "ComboboxData")
                                     .addHeader("X-Parse-Application-Id", MyUtils.APP_ID)
                                     .setHeader("X-Parse-REST-API-Key", MyUtils.REST_API_KEY)
@@ -319,6 +299,7 @@ public class DatabaseOperations
         }
         return response;
     }
+    
     public Response updateNote(String objectId, String remarks)
     {
         ListenableFuture<Response> lf = asyncHttpClient.preparePut(MyUtils.URL + "Notes/" + objectId)

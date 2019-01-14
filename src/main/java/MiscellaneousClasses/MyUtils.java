@@ -41,12 +41,12 @@ public class MyUtils
             instance = new MyUtils();
         return instance;
     }
-    public static String APP_ID = "4GCD5XK7GucFbTKnJa0fonFEBlAh3azBS3Gh0NNd";
-    public static String REST_API_KEY = "RYznH1yrJ3DVly2f02aEMkZJNwmPVdDBUQyqRT6H";
+    public static String APP_ID = "G68vjaiK4qU69S87FBD6ZLCRTkHOuo6EudExDvKf";
+    public static String REST_API_KEY = "VfcWNrQ9Tr19cU4Ad6mwNnfV1bYS65GtNewYkTvi";
     public static String IRREVOCABLE_SESSION = "1";
-    public static String URL_FILE = "https://concipiotektura.back4app.io/files/";
-    public static String URL = "https://concipiotektura.back4app.io/classes/";
-    public static String URL_BASE = "https://concipiotektura.back4app.io/";
+    public static String URL_FILE = "https://copia.back4app.io/files/";
+    public static String URL = "https://copia.back4app.io/classes/";
+    public static String URL_BASE = "https://copia.back4app.io/";
     public ArrayList<String> client_extractStringsToTags(ClientEntity clientEntity)
     {
         ArrayList<String> tags = new ArrayList<>();

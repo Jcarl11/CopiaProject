@@ -2,7 +2,6 @@ package com.carlo.copiaproject;
 
 import DatabaseOperations.DatabaseQuery;
 import DatabaseOperations.LocalStorage;
-import DatabaseOperations.RetrieveCombobox;
 import Entities.ComboboxDataEntity;
 import MiscellaneousClasses.GetOtherControllerAttributesSingleton;
 import MiscellaneousClasses.PreviewImage;
@@ -121,27 +120,6 @@ public class SuppliersController implements Initializable
                     else if(comboboxData.getField().equals("TYPE"))
                     {
                         typeList.add(comboboxData.getTitle());
-                    }
-                }
-            }
-            else
-            {
-                RetrieveCombobox retrieve = new RetrieveCombobox("Suppliers");
-                Thread retrieveThread = new Thread(retrieve);
-                retrieveThread.start();
-                try{retrieveThread.join();}catch(Exception ex){ex.printStackTrace();}
-                
-                for(ComboboxDataEntity comboboxData : retrieve.getResult())
-                {
-                    if(comboboxData.getField().equals("Industry"))
-                    {
-                        industryList.add(comboboxData.getTitle());
-                        LocalStorage.getInstance().insert_local_ComboboxData(comboboxData);
-                    }
-                    else if(comboboxData.getField().equals("Type"))
-                    {
-                        typeList.add(comboboxData.getTitle());
-                        LocalStorage.getInstance().insert_local_ComboboxData(comboboxData);
                     }
                 }
             }

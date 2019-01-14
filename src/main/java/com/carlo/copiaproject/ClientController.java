@@ -2,7 +2,6 @@ package com.carlo.copiaproject;
 
 import DatabaseOperations.DatabaseQuery;
 import DatabaseOperations.LocalStorage;
-import DatabaseOperations.RetrieveCombobox;
 import Entities.ComboboxDataEntity;
 import MiscellaneousClasses.*;
 import java.io.File;
@@ -12,7 +11,6 @@ import java.util.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -21,7 +19,6 @@ import javafx.scene.layout.AnchorPane;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.apache.commons.io.FilenameUtils;
-import org.asynchttpclient.Response;
 
 /**
  * FXML Controller class
@@ -124,27 +121,6 @@ public class ClientController implements Initializable
                     else if(comboboxData.getField().equals("TYPE"))
                     {
                         typeList.add(comboboxData.getTitle());
-                    }
-                }
-            }
-            else
-            {
-                RetrieveCombobox retrieve = new RetrieveCombobox("Client");
-                Thread retrieveThread = new Thread(retrieve);
-                retrieveThread.start();
-                try{retrieveThread.join();}catch(Exception ex){ex.printStackTrace();}
-                
-                for(ComboboxDataEntity comboboxData : retrieve.getResult())
-                {
-                    if(comboboxData.getField().equals("Industry"))
-                    {
-                        industryList.add(comboboxData.getTitle());
-                        LocalStorage.getInstance().insert_local_ComboboxData(comboboxData);
-                    }
-                    else if(comboboxData.getField().equals("Type"))
-                    {
-                        typeList.add(comboboxData.getTitle());
-                        LocalStorage.getInstance().insert_local_ComboboxData(comboboxData);
                     }
                 }
             }

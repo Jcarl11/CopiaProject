@@ -2,7 +2,6 @@ package com.carlo.copiaproject;
 
 import DatabaseOperations.DatabaseQuery;
 import DatabaseOperations.LocalStorage;
-import DatabaseOperations.RetrieveCombobox;
 import Entities.ComboboxDataEntity;
 import MiscellaneousClasses.GetOtherControllerAttributesSingleton;
 import MiscellaneousClasses.PreviewImage;
@@ -134,28 +133,6 @@ public class ConsultantsController implements Initializable
                         classificationList.add(comboboxData.getTitle());
                     }
                 }
-            }
-            else
-            {
-                RetrieveCombobox retrieve = new RetrieveCombobox("Consultants");
-                Thread retrieveThread = new Thread(retrieve);
-                retrieveThread.start();
-                try{retrieveThread.join();}catch(Exception ex){ex.printStackTrace();}
-                System.out.println("Size is: " + retrieve.getResult().size());
-                for(ComboboxDataEntity comboboxData : retrieve.getResult())
-                {
-                    if(comboboxData.getField().equals("Industry"))
-                    {
-                        industryList.add(comboboxData.getTitle());
-                        LocalStorage.getInstance().insert_local_ComboboxData(comboboxData);
-                    }
-                    else if(comboboxData.getField().equals("Classification"))
-                    {
-                        classificationList.add(comboboxData.getTitle());
-                        LocalStorage.getInstance().insert_local_ComboboxData(comboboxData);
-                    }
-                }
-                
             }
             combobox_consultants_industry.setItems(new SortedList<String>(industryList, Collator.getInstance()));
             combobox_consultants_classificiation.setItems(new SortedList<String>(classificationList, Collator.getInstance()));

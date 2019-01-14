@@ -21,6 +21,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javax.swing.JOptionPane;
 import org.asynchttpclient.Response;
+import org.json.JSONObject;
 
 public class FXMLController implements Initializable 
 {
@@ -302,14 +303,14 @@ public class FXMLController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
-        
         anchorpane_main.getChildren().clear();
         LocalStorage.getInstance().initialize_local_ComboboxData();
-        ArrayList<String> constants = LocalStorage.getInstance().retrieve_local_Categories_CONSTANTS();
-        if(constants.size() <= 0)
-        {
-            LocalStorage.getInstance().insert_constants();
-        }
         GetOtherControllerAttributesSingleton.getInstance().previewSetContainer(anchorpane_viewdocument);
+        if(LocalStorage.getInstance().countLocalDBRows() <= 0)
+        {
+            DatabaseOperations db = new DatabaseOperations();
+            String result = db.retrieveCombobox().getResponseBody();
+            LocalStorage.getInstance().populateCombobox(result);
+        }
     }    
 }

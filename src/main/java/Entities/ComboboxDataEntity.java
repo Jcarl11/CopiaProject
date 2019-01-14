@@ -34,6 +34,14 @@ public class ComboboxDataEntity
     public void setField(String field) {
         this.field = field;
     }
+
+    public ComboboxDataEntity(String objectId, String title, String category, String field) {
+        this.objectId = objectId;
+        this.title = title;
+        this.category = category;
+        this.field = field;
+    }
+    public ComboboxDataEntity(){}
     private String objectId;
     private String title;
     private String category;
